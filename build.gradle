@@ -28,7 +28,6 @@ configurations {
     // remove default logger
     all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 }
-
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-redis')
     compile('org.springframework.boot:spring-boot-starter-data-redis-reactive')
@@ -45,4 +44,6 @@ dependencies {
     testCompile('org.springframework.security:spring-security-test')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.0.0.RELEASE'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.6'
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.49'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 }

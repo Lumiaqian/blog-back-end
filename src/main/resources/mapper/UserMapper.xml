@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.UserMapper">
+
+    <resultMap id="userMap" type="com.caoyuqian.blog.pojo.SysUser">
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="password" property="password" />
+        <result column="email" property="email"/>
+        <collection property="roles" ofType="com.caoyuqian.blog.pojo.Role">
+            <result property="roleName" column="role_name"/>
+        </collection>
+    </resultMap>
+
+    <select  id="test" resultType="int">
+        select count(*) from user
+    </select>
+    <select id="getUserById" resultMap="userMap" parameterType="String">
+        select  "user".*,"role".role_name from "user"
+            left join role_user on "user".user_id=role_user.user_id
+            left join "role" on "role".role_id=role_user.role_id
+        where "user".user_id=#{user_id}
+    </select>
+</mapper>

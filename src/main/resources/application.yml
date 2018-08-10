@@ -1,29 +1,27 @@
 server:
-   http:
-      port: 8080
+  http:
+    port: 8080
 
 spring:
-   datasource:
-      name: blog
-      url: jdbc:postgresql://106.12.97.86:5432/blog
-      username: postgres
-      password: lumiaqian
-      driver-class-name: org.postgresql.Driver
-   redis:
-      host: 106.12.97.86
-      port: 6379
-      password: lumiaqian
-      pool:
-        max-idle: 5000
-        max-active: 5000
-        min-idle: 50
-        testOnBorrow: true
-        max-wait: 200
-      timeout: 0
-      database: 0
+  datasource:
+    name: blog
+    url: jdbc:postgresql://106.12.97.86:5432/blog
+    username: postgres
+    password: lumiaqian
+    driver-class-name: org.postgresql.Driver
+  redis:
+    host: 106.12.97.86
+    port: 6379
+    password: lumiaqian
+    pool:
+      max-idle: 5000
+      max-active: 5000
+      min-idle: 50
+      testOnBorrow: true
+      max-wait: 200
+    timeout: 0
+    database: 0
 
-   devtools：
-      restart：
-      exclude：static/**,public/**
-   mybatis:
-      mapper-locations: classpath:mapper/*.xml
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

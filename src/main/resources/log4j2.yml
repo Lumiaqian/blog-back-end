@@ -10,7 +10,7 @@ Configuration:
     - name: log.level.lumiaqian
       value: trace
     - name: log.path
-      value: /opt/logs
+      value: ../opt/logs
     - name: project.name
       value: my-spring-boot
 
