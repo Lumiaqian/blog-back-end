@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.CityMapper">
+    <resultMap id="city" type="com.caoyuqian.blog.pojo.City">
+        <result column="city_id" property="cityId"/>
+        <result column="city_name" property="cityName"/>
+    </resultMap>
+    <select id="getCityByName" parameterType="String" resultMap="city">
+        select * from city where city_name=#{city_name}
+    </select>
+</mapper>

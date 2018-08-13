@@ -1,6 +1,10 @@
 server:
   http:
     port: 8080
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
 
 spring:
   datasource:
@@ -19,9 +23,13 @@ spring:
       min-idle: 50
       testOnBorrow: true
       max-wait: 200
-    timeout: 0
+    timeout: 5000
     database: 0
 
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+
+appKey:
+  ak: 4sl4FWeMQ5Kv8GzCjxSYk8ih1LD4bMUL
+  coor: bd09ll

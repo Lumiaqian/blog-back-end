@@ -62,6 +62,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().authenticationEntryPoint(entryPointUnauthorizedHandler)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/utils/*/*").permitAll()
                 //.antMatchers("/").permitAll()
                 //.antMatchers("/test").permitAll()
                 //.antMatchers("/login").permitAll()
