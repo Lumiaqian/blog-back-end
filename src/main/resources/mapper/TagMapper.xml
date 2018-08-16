@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.TagMapper">
+    <resultMap id="tag" type="com.caoyuqian.blog.pojo.Tag">
+        <result column="tag_id" property="tagId"/>
+        <result column="tag_name" property="tagName"/>
+    </resultMap>
+    <insert id="saveTags" parameterType="List">
+        insert into tag(tag_id,tag_name) values
+            <foreach collection="tags" item="tag" separator="," index="index">
+                (#{tag.tagId},#{tag.tagName})
+            </foreach>
+    </insert>
+    <insert id="saveTag" parameterType="com.caoyuqian.blog.pojo.Tag">
+        insert into tag(tag_id,tag_name)
+        values(#{tag.tagId},#{tag.tagName})
+    </insert>
+    <select id="getCountByName" parameterType="String" resultType="int">
+        select count(*) from tag where tag_name=#{tag_name}
+    </select>
+    <select id="getTagByName" parameterType="String" resultMap="tag">
+        select * from tag where tag_name=#{tagName}
+    </select>
+</mapper>

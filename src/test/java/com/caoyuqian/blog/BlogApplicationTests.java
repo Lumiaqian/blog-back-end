@@ -1,22 +1,28 @@
 package com.caoyuqian.blog;
 
 import com.alibaba.fastjson.JSONObject;
+import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.City;
-import com.caoyuqian.blog.utils.JSONUtil;
-import com.caoyuqian.blog.utils.JwtTokenUtil;
-import com.caoyuqian.blog.utils.OkHttpUtil;
+import com.caoyuqian.blog.pojo.Post;
+import com.caoyuqian.blog.service.impl.PostServiceImpl;
+import com.caoyuqian.blog.utils.*;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +31,8 @@ import java.util.regex.Pattern;
 public class BlogApplicationTests {
 
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
-
+    @Autowired
+    private PostServiceImpl postService;
     @Value("${appKey.ak}")
     private String ak;
     @Test
@@ -78,5 +85,20 @@ public class BlogApplicationTests {
         city.setCityName(cityName.substring(0,cityName.length()-1));
         //city= JSONUtil.jsonToObj(str,City.class);
         logger.info("city: "+city.toString());
+    }
+    @Test
+    public void dateTest(){
+        Post post=new Post();
+        post=postService.getPostById("123");
+        logger.info(post.toString());
+        logger.info(DateUtil.DateToLocalDateTime(post.getPublicDate()).toString());
+        logger.info(DateUtil.DateToString(post.getPublicDate()));
+
+    }
+    @Test
+    public void snowFlake(){
+        SnowFlake snowFlake=new SnowFlake(2,3);
+        logger.info("snowFlake: "+snowFlake.nextId());
+        logger.info("snowFlake: "+snowFlake.nextId());
     }
 }

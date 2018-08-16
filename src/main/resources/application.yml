@@ -25,6 +25,10 @@ spring:
       max-wait: 200
     timeout: 5000
     database: 0
+  servlet:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 100Mb
 
 
 mybatis:
@@ -33,3 +37,6 @@ mybatis:
 appKey:
   ak: 4sl4FWeMQ5Kv8GzCjxSYk8ih1LD4bMUL
   coor: bd09ll
+
+prop:
+  upload-folder: ../posts/

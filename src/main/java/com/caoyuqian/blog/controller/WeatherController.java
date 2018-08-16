@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * @version V1.0
  * @Title: WeatherController
  * @Package: com.caoyuqian.blog.controller
- * @Description: 通过ip获取物理地址或天气
+ * @Description: 通过ip获取物理地址和天气
  * @date 2018/8/12 下午2:47
  **/
 @RequestMapping("utils")
@@ -35,21 +35,13 @@ public class WeatherController {
 
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
 
-    @Value("${appKey.ak}")
-    private String ak;
-
-    @Value("${appKey.coor")
-    private String coor;
-
     @Autowired
     private OkHttpService okHttpService;
-
 
     @GetMapping("weather/{ip}")
     public ResultResponseBody getWeather(@PathVariable String ip){
         JSONArray weather;
         ResultResponseBody resultResponseBody=new ResultResponseBody();
-        Map<String,Object> data=new HashMap<>();
         City city=new City();
         logger.info("ip: "+ip);
         //ipv4的正则规则
@@ -63,11 +55,9 @@ public class WeatherController {
             if (city!=null){
                 weather=okHttpService.getWeatherByCityId(city.getCityId());
                 if (weather!=null){
-                    data.put("weather",weather);
-                    data.put("cityName",city.getCityName());
                     resultResponseBody.setStatus("200");
                     resultResponseBody.setMsg("获取天气成功！");
-                    resultResponseBody.setResult(data);
+                    resultResponseBody.setResult(weather);
                 }else {
                     resultResponseBody.setStatus("400");
                     resultResponseBody.setMsg("获取天气失败！");

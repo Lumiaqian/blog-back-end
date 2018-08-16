@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.PostMapper">
+    <resultMap id="post" type="com.caoyuqian.blog.pojo.Post">
+        <result property="postId" column="post_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="path" column="path"/>
+        <result property="publicDate" column="public_date"/>
+        <result property="editDate" column="edit_date"/>
+    </resultMap>
+    
+    <insert id="savePost" parameterType="com.caoyuqian.blog.pojo.Post">
+        insert into post(post_id,title,content,path,public_date,edit_date)
+         values (#{post.postId},#{post.title},#{post.content},#{post.path},#{post.publicDate},#{post.editDate})
+    </insert>
+    <insert id="savePostTags" parameterType="com.caoyuqian.blog.pojo.Post" useGeneratedKeys="true" keyProperty="id">
+        insert into post_tag (post_id,tag_id) values
+            <foreach collection="post.tags" index="index" separator="," item="tag">
+                (#{post.postId},#{tag.tagId})
+            </foreach>
+    </insert>
+    <insert id="savePostCategories" parameterType="com.caoyuqian.blog.pojo.Post" keyProperty="id" useGeneratedKeys="true">
+        insert into post_category (post_id,category_id) values
+        <foreach collection="post.categories" index="index" separator="," item="category">
+            (#{post.postId},#{category.categoryId})
+        </foreach>
+    </insert>
+    <select id="getPostById" parameterType="String" resultMap="post">
+        select * from post where post_id=#{post_id}
+    </select>
+    <select id="getCountByTitile" parameterType="String" resultType="int">
+        select count(*) from post where title=#{title}
+    </select>
+    <select id="getCountById" parameterType="String" resultType="int">
+        select count(*) from post where post_id=#{post_id}
+    </select>
+    <select id="isExistsPostTag" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
+        select count(*) from post_tag where post_id=#{post.postId} and tag_id in
+          <foreach collection="post.tags" item="tag" separator="," index="index" open="(" close=")">
+              #{tag.tagId}
+          </foreach>
+    </select>
+    <select id="isExistsPostCate" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
+        select count(*) from post_category where post_id=#{post.postId} and category_id in
+        <foreach collection="post.categories" item="cate" separator="," index="index" open="(" close=")">
+            #{cate.categoryId}
+        </foreach>
+    </select>
+</mapper>
