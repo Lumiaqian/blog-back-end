@@ -3,8 +3,13 @@ package com.caoyuqian.blog.service.impl;
 import com.caoyuqian.blog.mapper.PostMapper;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.service.PostService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author qian
@@ -23,6 +28,19 @@ public class PostServiceImpl implements PostService{
     @Override
     public Post getPostById(String postId) {
         return postMapper.getPostById(postId);
+    }
+
+    @Override
+    public List<Post> getPost() {
+        return postMapper.getPost();
+    }
+
+    @Override
+    public PageInfo<Post> getPosts(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Post> posts=postMapper.getPost();
+        PageInfo<Post> pageInfo=new PageInfo<>(posts);
+        return pageInfo;
     }
 
     @Override

@@ -10,6 +10,15 @@
         <result property="path" column="path"/>
         <result property="publicDate" column="public_date"/>
         <result property="editDate" column="edit_date"/>
+        <collection property="categories" ofType="com.caoyuqian.blog.pojo.Category">
+            <result property="categoryId" column="category_id"/>
+            <result property="categoryName" column="category_name"/>
+            <result property="fatherId" column="father_id"/>
+        </collection>
+        <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag">
+            <result property="tagId" column="tag_id"/>
+            <result property="tagName" column="tag_name"/>
+        </collection>
     </resultMap>
     
     <insert id="savePost" parameterType="com.caoyuqian.blog.pojo.Post">
@@ -28,8 +37,16 @@
             (#{post.postId},#{category.categoryId})
         </foreach>
     </insert>
+    <select id="getPost" resultMap="post">
+        select  post.*,category.*,tag.* from post,tag,category,post_tag,post_category
+        WHERE post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+              tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+    </select>
     <select id="getPostById" parameterType="String" resultMap="post">
-        select * from post where post_id=#{post_id}
+        select post.*,category.*,tag.* from post,tag,category,post_tag,post_category
+        where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+              tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+              and post.post_id=#{post_id}
     </select>
     <select id="getCountByTitile" parameterType="String" resultType="int">
         select count(*) from post where title=#{title}

@@ -13,6 +13,7 @@ import com.caoyuqian.blog.service.impl.TagServiceImpl;
 import com.caoyuqian.blog.utils.DateUtil;
 import com.caoyuqian.blog.utils.JSONUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
+import com.github.pagehelper.PageInfo;
 import javafx.geometry.Pos;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -20,11 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.Yaml;
 
@@ -40,10 +39,10 @@ import java.util.*;
  * @version V1.0
  * @Title: PostController
  * @Package: com.caoyuqian.blog.controller
- * @Description: post相关的Url
+ * @Description: 管理后台的post相关的Url
  * @date 2018/8/14 下午4:33
  **/
-@RequestMapping("posts")
+@RequestMapping("lumia/posts")
 @RestController
 public class PostController {
     private final Logger logger= LoggerFactory.getLogger(this.getClass());
@@ -57,7 +56,14 @@ public class PostController {
     @Autowired
     private CategoryServiceImpl categoryService;
 
-    @PutMapping("lumia/upload")
+     /**
+       * @Param:
+       * @return:
+       * @Author: qian
+       * @Description: 解析MarkDown
+       * @Date: 2018/8/16 下午8:24
+      **/
+    @PutMapping("upload")
     public ResultResponseBody upload(MultipartFile file) throws Exception {
         ResultResponseBody resultResponseBody=new ResultResponseBody();
 
@@ -160,7 +166,7 @@ public class PostController {
             //文件写入指定路径
             Files.write(path, bytes);
             resultResponseBody.setStatus("200");
-            resultResponseBody.setMsg("转换成功！");
+            resultResponseBody.setMsg("解析成功！");
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("服务器异常");
@@ -168,6 +174,55 @@ public class PostController {
         return resultResponseBody;
     }
 
+     /**
+       * @Param: pageNo PageSize
+       * @return:
+       * @Author: qian
+       * @Description: 获取post列表
+       * @Date: 2018/8/16 下午8:25
+      **/
+    @GetMapping("list")
+    public ResultResponseBody getPots(@Param("pageNo") int pageNo,@Param("pageSize") int pageSize){
+        ResultResponseBody resultResponseBody=new ResultResponseBody();
+        /*List<Post> posts=new ArrayList<>();
+        posts=postService.getPost();
+        logger.info(String.valueOf(posts.size()));*/
+        logger.info("pageNo: "+pageNo+" pageSize: "+pageSize);
+        try {
+            PageInfo<Post> posts=postService.getPosts(pageNo,pageSize);
+            resultResponseBody.setStatus("200");
+            resultResponseBody.setMsg("获取成功！");
+            resultResponseBody.setResult(posts);
+        } catch (Exception e) {
+            logger.error("服务器异常！");
+            e.printStackTrace();
+        }
+        return resultResponseBody;
+    }
+
+     /**
+       * @Param: postId
+       * @return:
+       * @Author: qian
+       * @Description: 根据postId获取文章
+       * @Date: 2018/8/16 下午8:43
+      **/
+    @GetMapping("{postId}")
+    public ResultResponseBody getPost(@PathVariable String postId){
+        ResultResponseBody resultResponseBody=new ResultResponseBody();
+        Post post=postService.getPostById(postId);
+        resultResponseBody.setMsg("获取post成功");
+        resultResponseBody.setStatus("200");
+        resultResponseBody.setResult(post);
+        return resultResponseBody;
+    }
+
+    @PostMapping("public")
+    public ResultResponseBody publicPost(){
+        ResultResponseBody resultResponseBody=new ResultResponseBody();
+
+        return resultResponseBody;
+    }
 
     private JSONObject parseArticle(String fileName,String context) throws ParseException {
         JSONObject rst=new JSONObject();

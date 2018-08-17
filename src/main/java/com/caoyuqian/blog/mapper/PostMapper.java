@@ -6,10 +6,13 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 
+import java.util.List;
+
 @Mapper
 public interface PostMapper {
 
     Post getPostById(@Param("post_id")String postId);
+    List<Post> getPost();
     int savePost(@Param("post") Post post);
     int getCountByTitile(@Param("title") String title);
     int getCountById(@Param("post_id") String postId);
