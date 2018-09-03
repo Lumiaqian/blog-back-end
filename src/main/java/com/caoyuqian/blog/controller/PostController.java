@@ -12,6 +12,7 @@ import com.caoyuqian.blog.service.impl.PostServiceImpl;
 import com.caoyuqian.blog.service.impl.TagServiceImpl;
 import com.caoyuqian.blog.utils.DateUtil;
 import com.caoyuqian.blog.utils.JSONUtil;
+import com.caoyuqian.blog.utils.RedisManger;
 import com.caoyuqian.blog.utils.SnowFlake;
 import com.github.pagehelper.PageInfo;
 import javafx.geometry.Pos;
@@ -55,7 +56,8 @@ public class PostController {
     private TagServiceImpl tagService;
     @Autowired
     private CategoryServiceImpl categoryService;
-
+    @Autowired
+    private RedisManger redisManger;
      /**
        * @Param:
        * @return:
@@ -211,6 +213,12 @@ public class PostController {
     public ResultResponseBody getPost(@PathVariable String postId){
         ResultResponseBody resultResponseBody=new ResultResponseBody();
         Post post=postService.getPostById(postId);
+        int count=1;//默认阅读次数为一次
+        if (redisManger.get(postId)!=null){
+            count=(Integer) redisManger.get(postId);
+            post.setWatchCount(count);
+        }
+        redisManger.set(postId,count+1);
         resultResponseBody.setMsg("获取post成功");
         resultResponseBody.setStatus("200");
         resultResponseBody.setResult(post);

@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.service.impl;
 
+import com.caoyuqian.blog.cache.CacheExpire;
 import com.caoyuqian.blog.mapper.PostMapper;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.service.PostService;
@@ -7,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +28,8 @@ public class PostServiceImpl implements PostService{
     private PostMapper postMapper;
 
     @Override
+    @Cacheable(value = "post",key = "#postId")
+    @CacheExpire(60*30)
     public Post getPostById(String postId) {
         return postMapper.getPostById(postId);
     }

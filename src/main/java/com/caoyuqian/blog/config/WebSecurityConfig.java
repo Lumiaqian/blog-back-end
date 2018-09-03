@@ -63,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/utils/*").permitAll()
                 .antMatchers("/utils/*/*").permitAll()
                 .antMatchers("/lumia/posts/*").permitAll()
                 //.antMatchers("/posts/qian/*").hasAnyRole("ADMIN")

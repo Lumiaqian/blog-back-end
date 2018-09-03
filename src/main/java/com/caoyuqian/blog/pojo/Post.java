@@ -22,6 +22,15 @@ public class Post implements Serializable {
     private String path;//保存路径
     private List<Tag> tags;//标签
     private List<Category> categories;//类别
+    private int watchCount;//阅读次数
+
+    public int getWatchCount() {
+        return watchCount;
+    }
+
+    public void setWatchCount(int watchCount) {
+        this.watchCount = watchCount;
+    }
 
     public String getPostId() {
         return postId;
@@ -98,6 +107,7 @@ public class Post implements Serializable {
                 ", path='" + path + '\'' +
                 ", tags=" + tags +
                 ", categories=" + categories +
+                ", watchCount=" + watchCount +
                 '}';
     }
 }

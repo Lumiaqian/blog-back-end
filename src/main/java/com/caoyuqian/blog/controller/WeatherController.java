@@ -7,6 +7,7 @@ import com.caoyuqian.blog.pojo.ResultResponseBody;
 import com.caoyuqian.blog.service.impl.CityServiceImpl;
 import com.caoyuqian.blog.service.impl.OkHttpService;
 import com.caoyuqian.blog.service.impl.UserServiceImpl;
+import com.caoyuqian.blog.utils.NetworkUtil;
 import com.caoyuqian.blog.utils.OkHttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +75,13 @@ public class WeatherController {
         return resultResponseBody;
     }
 
+    @GetMapping("weather")
+    public ResultResponseBody getWeather(HttpServletRequest request){
+        ResultResponseBody resultResponseBody=new ResultResponseBody();
+        String ip= NetworkUtil.getIpAddress(request);
+        resultResponseBody.setResult(ip);
+        return resultResponseBody;
+    }
 
 
 }
