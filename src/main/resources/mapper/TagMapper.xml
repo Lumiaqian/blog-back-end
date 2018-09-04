@@ -21,6 +21,6 @@
         select count(*) from tag where tag_name=#{tag_name}
     </select>
     <select id="getTagByName" parameterType="String" resultMap="tag">
-        select * from tag where tag_name=#{tagName}
+        select tag_id,tagName from tag where tag_name=#{tagName}
     </select>
 </mapper>

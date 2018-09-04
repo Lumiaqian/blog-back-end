@@ -18,7 +18,7 @@
         select count(*) from user
     </select>
     <select id="getUserById" resultMap="userMap" parameterType="String">
-        select  "user".*,"role".role_name from "user"
+        select  "user".user_id,"user".user_name,"user".password,"user".email,"role".role_name from "user"
             left join role_user on "user".user_id=role_user.user_id
             left join "role" on "role".role_id=role_user.role_id
         where "user".user_id=#{user_id}

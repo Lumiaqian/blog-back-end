@@ -22,7 +22,7 @@
         select count(*) from category where category_name=#{category_name}
     </select>
     <select id="getCategoryByName" parameterType="String" resultMap="cate">
-        select * from category where category_name=#{category_name}
+        select categoryId,categoryName,fatherId from category where category_name=#{category_name}
     </select>
     <update id="updateCategoryFatherId" parameterType="com.caoyuqian.blog.pojo.Category" >
         update category set

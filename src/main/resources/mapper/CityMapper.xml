@@ -8,6 +8,6 @@
         <result column="city_name" property="cityName"/>
     </resultMap>
     <select id="getCityByName" parameterType="String" resultMap="city">
-        select * from city where city_name=#{city_name}
+        select city_id,city_name from city where city_name=#{city_name}
     </select>
 </mapper>

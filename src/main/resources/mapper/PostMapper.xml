@@ -20,7 +20,7 @@
             <result property="tagName" column="tag_name"/>
         </collection>
     </resultMap>
-    
+
     <insert id="savePost" parameterType="com.caoyuqian.blog.pojo.Post">
         insert into post(post_id,title,content,path,public_date,edit_date)
          values (#{post.postId},#{post.title},#{post.content},#{post.path},#{post.publicDate},#{post.editDate})
@@ -38,12 +38,16 @@
         </foreach>
     </insert>
     <select id="getPost" resultMap="post">
-        select  post.*,category.*,tag.* from post,tag,category,post_tag,post_category
+        select  post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+                category.category_id,category.category_name,category.father_id,
+                tag.tag_id,tag.tagName from post,tag,category,post_tag,post_category
         WHERE post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
     </select>
     <select id="getPostById" parameterType="String" resultMap="post">
-        select post.*,category.*,tag.* from post,tag,category,post_tag,post_category
+        select ost.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+               category.category_id,category.category_name,category.father_id,
+               tag.tag_id,tag.tagName from post,tag,category,post_tag,post_category
         where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
               and post.post_id=#{post_id}
