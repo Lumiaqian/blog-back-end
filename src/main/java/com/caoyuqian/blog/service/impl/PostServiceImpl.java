@@ -35,6 +35,13 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Cacheable(value = "post",key = "#postId")
+    @CacheExpire(60*30)
+    public Post about(String postId) {
+        return postMapper.about(postId);
+    }
+
+    @Override
     public List<Post> getPost() {
         return postMapper.getPost();
     }

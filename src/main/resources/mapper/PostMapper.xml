@@ -40,17 +40,21 @@
     <select id="getPost" resultMap="post">
         select  post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
                 category.category_id,category.category_name,category.father_id,
-                tag.tag_id,tag.tagName from post,tag,category,post_tag,post_category
+                tag.tag_id,tag.tag_name from post,tag,category,post_tag,post_category
         WHERE post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
     </select>
     <select id="getPostById" parameterType="String" resultMap="post">
-        select ost.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
                category.category_id,category.category_name,category.father_id,
-               tag.tag_id,tag.tagName from post,tag,category,post_tag,post_category
+               tag.tag_id,tag.tag_name from post,tag,category,post_tag,post_category
         where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
               and post.post_id=#{post_id}
+    </select>
+    <select id="about" parameterType="String" resultMap="post">
+        select post_id,title,content,path,public_date,edit_date from post
+        where post_id=#{post_id}
     </select>
     <select id="getCountByTitile" parameterType="String" resultType="int">
         select count(*) from post where title=#{title}

@@ -1,7 +1,6 @@
 package com.caoyuqian.blog.config;
 
 import com.caoyuqian.blog.cache.TedisCacheManager;
-import com.caoyuqian.blog.utils.FastJsonRedisSerializer;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;

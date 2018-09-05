@@ -35,6 +35,11 @@ import java.util.concurrent.Callable;
  * @date 2018/8/13 下午3:13
  **/
 public class TedisCacheManager extends RedisCacheManager implements ApplicationContextAware, InitializingBean {
+    /**
+     * Redis 容易出现缓存问题（超时、Redis 宕机等），当使用 spring cache 的注释 Cacheable、Cacheput 等处理缓存问题时，
+     * 我们无法使用 try catch 处理出现的异常，所以最后导致结果是整个服务报错无法正常工作。
+     * 通过自定义 TedisCacheManager 并继承 RedisCacheManager 来处理异常可以解决这个问题。
+     */
     private final Logger log= LoggerFactory.getLogger(this.getClass());
     private ApplicationContext applicationContext;
     private Map<String, RedisCacheConfiguration> initialCacheConfiguration = new LinkedHashMap<>();

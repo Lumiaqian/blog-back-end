@@ -12,6 +12,7 @@ import java.util.List;
 public interface PostMapper {
 
     Post getPostById(@Param("post_id")String postId);
+    Post about(@Param("post_id")String postId);
     List<Post> getPost();
     int savePost(@Param("post") Post post);
     int getCountByTitile(@Param("title") String title);

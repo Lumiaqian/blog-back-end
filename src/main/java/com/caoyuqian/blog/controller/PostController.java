@@ -89,36 +89,41 @@ public class PostController {
         //更新数据库中的内容
         int code=0;
         //更新category
-        logger.info(post.getCategories().toString());
-        List<Category> categories=new ArrayList<>();
-        for(Category category:post.getCategories()){
-            code=categoryService.getCountByName(category.getCategoryName());
-            if (code==0){
-                code=categoryService.saveCategory(category);
-                if (code==0)
-                    logger.error("category存入数据库失败！");
-            }else {
-                category=categoryService.getCategoryByName(category.getCategoryName());
+        if (post.getCategories()!=null){
+            logger.info(post.getCategories().toString());
+            List<Category> categories=new ArrayList<>();
+            for(Category category:post.getCategories()){
+                code=categoryService.getCountByName(category.getCategoryName());
+                if (code==0){
+                    code=categoryService.saveCategory(category);
+                    if (code==0)
+                        logger.error("category存入数据库失败！");
+                }else {
+                    category=categoryService.getCategoryByName(category.getCategoryName());
+                }
+                categories.add(category);
             }
-            categories.add(category);
+            post.setCategories(categories);
         }
-        post.setCategories(categories);
         code=0;//重置code
         //更新tag
-        logger.info(post.getTags().toString());
-        List<Tag> tags=new ArrayList<>();
-        for (Tag tag:post.getTags()){
-            code=tagService.getCountByName(tag.getTagName());
-            if (code==0){
-                code=tagService.saveTag(tag);
-                if (code==0)
-                    logger.error("tag存入数据库失败！");
-            }else {
-                tag=tagService.getTagByName(tag.getTagName());
+        if (post.getTags()!=null){
+            logger.info(post.getTags().toString());
+            List<Tag> tags=new ArrayList<>();
+            for (Tag tag:post.getTags()){
+                code=tagService.getCountByName(tag.getTagName());
+                if (code==0){
+                    code=tagService.saveTag(tag);
+                    if (code==0)
+                        logger.error("tag存入数据库失败！");
+                }else {
+                    tag=tagService.getTagByName(tag.getTagName());
+                }
+                tags.add(tag);
             }
-            tags.add(tag);
+            post.setTags(tags);
         }
-        post.setTags(tags);
+
         //更新post
         code=0;
         code=postService.getCountById(post.getPostId());
@@ -225,6 +230,17 @@ public class PostController {
         return resultResponseBody;
     }
 
+    @GetMapping("about")
+    public ResultResponseBody about(){
+        ResultResponseBody resultResponseBody=new ResultResponseBody();
+        String postId="20180315185058";
+        Post post=postService.about(postId);
+        resultResponseBody.setMsg("获取about成功");
+        resultResponseBody.setStatus("200");
+        resultResponseBody.setResult(post);
+        return resultResponseBody;
+    }
+
     @PostMapping("public")
     public ResultResponseBody publicPost(){
         ResultResponseBody resultResponseBody=new ResultResponseBody();
@@ -277,11 +293,13 @@ public class PostController {
         List<Tag> tags=new ArrayList<>();
         SnowFlake tagSnow=new SnowFlake(2,3);
         Object arr=elemts.get("tags");
-        if (arr instanceof String){
+        if (arr==null){
+            tags=null;
+        } else if (arr instanceof String){
             tag.setTagId(tagSnow.nextId());
             tag.setTagName(arr.toString());
             tags.add(tag);
-        }else {
+        } else {
             for ( String tag1 : (List<String>) arr) {
                 if (StringUtils.isBlank(tag1)) {
 
@@ -298,7 +316,9 @@ public class PostController {
         SnowFlake snowFlake=new SnowFlake(2,3);
         logger.info("初始化的list: "+list.isEmpty());
         Object cate=elemts.get("categories");
-        if (cate instanceof String){
+        if (cate==null){
+            categories=null;
+        }else if (cate instanceof String){
             logger.info("-----进入判断是否只有一个标签------");
              category.setCategoryName(cate.toString());
              category.setCategoryId(snowFlake.nextId());
@@ -328,7 +348,9 @@ public class PostController {
         rst.put("publicDate",pubilcDate);
         rst.put("editDate",pubilcDate);
         rst.put("categories",categories);
-        if (!tags.isEmpty()){
+        if (tags==null){
+            rst.put("tags",tags);
+        } else if (!tags.isEmpty()){
             rst.put("tags",tags);
         }
         return rst;

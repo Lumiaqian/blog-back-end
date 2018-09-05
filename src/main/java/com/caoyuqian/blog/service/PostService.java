@@ -8,6 +8,7 @@ import java.util.List;
 public interface PostService {
 
     Post getPostById(String postId);
+    Post about(String postId);
     List<Post> getPost();
     PageInfo<Post> getPosts(int pageNo,int pageSize);
     int savePost(Post post);
