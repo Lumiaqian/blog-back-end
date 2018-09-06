@@ -10,17 +10,27 @@
         <result property="path" column="path"/>
         <result property="publicDate" column="public_date"/>
         <result property="editDate" column="edit_date"/>
-        <collection property="categories" ofType="com.caoyuqian.blog.pojo.Category">
-            <result property="categoryId" column="category_id"/>
-            <result property="categoryName" column="category_name"/>
-            <result property="fatherId" column="father_id"/>
+        <collection property="categories" ofType="com.caoyuqian.blog.pojo.Category" select="getcategoryById" column="category_id">
         </collection>
-        <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag">
-            <result property="tagId" column="tag_id"/>
-            <result property="tagName" column="tag_name"/>
+        <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag" select="getTagById" column="tag_id">
         </collection>
     </resultMap>
+    <resultMap id="tag" type="com.caoyuqian.blog.pojo.Tag">
+        <result property="tagId" column="tag_id"/>
+        <result property="tagName" column="tag_name"/>
+    </resultMap>
+    <resultMap id="category" type="com.caoyuqian.blog.pojo.Category">
+        <result property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="fatherId" column="father_id"/>
+    </resultMap>
 
+    <select id="getTagById" resultMap="tag" parameterType="long">
+        select tag_id,tag_name from tag where tag_id=#{tag_id}
+    </select>
+    <select id="getcategoryById" resultMap="category" parameterType="long">
+        select category_id,category_name,father_id from category where category_id=#{category_id}
+    </select>
     <insert id="savePost" parameterType="com.caoyuqian.blog.pojo.Post">
         insert into post(post_id,title,content,path,public_date,edit_date)
          values (#{post.postId},#{post.title},#{post.content},#{post.path},#{post.publicDate},#{post.editDate})

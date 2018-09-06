@@ -33,7 +33,11 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-
+pagehelper:
+  helperDialect: postgresql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
 appKey:
   ak: 4sl4FWeMQ5Kv8GzCjxSYk8ih1LD4bMUL
   coor: bd09ll
