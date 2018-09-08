@@ -1,5 +1,8 @@
 package com.caoyuqian.blog.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.caoyuqian.blog.utils.ToStringSerializer;
+
 import java.io.Serializable;
 
 /**
@@ -12,6 +15,7 @@ import java.io.Serializable;
  **/
 public class Tag implements Serializable {
 
+    @JSONField(serializeUsing= ToStringSerializer.class)
     private long tagId;//id
     private String tagName;//名称
 

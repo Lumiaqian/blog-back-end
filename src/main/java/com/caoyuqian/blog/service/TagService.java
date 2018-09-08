@@ -10,4 +10,5 @@ public interface TagService {
     int saveTag(Tag tag);
     int getCountByName(String tagName);
     Tag getTagByName(String tagName);
+    List<Tag> getTags();
 }

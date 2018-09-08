@@ -230,6 +230,13 @@ public class PostController {
         return resultResponseBody;
     }
 
+     /**
+      * @Param:
+      * @return:
+      * @Author: qian
+      * @Description: 获取关于我文章的API
+      * @Date: 2018/9/7 下午8:56
+     **/
     @GetMapping("about")
     public ResultResponseBody about(){
         ResultResponseBody resultResponseBody=new ResultResponseBody();
@@ -240,7 +247,6 @@ public class PostController {
         resultResponseBody.setResult(post);
         return resultResponseBody;
     }
-
     @PostMapping("public")
     public ResultResponseBody publicPost(){
         ResultResponseBody resultResponseBody=new ResultResponseBody();

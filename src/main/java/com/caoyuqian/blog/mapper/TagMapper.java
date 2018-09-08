@@ -13,4 +13,5 @@ public interface TagMapper {
     int saveTags(@Param("tags") List<Tag> tagList );
     int getCountByName(@Param("tag_name") String tagName);
     Tag getTagByName(@Param("tagName") String tagName);
+    List<Tag> getTags();
 }

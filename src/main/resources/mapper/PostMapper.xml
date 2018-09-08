@@ -6,13 +6,34 @@
     <resultMap id="post" type="com.caoyuqian.blog.pojo.Post">
         <result property="postId" column="post_id"/>
         <result property="title" column="title"/>
+        <!--<result property="content" column="content"/>-->
+        <result property="path" column="path"/>
+        <result property="publicDate" column="public_date"/>
+        <result property="editDate" column="edit_date"/>
+        <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag">
+            <result property="tagId" column="tag_id"/>
+            <result property="tagName" column="tag_name"/>
+        </collection>
+        <collection property="categories" ofType="com.caoyuqian.blog.pojo.Category">
+            <result property="categoryId" column="category_id"/>
+            <result property="categoryName" column="category_name"/>
+            <result property="fatherId" column="father_id"/>
+        </collection>
+    </resultMap>
+    <resultMap id="posts" type="com.caoyuqian.blog.pojo.Post">
+        <result property="postId" column="post_id"/>
+        <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="path" column="path"/>
         <result property="publicDate" column="public_date"/>
         <result property="editDate" column="edit_date"/>
-        <collection property="categories" ofType="com.caoyuqian.blog.pojo.Category" select="getcategoryById" column="category_id">
+        <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag"
+                    select="getTagById" column="post_id">
+
         </collection>
-        <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag" select="getTagById" column="tag_id">
+        <collection property="categories" ofType="com.caoyuqian.blog.pojo.Category"
+                    select="getCategoryById" column="post_id">
+
         </collection>
     </resultMap>
     <resultMap id="tag" type="com.caoyuqian.blog.pojo.Tag">
@@ -25,11 +46,16 @@
         <result property="fatherId" column="father_id"/>
     </resultMap>
 
-    <select id="getTagById" resultMap="tag" parameterType="long">
-        select tag_id,tag_name from tag where tag_id=#{tag_id}
+    <select id="getTagById" resultMap="tag" parameterType="string">
+        select tag.tag_id,tag.tag_name
+        from tag,post_tag,post
+        where  post.post_id=post_tag.post_id and tag.tag_id=post_tag.tag_id and post.post_id=#{post_id}
     </select>
-    <select id="getcategoryById" resultMap="category" parameterType="long">
-        select category_id,category_name,father_id from category where category_id=#{category_id}
+    <select id="getCategoryById" resultMap="category" parameterType="string">
+        select category.category_id,category.category_name,category.father_id
+        from category,post_category,post
+        where  post.post_id=post_category.post_id
+          and category.category_id=post_category.category_id and post.post_id=#{post_id}
     </select>
     <insert id="savePost" parameterType="com.caoyuqian.blog.pojo.Post">
         insert into post(post_id,title,content,path,public_date,edit_date)
@@ -47,20 +73,28 @@
             (#{post.postId},#{category.categoryId})
         </foreach>
     </insert>
-    <select id="getPost" resultMap="post">
-        select  post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
-                category.category_id,category.category_name,category.father_id,
-                tag.tag_id,tag.tag_name from post,tag,category,post_tag,post_category
-        WHERE post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
-              tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+    <select id="getPost" resultMap="posts">
+        select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date
+        from post
+        where post.post_id!='20180315185058'
     </select>
     <select id="getPostById" parameterType="String" resultMap="post">
         select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
                category.category_id,category.category_name,category.father_id,
-               tag.tag_id,tag.tag_name from post,tag,category,post_tag,post_category
+               tag.tag_id,tag.tag_name
+        from post,tag,category,post_tag,post_category
         where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
               and post.post_id=#{post_id}
+    </select>
+    <select id="getPostsByTag" parameterType="long" resultMap="post">
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+               category.category_id,category.category_name,category.father_id,
+               tag.tag_id,tag.tag_name
+        from post,tag,category,post_tag,post_category
+        where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+              tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+          and tag.tag_id=#{tag_id}
     </select>
     <select id="about" parameterType="String" resultMap="post">
         select post_id,title,content,path,public_date,edit_date from post

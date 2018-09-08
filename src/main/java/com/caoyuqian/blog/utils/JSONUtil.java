@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
  **/
 public class JSONUtil {
 
-
      /**
        * @Param: unicode编码的JSON
        * @return:

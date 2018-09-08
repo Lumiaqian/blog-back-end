@@ -47,6 +47,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public List<Post> getPostsByTag(long tagId) {
+        return postMapper.getPostsByTag(tagId);
+    }
+
+    @Override
     public PageInfo<Post> getPosts(int pageNo, int pageSize) {
         PageHelper.startPage(pageNo,pageSize);
         List<Post> posts=postMapper.getPost();
