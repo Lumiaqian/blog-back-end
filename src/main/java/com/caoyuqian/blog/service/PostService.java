@@ -11,6 +11,7 @@ public interface PostService {
     Post about(String postId);
     List<Post> getPost();
     List<Post> getPostsByTag(long tagId);
+    List<Post> getPostsByCate(long categoryId);
     PageInfo<Post> getPosts(int pageNo,int pageSize);
     int savePost(Post post);
     int getCountByTitile(String title);

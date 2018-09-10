@@ -15,7 +15,7 @@
     </resultMap>
 
     <select  id="test" resultType="int">
-        select count(*) from user
+        select count(1) from user
     </select>
     <select id="getUserById" resultMap="userMap" parameterType="String">
         select  "user".user_id,"user".user_name,"user".password,"user".email,"role".role_name from "user"

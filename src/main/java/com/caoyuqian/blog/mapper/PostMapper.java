@@ -19,6 +19,7 @@ public interface PostMapper {
     Category getcategoryById(@Param("category_id") long categoryId);*/
     List<Post> getPost();
     List<Post> getPostsByTag(@Param("tag_id") long tagId);
+    List<Post> getPostsByCate(@Param("category_id") long categoryId);
     int savePost(@Param("post") Post post);
     int getCountByTitile(@Param("title") String title);
     int getCountById(@Param("post_id") String postId);

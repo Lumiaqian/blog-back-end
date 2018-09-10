@@ -47,4 +47,9 @@ public class CategoryServiceImpl implements CategoryService {
     public int updateCategoryFatherId(Category category) {
         return categoryMapper.updateCategoryFatherId(category);
     }
+
+    @Override
+    public List<Category> getCategories() {
+        return categoryMapper.getCategories();
+    }
 }

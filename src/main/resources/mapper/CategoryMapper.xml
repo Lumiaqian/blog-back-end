@@ -7,6 +7,7 @@
         <result property="categoryId" column="category_id"/>
         <result property="categoryName" column="category_name"/>
         <result property="fatherId" column="father_id"/>
+        <collection property="count" select="getCountByCate" column="category_id"/>
     </resultMap>
     <insert id="saveCategories" parameterType="List"  >
         insert into category(category_id,category_name,father_id) values
@@ -19,10 +20,18 @@
        values (#{category.categoryId},#{category.categoryName},#{category.fatherId})
     </insert>
     <select id="getCountByName" parameterType="String" resultType="int">
-        select count(*) from category where category_name=#{category_name}
+        select count(1) from category where category_name=#{category_name}
     </select>
     <select id="getCategoryByName" parameterType="String" resultMap="cate">
         select category_id,category_name,father_id from category where category_name=#{category_name}
+    </select>
+    <select id="getCategories" resultMap="cate">
+        select category_id,category_name,father_id from category
+    </select>
+    <select id="getCountByCate" resultType="int" parameterType="long">
+        select count(1) from category,post_category
+        where post_category.category_id=category.category_id
+        and category.category_id=#{category_id}
     </select>
     <update id="updateCategoryFatherId" parameterType="com.caoyuqian.blog.pojo.Category" >
         update category set

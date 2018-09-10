@@ -52,6 +52,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public List<Post> getPostsByCate(long categoryId) {
+        return postMapper.getPostsByCate(categoryId);
+    }
+
+    @Override
     public PageInfo<Post> getPosts(int pageNo, int pageSize) {
         PageHelper.startPage(pageNo,pageSize);
         List<Post> posts=postMapper.getPost();

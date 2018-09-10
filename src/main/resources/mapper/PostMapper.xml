@@ -6,7 +6,7 @@
     <resultMap id="post" type="com.caoyuqian.blog.pojo.Post">
         <result property="postId" column="post_id"/>
         <result property="title" column="title"/>
-        <!--<result property="content" column="content"/>-->
+        <result property="content" column="content"/>
         <result property="path" column="path"/>
         <result property="publicDate" column="public_date"/>
         <result property="editDate" column="edit_date"/>
@@ -77,6 +77,7 @@
         select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date
         from post
         where post.post_id!='20180315185058'
+        order by post.public_date desc
     </select>
     <select id="getPostById" parameterType="String" resultMap="post">
         select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
@@ -96,24 +97,33 @@
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
           and tag.tag_id=#{tag_id}
     </select>
+    <select id="getPostsByCate" parameterType="long" resultMap="post">
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+               category.category_id,category.category_name,category.father_id,
+               tag.tag_id,tag.tag_name
+        from post,tag,category,post_tag,post_category
+        where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+              tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+          and category.category_id=#{category_id}
+    </select>
     <select id="about" parameterType="String" resultMap="post">
         select post_id,title,content,path,public_date,edit_date from post
         where post_id=#{post_id}
     </select>
     <select id="getCountByTitile" parameterType="String" resultType="int">
-        select count(*) from post where title=#{title}
+        select count(1) from post where title=#{title}
     </select>
     <select id="getCountById" parameterType="String" resultType="int">
-        select count(*) from post where post_id=#{post_id}
+        select count(1) from post where post_id=#{post_id}
     </select>
     <select id="isExistsPostTag" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
-        select count(*) from post_tag where post_id=#{post.postId} and tag_id in
+        select count(1) from post_tag where post_id=#{post.postId} and tag_id in
           <foreach collection="post.tags" item="tag" separator="," index="index" open="(" close=")">
               #{tag.tagId}
           </foreach>
     </select>
     <select id="isExistsPostCate" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
-        select count(*) from post_category where post_id=#{post.postId} and category_id in
+        select count(1) from post_category where post_id=#{post.postId} and category_id in
         <foreach collection="post.categories" item="cate" separator="," index="index" open="(" close=")">
             #{cate.categoryId}
         </foreach>

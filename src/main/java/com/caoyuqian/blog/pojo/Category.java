@@ -20,7 +20,15 @@ public class Category implements Serializable {
     private String categoryName;
     @JSONField(serializeUsing= ToStringSerializer.class)
     private long fatherId;
+    private int count; //该标签下的文章数目
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public long getFatherId() {
         return fatherId;
@@ -52,6 +60,7 @@ public class Category implements Serializable {
                 "categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
                 ", fatherId=" + fatherId +
+                ", count=" + count +
                 '}';
     }
 }

@@ -89,18 +89,23 @@ public class PostController {
         //更新数据库中的内容
         int code=0;
         //更新category
+        long fatherId = -1;
         if (post.getCategories()!=null){
             logger.info(post.getCategories().toString());
             List<Category> categories=new ArrayList<>();
             for(Category category:post.getCategories()){
                 code=categoryService.getCountByName(category.getCategoryName());
                 if (code==0){
+                    category.setFatherId(fatherId);
                     code=categoryService.saveCategory(category);
                     if (code==0)
                         logger.error("category存入数据库失败！");
                 }else {
+                    logger.info("category已经存在！");
                     category=categoryService.getCategoryByName(category.getCategoryName());
+                    fatherId=category.getCategoryId();
                 }
+                logger.info(String.valueOf(fatherId));
                 categories.add(category);
             }
             post.setCategories(categories);
@@ -197,6 +202,7 @@ public class PostController {
         logger.info("pageNo: "+pageNo+" pageSize: "+pageSize);
         try {
             PageInfo<Post> posts=postService.getPosts(pageNo,pageSize);
+            // posts.getList().sort(Comparator.comparing(Post::getPublicDate).reversed());
             resultResponseBody.setStatus("200");
             resultResponseBody.setMsg("获取成功！");
             resultResponseBody.setResult(posts);

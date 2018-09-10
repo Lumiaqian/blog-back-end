@@ -11,4 +11,5 @@ public interface CategoryService {
     int getCountByName(String cateName);
     Category getCategoryByName(String categoryName);
     int updateCategoryFatherId(Category category);
+    List<Category> getCategories();
 }

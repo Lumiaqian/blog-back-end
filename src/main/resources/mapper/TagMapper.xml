@@ -18,7 +18,7 @@
         values(#{tag.tagId},#{tag.tagName})
     </insert>
     <select id="getCountByName" parameterType="String" resultType="int">
-        select count(*) from tag where tag_name=#{tag_name}
+        select count(1) from tag where tag_name=#{tag_name}
     </select>
     <select id="getTagByName" parameterType="String" resultMap="tag">
         select tag_id,tag_name from tag where tag_name=#{tagName}
