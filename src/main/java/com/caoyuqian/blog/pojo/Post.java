@@ -1,5 +1,8 @@
 package com.caoyuqian.blog.pojo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -12,8 +15,10 @@ import java.util.List;
  * @Description: Post文章类
  * @date 2018/8/14 下午2:24
  **/
+@Document(indexName = "posts_index",type = "post")
 public class Post implements Serializable {
 
+    @Id
     private String postId;//ID
     private String title;//文章标题
     private String content;//文章内容

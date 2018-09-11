@@ -7,6 +7,10 @@ server:
       enabled: true
 
 spring:
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 106.12.97.86:9300
   datasource:
     name: blog
     url: jdbc:postgresql://106.12.97.86:5432/blog
