@@ -1,0 +1,94 @@
+{
+  "post": {
+    "properties": {
+      "path": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "categories": {
+        "properties": {
+          "count": {
+            "type": "long"
+          },
+          "fatherId": {
+            "type": "long"
+          },
+          "categoryName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          },
+          "categoryId": {
+            "type": "long"
+          }
+        }
+      },
+      "postId": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "publicDate": {
+        "type": "long"
+      },
+      "title": {
+        "type": "text",
+        "analyzer": "ik_smart",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "editDate": {
+        "type": "long"
+      },
+      "content": {
+        "type": "text",
+        "analyzer": "ik_smart",
+        "search_analyzer": "ik_smart",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "tags": {
+        "properties": {
+          "tagId": {
+            "type": "long"
+          },
+          "tagName": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "ignore_above": 256,
+                "type": "keyword"
+              }
+            }
+          }
+        }
+      },
+      "watchCount": {
+        "type": "long"
+      }
+    }
+
+  }
+}

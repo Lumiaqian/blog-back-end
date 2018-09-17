@@ -8,6 +8,7 @@ import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.service.CategoryService;
 import com.caoyuqian.blog.service.TagService;
 import com.caoyuqian.blog.service.impl.CategoryServiceImpl;
+import com.caoyuqian.blog.service.impl.PostRepositoryServiceImpl;
 import com.caoyuqian.blog.service.impl.PostServiceImpl;
 import com.caoyuqian.blog.service.impl.TagServiceImpl;
 import com.caoyuqian.blog.utils.DateUtil;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +60,8 @@ public class PostController {
     private CategoryServiceImpl categoryService;
     @Autowired
     private RedisManger redisManger;
+    @Autowired
+    private PostRepositoryServiceImpl postRepositoryService;
      /**
        * @Param:
        * @return:
@@ -104,6 +108,7 @@ public class PostController {
                     logger.info("category已经存在！");
                     category=categoryService.getCategoryByName(category.getCategoryName());
                     fatherId=category.getCategoryId();
+                    category.setCount(0);
                 }
                 logger.info(String.valueOf(fatherId));
                 categories.add(category);
@@ -154,6 +159,9 @@ public class PostController {
             if (code==0)
                 logger.error("post_category保存失败！");
         }
+        logger.info("解析出的post为："+post.toString());
+        //保存到elasticsearch中
+        postRepositoryService.save(post);
         //保存到服务器中
 
         //获取文件名
@@ -257,6 +265,32 @@ public class PostController {
     public ResultResponseBody publicPost(){
         ResultResponseBody resultResponseBody=new ResultResponseBody();
 
+        return resultResponseBody;
+    }
+
+    @GetMapping("sync")
+    public ResultResponseBody sync(){
+        ResultResponseBody resultResponseBody=new ResultResponseBody();
+        List<Post> posts=postService.getPost();
+        logger.info("PostSize: "+posts.size());
+        postRepositoryService.saveAll(posts);
+        resultResponseBody.setStatus("200");
+        resultResponseBody.setMsg("同步成功！");
+        resultResponseBody.setResult(posts);
+        return resultResponseBody;
+    }
+
+    @PostMapping("search")
+    public ResultResponseBody search(@RequestBody Map map){
+        ResultResponseBody resultResponseBody=new ResultResponseBody();
+        Integer pageNum= (Integer) map.get("pageNum");
+        Integer pageSize=(Integer) map.get("pageSize");
+        logger.info("pageNum: "+pageNum+"pageSize: "+pageSize);
+        String key=(String) map.get("keyWorld");
+        Page<Post> posts=postRepositoryService.getListByKey(pageNum,pageSize,key);
+        resultResponseBody.setStatus("200");
+        resultResponseBody.setMsg("success");
+        resultResponseBody.setResult(posts);
         return resultResponseBody;
     }
 

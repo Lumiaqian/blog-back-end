@@ -101,4 +101,10 @@ public class BlogApplicationTests {
         logger.info("snowFlake: "+snowFlake.nextId());
         logger.info("snowFlake: "+snowFlake.nextId());
     }
+
+    @Test
+    public void elasticsearchTest(){
+        //System.setProperty("es.set.netty.runtime.available.processors", "false");
+
+    }
 }

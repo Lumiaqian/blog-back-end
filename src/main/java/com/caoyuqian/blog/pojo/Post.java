@@ -2,6 +2,8 @@ package com.caoyuqian.blog.pojo;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.Mapping;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,6 +18,7 @@ import java.util.List;
  * @date 2018/8/14 下午2:24
  **/
 @Document(indexName = "posts_index",type = "post")
+@Mapping(mappingPath = "post_mapping.json")
 public class Post implements Serializable {
 
     @Id
