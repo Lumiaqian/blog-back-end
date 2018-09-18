@@ -46,7 +46,6 @@ public class TagController {
     @GetMapping("posts/{tagId}")
     public JsonResult getPostsByTag(@PathVariable long tagId){
         JsonResult jsonResult=new JsonResult();
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
         List<Post> posts;
         posts=postService.getPostsByTag(tagId);
         posts.sort(Comparator.comparing(Post::getPublicDate).reversed());
