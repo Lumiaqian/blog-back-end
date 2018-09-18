@@ -3,6 +3,7 @@ package com.caoyuqian.blog.controller;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.ResultResponseBody;
 import com.caoyuqian.blog.pojo.Tag;
+import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.impl.PostServiceImpl;
 import com.caoyuqian.blog.service.impl.TagServiceImpl;
 import org.slf4j.Logger;
@@ -34,24 +35,23 @@ public class TagController {
     private PostServiceImpl postService;
 
     @GetMapping("list")
-    public ResultResponseBody list(){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult list(){
+        JsonResult jsonResult=new JsonResult();
         List<Tag> tags;
         tags=tagService.getTags();
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setMsg("获取tags成功！");
-        resultResponseBody.setResult(tags);
-        return resultResponseBody;
+        jsonResult.setMessage("获取tags成功！");
+        jsonResult.setData(tags);
+        return jsonResult;
     }
     @GetMapping("posts/{tagId}")
-    public ResultResponseBody getPostsByTag(@PathVariable long tagId){
+    public JsonResult getPostsByTag(@PathVariable long tagId){
+        JsonResult jsonResult=new JsonResult();
         ResultResponseBody resultResponseBody=new ResultResponseBody();
         List<Post> posts;
         posts=postService.getPostsByTag(tagId);
         posts.sort(Comparator.comparing(Post::getPublicDate).reversed());
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setMsg("获取成功！");
-        resultResponseBody.setResult(posts);
-        return resultResponseBody;
+        jsonResult.setMessage("获取成功！");
+        jsonResult.setData(posts);
+        return jsonResult;
     }
 }

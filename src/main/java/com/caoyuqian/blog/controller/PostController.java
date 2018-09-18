@@ -5,6 +5,8 @@ import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.ResultResponseBody;
 import com.caoyuqian.blog.pojo.Tag;
+import com.caoyuqian.blog.pojo.result.JsonResult;
+import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.CategoryService;
 import com.caoyuqian.blog.service.TagService;
 import com.caoyuqian.blog.service.impl.CategoryServiceImpl;
@@ -70,15 +72,13 @@ public class PostController {
        * @Date: 2018/8/16 下午8:24
       **/
     @PutMapping("upload")
-    public ResultResponseBody upload(MultipartFile file) throws Exception {
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
-
+    public JsonResult upload(MultipartFile file) throws Exception {
+        JsonResult jsonResult=new JsonResult();
         if (Objects.isNull(file) || file.isEmpty()) {
             //上传文件为空
             logger.error("文件为空！");
-            resultResponseBody.setStatus("400");
-            resultResponseBody.setMsg("文件为空，请重新上传！");
-            return resultResponseBody;
+            jsonResult.setCode(ResultCode.File_Empty);
+            return jsonResult;
         }
         BufferedReader br=new BufferedReader(new InputStreamReader(file.getInputStream()));
         String context=FileCopyUtils.copyToString(br);
@@ -172,9 +172,8 @@ public class PostController {
         if (suffixName.equals("md")){
             //文件格式错误
             logger.error("文件格式错误！");
-            resultResponseBody.setStatus("400");
-            resultResponseBody.setMsg("文件格式不正确，请重新上传！");
-            return resultResponseBody;
+            jsonResult.setCode(ResultCode.File_Format_ERROR);
+            return jsonResult;
         }
         try {
             byte[] bytes = file.getBytes();
@@ -185,13 +184,12 @@ public class PostController {
             }
             //文件写入指定路径
             Files.write(path, bytes);
-            resultResponseBody.setStatus("200");
-            resultResponseBody.setMsg("解析成功！");
+            jsonResult.setMessage("解析成功！");
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("服务器异常");
         }
-        return resultResponseBody;
+        return jsonResult;
     }
 
      /**
@@ -202,8 +200,8 @@ public class PostController {
        * @Date: 2018/8/16 下午8:25
       **/
     @GetMapping("list")
-    public ResultResponseBody getPots(@Param("pageNo") int pageNo,@Param("pageSize") int pageSize){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult getPots(@Param("pageNo") int pageNo,@Param("pageSize") int pageSize){
+        JsonResult jsonResult=new JsonResult();
         /*List<Post> posts=new ArrayList<>();
         posts=postService.getPost();
         logger.info(String.valueOf(posts.size()));*/
@@ -211,14 +209,13 @@ public class PostController {
         try {
             PageInfo<Post> posts=postService.getPosts(pageNo,pageSize);
             // posts.getList().sort(Comparator.comparing(Post::getPublicDate).reversed());
-            resultResponseBody.setStatus("200");
-            resultResponseBody.setMsg("获取成功！");
-            resultResponseBody.setResult(posts);
+            jsonResult.setMessage("获取成功！");
+            jsonResult.setData(posts);
         } catch (Exception e) {
             logger.error("服务器异常！");
             e.printStackTrace();
         }
-        return resultResponseBody;
+        return jsonResult;
     }
 
      /**
@@ -229,8 +226,8 @@ public class PostController {
        * @Date: 2018/8/16 下午8:43
       **/
     @GetMapping("{postId}")
-    public ResultResponseBody getPost(@PathVariable String postId){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult getPost(@PathVariable String postId){
+        JsonResult jsonResult=new JsonResult();
         Post post=postService.getPostById(postId);
         int count=1;//默认阅读次数为一次
         if (redisManger.get(postId)!=null){
@@ -238,10 +235,9 @@ public class PostController {
             post.setWatchCount(count);
         }
         redisManger.set(postId,count+1);
-        resultResponseBody.setMsg("获取post成功");
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setResult(post);
-        return resultResponseBody;
+        jsonResult.setMessage("获取post成功！");
+        jsonResult.setData(post);
+        return jsonResult;
     }
 
      /**
@@ -252,46 +248,42 @@ public class PostController {
       * @Date: 2018/9/7 下午8:56
      **/
     @GetMapping("about")
-    public ResultResponseBody about(){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult about(){
+        JsonResult jsonResult=new JsonResult();
         String postId="20180315185058";
         Post post=postService.about(postId);
-        resultResponseBody.setMsg("获取about成功");
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setResult(post);
-        return resultResponseBody;
+        jsonResult.setMessage("获取about成功！");
+        jsonResult.setData(post);
+        return jsonResult;
     }
     @PostMapping("public")
-    public ResultResponseBody publicPost(){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult publicPost(){
+        JsonResult jsonResult=new JsonResult();
 
-        return resultResponseBody;
+        return jsonResult;
     }
 
     @GetMapping("sync")
-    public ResultResponseBody sync(){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult sync(){
+        JsonResult jsonResult=new JsonResult();
         List<Post> posts=postService.getPost();
         logger.info("PostSize: "+posts.size());
         postRepositoryService.saveAll(posts);
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setMsg("同步成功！");
-        resultResponseBody.setResult(posts);
-        return resultResponseBody;
+        jsonResult.setMessage("同步成功！");
+        jsonResult.setData(posts);
+        return jsonResult;
     }
 
     @PostMapping("search")
-    public ResultResponseBody search(@RequestBody Map map){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult search(@RequestBody Map map){
+        JsonResult jsonResult=new JsonResult();
         Integer pageNum= (Integer) map.get("pageNum");
         Integer pageSize=(Integer) map.get("pageSize");
         logger.info("pageNum: "+pageNum+"pageSize: "+pageSize);
         String key=(String) map.get("keyWorld");
         Page<Post> posts=postRepositoryService.getListByKey(pageNum,pageSize,key);
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setMsg("success");
-        resultResponseBody.setResult(posts);
-        return resultResponseBody;
+        jsonResult.setData(posts);
+        return jsonResult;
     }
 
     private JSONObject parseArticle(String fileName,String context) throws ParseException {

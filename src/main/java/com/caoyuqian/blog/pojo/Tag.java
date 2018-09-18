@@ -1,7 +1,7 @@
 package com.caoyuqian.blog.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.caoyuqian.blog.utils.ToStringSerializer;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 
 import java.io.Serializable;
 

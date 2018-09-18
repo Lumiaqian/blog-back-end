@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.caoyuqian.blog.pojo.City;
 import com.caoyuqian.blog.pojo.ResultResponseBody;
+import com.caoyuqian.blog.pojo.result.JsonResult;
+import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.impl.CityServiceImpl;
 import com.caoyuqian.blog.service.impl.OkHttpService;
 import com.caoyuqian.blog.service.impl.UserServiceImpl;
@@ -41,9 +43,9 @@ public class WeatherController {
     private OkHttpService okHttpService;
 
     @GetMapping("weather/{ip}")
-    public ResultResponseBody getWeather(@PathVariable String ip){
+    public JsonResult getWeather(@PathVariable String ip){
         JSONArray weather;
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+        JsonResult jsonResult=new JsonResult();
         City city=new City();
         logger.info("ip: "+ip);
         //ipv4的正则规则
@@ -57,30 +59,29 @@ public class WeatherController {
             if (city!=null){
                 weather=okHttpService.getWeatherByCityId(city.getCityId());
                 if (weather!=null){
-                    resultResponseBody.setStatus("200");
-                    resultResponseBody.setMsg("获取天气成功！");
-                    resultResponseBody.setResult(weather);
+                    jsonResult.setMessage("获取天气成功！");
+                    jsonResult.setData(weather);
                 }else {
-                    resultResponseBody.setStatus("400");
-                    resultResponseBody.setMsg("获取天气失败！");
+                    jsonResult.setCode(ResultCode.UNKONW_ERROR);
+                    jsonResult.setMessage("获取天气失败！");
                 }
             }else {
-                resultResponseBody.setStatus("400");
-                resultResponseBody.setMsg("ip地址不正确！");
+                jsonResult.setCode(ResultCode.UNKONW_ERROR);
+                jsonResult.setMessage("ip地址不正确！");
             }
         }else {
-            resultResponseBody.setStatus("400");
-            resultResponseBody.setMsg("ip地址格式不正确！");
+            jsonResult.setCode(ResultCode.UNKONW_ERROR);
+            jsonResult.setMessage("ip地址格式不正确！");
         }
-        return resultResponseBody;
+        return jsonResult;
     }
 
     @GetMapping("weather")
-    public ResultResponseBody getWeather(HttpServletRequest request){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult getWeather(HttpServletRequest request){
+        JsonResult jsonResult=new JsonResult();
         String ip= NetworkUtil.getIpAddress(request);
-        resultResponseBody.setResult(ip);
-        return resultResponseBody;
+        jsonResult.setData(ip);
+        return jsonResult;
     }
 
 

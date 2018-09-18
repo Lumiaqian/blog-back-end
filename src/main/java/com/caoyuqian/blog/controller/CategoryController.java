@@ -3,6 +3,7 @@ package com.caoyuqian.blog.controller;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.ResultResponseBody;
+import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.impl.CategoryServiceImpl;
 import com.caoyuqian.blog.service.impl.PostServiceImpl;
 import org.slf4j.Logger;
@@ -35,23 +36,21 @@ public class CategoryController {
     private PostServiceImpl postService;
 
     @GetMapping("list")
-    public ResultResponseBody list(){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult list(){
+        JsonResult jsonResult=new JsonResult();
         List<Category> categories=categoryService.getCategories();
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setMsg("获取categories成功！");
-        resultResponseBody.setResult(categories);
-        return resultResponseBody;
+        jsonResult.setMessage("获取categories成功！");
+        jsonResult.setData(categories);
+        return jsonResult;
     }
     @GetMapping("posts/{categoryId}")
-    public ResultResponseBody getPostsByTag(@PathVariable long categoryId){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult getPostsByTag(@PathVariable long categoryId){
+        JsonResult jsonResult=new JsonResult();
         List<Post> posts=postService.getPostsByCate(categoryId);
         posts.sort(Comparator.comparing(Post::getPublicDate).reversed());
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setMsg("获取成功！");
-        resultResponseBody.setResult(posts);
-        return resultResponseBody;
+        jsonResult.setMessage("获取成功！");
+        jsonResult.setData(posts);
+        return jsonResult;
     }
 
 }

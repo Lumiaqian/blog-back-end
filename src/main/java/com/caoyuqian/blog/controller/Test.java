@@ -2,6 +2,7 @@ package com.caoyuqian.blog.controller;
 
 import com.caoyuqian.blog.pojo.ResultResponseBody;
 import com.caoyuqian.blog.pojo.SysUser;
+import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +24,12 @@ public class Test {
     private UserService userService;
 
     @RequestMapping("test")
-    public ResultResponseBody test(){
-        ResultResponseBody resultResponseBody=new ResultResponseBody();
+    public JsonResult test(){
+        JsonResult jsonResult=new JsonResult();
         //SysUser user=new SysUser();
         //user=userService.test();
-        resultResponseBody.setResult(userService.test());
-        resultResponseBody.setStatus("200");
-        resultResponseBody.setMsg("LumiaQian");
-        return resultResponseBody;
+        jsonResult.setData(userService.test());
+        jsonResult.setMessage("LumiaQian");
+        return jsonResult;
     }
 }
