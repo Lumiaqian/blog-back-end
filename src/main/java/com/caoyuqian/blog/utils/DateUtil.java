@@ -18,6 +18,17 @@ import java.util.Date;
  **/
 public class DateUtil {
 
+    /**
+      * @Param:
+      * @return:
+      * @Author: qian
+      * @Description: 获取当前时间
+      * @Date: 2018/9/21 下午3:51
+     **/
+    public static Date getNow(){
+        LocalDateTime now=LocalDateTime.now();
+        return localDateTimeToDate(now);
+    }
      /**
        * @Param: LocalDateTime
        * @return:

@@ -1,7 +1,6 @@
 package com.caoyuqian.blog.controller;
 
 import com.caoyuqian.blog.pojo.Post;
-import com.caoyuqian.blog.pojo.ResultResponseBody;
 import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.impl.PostServiceImpl;

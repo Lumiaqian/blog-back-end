@@ -13,4 +13,6 @@ public interface UserMapper {
 
    //@Select("select count(*) from user")
    public int test();
+   int register(@Param("user") SysUser sysUser);
+   int saveRoleUser(@Param("user_id") String userId);
 }

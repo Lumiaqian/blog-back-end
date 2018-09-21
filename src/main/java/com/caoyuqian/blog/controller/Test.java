@@ -1,12 +1,9 @@
 package com.caoyuqian.blog.controller;
 
-import com.caoyuqian.blog.pojo.ResultResponseBody;
-import com.caoyuqian.blog.pojo.SysUser;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**

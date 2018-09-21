@@ -1,27 +1,17 @@
 package com.caoyuqian.blog.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.caoyuqian.blog.pojo.City;
-import com.caoyuqian.blog.pojo.ResultResponseBody;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
-import com.caoyuqian.blog.service.impl.CityServiceImpl;
 import com.caoyuqian.blog.service.impl.OkHttpService;
-import com.caoyuqian.blog.service.impl.UserServiceImpl;
 import com.caoyuqian.blog.utils.NetworkUtil;
-import com.caoyuqian.blog.utils.OkHttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

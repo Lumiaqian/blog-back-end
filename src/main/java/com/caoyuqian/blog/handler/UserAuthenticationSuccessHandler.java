@@ -2,7 +2,7 @@ package com.caoyuqian.blog.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.caoyuqian.blog.pojo.AuthUser;
-import com.caoyuqian.blog.pojo.ResultResponseBody;
+import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +28,13 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
     Logger logger= LoggerFactory.getLogger(this.getClass());
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        ResultResponseBody responseBody=new ResultResponseBody();
-        responseBody.setStatus("200");
-        responseBody.setMsg("Login Success!");
+        JsonResult jsonResult=new JsonResult();
         AuthUser user=(AuthUser) authentication.getPrincipal();
         logger.info("authUserName: "+user.getUsername());
         String token= JwtTokenUtil.CreateToken(user.getUsername(),1000*60*60*24);
-        responseBody.setToken(token);
-        response.getWriter().write(JSON.toJSONString(responseBody));
+        jsonResult.setMessage("登录成功！");
+        response.setCharacterEncoding("UTF-8");
+        response.addHeader("Authorization","Bearer "+token);//将Token放入响应头response header中
+        response.getWriter().write(JSON.toJSONString(jsonResult));
     }
 }

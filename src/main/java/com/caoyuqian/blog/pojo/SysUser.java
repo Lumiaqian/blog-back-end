@@ -1,6 +1,7 @@
 package com.caoyuqian.blog.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,7 +17,68 @@ public class SysUser implements Serializable {
     private String userName;
     private String password;
     private String email;
+    private Date createDate;//创建时间
+    private Date lastLoginDate;//最后一次登录时间
+    private String introduction;//个人简介
+    private String avatar;//头像URL
+    private String motto;//格言
     private List<Role> roles;//用户拥有的角色
+
+    @Override
+    public String toString() {
+        return "SysUser{" +
+                "userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", createDate=" + createDate +
+                ", lastLoginDate=" + lastLoginDate +
+                ", introduction='" + introduction + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", motto='" + motto + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getMotto() {
+        return motto;
+    }
+
+    public void setMotto(String motto) {
+        this.motto = motto;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
 
     public String getUserId() {
         return userId;

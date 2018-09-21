@@ -35,6 +35,9 @@ public class BlogApplicationTests {
     private PostServiceImpl postService;
     @Value("${appKey.ak}")
     private String ak;
+    static {
+        System.setProperty("es.set.netty.runtime.available.processors", "false");
+    }
     @Test
     public void contextLoads() {
         logger.trace("I am trace log.");
@@ -100,11 +103,5 @@ public class BlogApplicationTests {
         SnowFlake snowFlake=new SnowFlake(2,3);
         logger.info("snowFlake: "+snowFlake.nextId());
         logger.info("snowFlake: "+snowFlake.nextId());
-    }
-
-    @Test
-    public void elasticsearchTest(){
-        //System.setProperty("es.set.netty.runtime.available.processors", "false");
-
     }
 }
