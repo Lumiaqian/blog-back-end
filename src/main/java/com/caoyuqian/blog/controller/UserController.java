@@ -22,7 +22,7 @@ import java.util.Map;
  * @version V1.0
  * @Title: UserController
  * @Package: com.caoyuqian.blog.controller
- * @Description: TOTO
+ * @Description: 用户相关的Controller
  * @date 2018/9/21 下午2:37
  **/
 @RestController
