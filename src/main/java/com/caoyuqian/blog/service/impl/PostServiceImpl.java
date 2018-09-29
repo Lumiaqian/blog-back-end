@@ -98,4 +98,9 @@ public class PostServiceImpl implements PostService{
     public int isExistsPostCate(Post post) {
         return postMapper.isExistsPostCate(post);
     }
+
+    @Override
+    public int getCount() {
+        return postMapper.getCount();
+    }
 }

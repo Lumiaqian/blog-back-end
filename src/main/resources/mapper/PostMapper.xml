@@ -116,6 +116,9 @@
     <select id="getCountById" parameterType="String" resultType="int">
         select count(1) from post where post_id=#{post_id}
     </select>
+    <select id="getCount" resultType="int">
+        select count(1) from post where post.post_id!='20180315185058'
+    </select>
     <select id="isExistsPostTag" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
         select count(1) from post_tag where post_id=#{post.postId} and tag_id in
           <foreach collection="post.tags" item="tag" separator="," index="index" open="(" close=")">

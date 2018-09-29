@@ -20,4 +20,5 @@ public interface PostService {
     int savePostCategories(Post post);
     int isExistsPostTag(Post post);
     int isExistsPostCate(Post post);
+    int getCount();
 }

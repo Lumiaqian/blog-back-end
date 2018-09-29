@@ -17,6 +17,9 @@
         insert into tag(tag_id,tag_name)
         values(#{tag.tagId},#{tag.tagName})
     </insert>
+    <select id="getCount" resultType="int">
+        select count(1) from tag
+    </select>
     <select id="getCountByName" parameterType="String" resultType="int">
         select count(1) from tag where tag_name=#{tag_name}
     </select>

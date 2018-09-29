@@ -9,8 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +56,15 @@ public class UserController {
            jsonResult.setMessage("注册出现异常！");
            return jsonResult;
        }
+       return jsonResult;
+   }
+
+   @GetMapping("lumia/user/info")
+    public JsonResult getUserInfo(@Param("username") String username){
+       JsonResult jsonResult=new JsonResult();
+       SysUser user=userService.getUserById(username);
+       user.setPassword(null);
+       jsonResult.setData(user);
        return jsonResult;
    }
 }

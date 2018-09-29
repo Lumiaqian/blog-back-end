@@ -19,6 +19,9 @@
        insert into category(category_id,category_name,father_id)
        values (#{category.categoryId},#{category.categoryName},#{category.fatherId})
     </insert>
+    <select id="getCount" resultType="int">
+        select count(1) from category
+    </select>
     <select id="getCountByName" parameterType="String" resultType="int">
         select count(1) from category where category_name=#{category_name}
     </select>

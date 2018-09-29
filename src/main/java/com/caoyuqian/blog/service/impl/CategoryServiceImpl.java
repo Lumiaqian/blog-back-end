@@ -52,4 +52,9 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getCategories() {
         return categoryMapper.getCategories();
     }
+
+    @Override
+    public int getCount() {
+        return categoryMapper.getCount();
+    }
 }

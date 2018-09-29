@@ -27,4 +27,5 @@ public interface PostMapper {
     int savePostCategories(@Param("post") Post post);
     int isExistsPostTag(@Param("post")Post post);
     int isExistsPostCate(@Param("post") Post post);
+    int getCount();
 }
