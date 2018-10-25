@@ -16,4 +16,5 @@ public interface CategoryMapper {
     int updateCategoryFatherId(@Param("category") Category category);
     List<Category> getCategories();
     int getCount();
+    Category getCateById(@Param("category_id") long categoryId);
 }

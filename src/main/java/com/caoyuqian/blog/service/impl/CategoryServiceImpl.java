@@ -57,4 +57,9 @@ public class CategoryServiceImpl implements CategoryService {
     public int getCount() {
         return categoryMapper.getCount();
     }
+
+    @Override
+    public Category getCateById(long categoryId) {
+        return categoryMapper.getCateById(categoryId);
+    }
 }

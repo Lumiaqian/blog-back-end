@@ -135,6 +135,7 @@ public class PostController {
         code=0;
         code=postService.getCountById(post.getPostId());
         if (code==0){
+            post.setStatus(1);
             code=postService.savePost(post);
             if (code==0)
                 logger.error("post存入数据库失败！");
@@ -158,7 +159,7 @@ public class PostController {
         }
         logger.info("解析出的post为："+post.toString());
         //保存到elasticsearch中
-        postRepositoryService.save(post);
+        //postRepositoryService.save(post);
         //保存到服务器中
 
         //获取文件名
@@ -225,7 +226,7 @@ public class PostController {
     @GetMapping("{postId}")
     public JsonResult getPost(@PathVariable String postId){
         JsonResult jsonResult=new JsonResult();
-        Post post=postService.getPostById(postId);
+        Post post=postService.getPubPostById(postId);
         int count=1;//默认阅读次数为一次
         if (redisManger.get(postId)!=null){
             count=(Integer) redisManger.get(postId);
@@ -304,6 +305,7 @@ public class PostController {
             rst.put("postId", DateUtil.DateToString(date));
             rst.put("publicDate",date);
             rst.put("editDate",date);
+            rst.put("saveDate",date);
             category.setCategoryName("默认分类");
             rst.put("category",category);
 
@@ -382,6 +384,7 @@ public class PostController {
         rst.put("content",content);
         rst.put("publicDate",pubilcDate);
         rst.put("editDate",pubilcDate);
+        rst.put("saveDate",pubilcDate);
         rst.put("categories",categories);
         if (tags==null){
             rst.put("tags",tags);

@@ -27,10 +27,28 @@ public class Post implements Serializable {
     private String content;//文章内容
     private Date publicDate;//发表时间
     private Date editDate;//修改时间
+    private Date saveDate;//保存时间
     private String path;//保存路径
     private List<Tag> tags;//标签
     private List<Category> categories;//类别
     private int watchCount;//阅读次数
+    private int status;//1表示已发布状态、0表示未发布状态、-1表示已经删除在垃圾箱中的状态
+
+    public Date getSaveDate() {
+        return saveDate;
+    }
+
+    public void setSaveDate(Date saveDate) {
+        this.saveDate = saveDate;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getWatchCount() {
         return watchCount;
@@ -112,10 +130,12 @@ public class Post implements Serializable {
                 ", content='" + content + '\'' +
                 ", publicDate=" + publicDate +
                 ", editDate=" + editDate +
+                ", SaveDate=" + saveDate +
                 ", path='" + path + '\'' +
                 ", tags=" + tags +
                 ", categories=" + categories +
                 ", watchCount=" + watchCount +
+                ", status=" + status +
                 '}';
     }
 }

@@ -13,4 +13,5 @@ public interface CategoryService {
     int updateCategoryFatherId(Category category);
     List<Category> getCategories();
     int getCount();
+    Category getCateById(long categoryId);
 }

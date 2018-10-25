@@ -2,6 +2,8 @@ package com.caoyuqian.blog.utils;
 
 import com.alibaba.fastjson.JSON;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,4 +52,10 @@ public class JSONUtil {
     public static <T> T mapToObj(Map<?, ?> map, Class<T> clazz) throws Exception {
         return JSON.parseObject(JSON.toJSONString(map), clazz);
     }
+
+//    public static <T> ArrayList<T> listToObjectList(List<T> list){
+//        for (T t : list){
+//
+//        }
+//    }
 }

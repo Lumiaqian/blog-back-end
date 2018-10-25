@@ -7,10 +7,14 @@ import com.caoyuqian.blog.service.PostService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import javafx.geometry.Pos;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,12 +28,19 @@ import java.util.List;
 @Service
 public class PostServiceImpl implements PostService{
 
+    private final Logger logger= LoggerFactory.getLogger(PostServiceImpl.class);
+
     @Autowired
     private PostMapper postMapper;
 
     @Override
     @Cacheable(value = "post",key = "#postId")
     @CacheExpire(60*30)
+    public Post getPubPostById(String postId) {
+        return postMapper.getPubPostById(postId);
+    }
+
+    @Override
     public Post getPostById(String postId) {
         return postMapper.getPostById(postId);
     }
@@ -39,6 +50,11 @@ public class PostServiceImpl implements PostService{
     @CacheExpire(60*30)
     public Post about(String postId) {
         return postMapper.about(postId);
+    }
+
+    @Override
+    public Post getPostByTitle(String title) {
+        return postMapper.getPostByTitle(title);
     }
 
     @Override
@@ -66,6 +82,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public int savePost(Post post) {
+        logger.info("service: "+post.getSaveDate().toString());
         return postMapper.savePost(post);
     }
 
@@ -102,5 +119,30 @@ public class PostServiceImpl implements PostService{
     @Override
     public int getCount() {
         return postMapper.getCount();
+    }
+
+    @Override
+    public int updatePost(Post post) {
+        return postMapper.updatePost(post);
+    }
+
+    @Override
+    public int updatePostTags(ArrayList list) {
+        return postMapper.updatePostTags(list);
+    }
+
+    @Override
+    public int deletePostTags(Post post) {
+        return postMapper.deletePostTags(post);
+    }
+
+    @Override
+    public int updatePostCates(ArrayList list) {
+        return postMapper.updatePostCates(list);
+    }
+
+    @Override
+    public int deletePostCates(Post post) {
+        return postMapper.deletePostCates(post);
     }
 }

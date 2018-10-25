@@ -10,6 +10,8 @@
         <result property="path" column="path"/>
         <result property="publicDate" column="public_date"/>
         <result property="editDate" column="edit_date"/>
+        <result property="saveDate" column="save_date"/>
+        <result property="status" column="status"/>
         <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag">
             <result property="tagId" column="tag_id"/>
             <result property="tagName" column="tag_name"/>
@@ -27,6 +29,8 @@
         <result property="path" column="path"/>
         <result property="publicDate" column="public_date"/>
         <result property="editDate" column="edit_date"/>
+        <result property="saveDate" column="save_date"/>
+        <result property="status" column="status"/>
         <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag"
                     select="getTagById" column="post_id">
 
@@ -58,8 +62,8 @@
           and category.category_id=post_category.category_id and post.post_id=#{post_id}
     </select>
     <insert id="savePost" parameterType="com.caoyuqian.blog.pojo.Post">
-        insert into post(post_id,title,content,path,public_date,edit_date)
-         values (#{post.postId},#{post.title},#{post.content},#{post.path},#{post.publicDate},#{post.editDate})
+        insert into post(post_id,title,content,path,public_date,edit_date,save_date,status)
+         values (#{post.postId},#{post.title},#{post.content},#{post.path},#{post.publicDate},#{post.editDate},#{post.saveDate},#{post.status})
     </insert>
     <insert id="savePostTags" parameterType="com.caoyuqian.blog.pojo.Post" useGeneratedKeys="true" keyProperty="id">
         insert into post_tag (post_id,tag_id) values
@@ -74,41 +78,59 @@
         </foreach>
     </insert>
     <select id="getPost" resultMap="posts">
-        select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date
+        select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status
         from post
-        where post.post_id!='20180315185058'
+        where post.post_id!='20180315185058' and post.status=1
         order by post.public_date desc
     </select>
-    <select id="getPostById" parameterType="String" resultMap="post">
-        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+    <select id="getPubPostById" parameterType="String" resultMap="post">
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
                category.category_id,category.category_name,category.father_id,
                tag.tag_id,tag.tag_name
         from post,tag,category,post_tag,post_category
         where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
-              and post.post_id=#{post_id}
+              and post.post_id=#{post_id} and post.status=1
+    </select>
+    <select id="getPostById" parameterType="String" resultMap="post">
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
+               category.category_id,category.category_name,category.father_id,
+               tag.tag_id,tag.tag_name
+        from post,tag,category,post_tag,post_category
+        where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+              tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+          and post.post_id=#{post_id}
     </select>
     <select id="getPostsByTag" parameterType="long" resultMap="post">
-        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
                category.category_id,category.category_name,category.father_id,
                tag.tag_id,tag.tag_name
         from post,tag,category,post_tag,post_category
         where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
-          and tag.tag_id=#{tag_id}
+          and tag.tag_id=#{tag_id} and post.status=1
     </select>
     <select id="getPostsByCate" parameterType="long" resultMap="post">
-        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
                category.category_id,category.category_name,category.father_id,
                tag.tag_id,tag.tag_name
         from post,tag,category,post_tag,post_category
         where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
-          and category.category_id=#{category_id}
+          and category.category_id=#{category_id} and post.status=1
     </select>
     <select id="about" parameterType="String" resultMap="post">
-        select post_id,title,content,path,public_date,edit_date from post
+        select post_id,title,content,path,public_date,edit_date,save_date,status from post
         where post_id=#{post_id}
+    </select>
+    <select id="getPostByTitle" parameterType="String" resultMap="post">
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
+               category.category_id,category.category_name,category.father_id,
+               tag.tag_id,tag.tag_name
+        from post,tag,category,post_tag,post_category
+        where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+              tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+          and title=#{title}
     </select>
     <select id="getCountByTitile" parameterType="String" resultType="int">
         select count(1) from post where title=#{title}
@@ -117,7 +139,7 @@
         select count(1) from post where post_id=#{post_id}
     </select>
     <select id="getCount" resultType="int">
-        select count(1) from post where post.post_id!='20180315185058'
+        select count(1) from post where post.post_id!='20180315185058' and post.status=1
     </select>
     <select id="isExistsPostTag" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
         select count(1) from post_tag where post_id=#{post.postId} and tag_id in
@@ -131,4 +153,55 @@
             #{cate.categoryId}
         </foreach>
     </select>
+    <update id="updatePost" parameterType="com.caoyuqian.blog.pojo.Post">
+        update post
+        <set>
+            <if test="post.title != null">title=#{post.title},</if>
+            <if test="post.path != null">post.path=#{post.path},</if>
+            <if test="post.content != null">content=#{post.content},</if>
+            <if test="post.publicDate != null">public_date=#{post.publicDate},</if>
+            <if test="post.editDate != null">edit_date=#{post.editDate},</if>
+            <if test="post.saveDate != null">save_date=#{post.saveDate},</if>
+            <if test="post.status != null">status=#{post.status}</if>
+        </set>
+        where post_id=#{post.postId}
+    </update>
+    <update id="updatePostTags" parameterType="ArrayList">
+        update post_tag set tag_id=tag.newId
+        from (values 
+             <foreach collection="maps" item="item" separator="," close="" open="" index="index">
+                 (#{item.oldId},#{item.newId},#{item.postId})
+             </foreach>
+             ) as tag(oldId,newId,postId)
+        where post_id=tag.postId and tag_id=tag.oldId
+    </update>
+
+    <update id="updatePostCates" parameterType="ArrayList">
+        update post_category set category_id=cate.newId
+        from (values
+             <foreach collection="maps" item="item" separator="," index="index" open="" close="">
+                 (#{item.oldId},#{item.newId},#{item.postId})
+             </foreach>
+             ) as cate(oldId,newId,postId)
+        where post_id=cate.postId and category_id=cate.oldId
+    </update>
+
+    <delete id="deletePostTags" parameterType="com.caoyuqian.blog.pojo.Post">
+        delete from  post_tag
+                using ( values
+                      <foreach collection="post.tags" item="item" separator=",">
+                          (#{item.tagId})
+                      </foreach>
+        ) as tag(tagId)
+        where post_id=#{post.postId} and tag_id=tag.tagId
+    </delete>
+    <delete id="deletePostCates" parameterType="com.caoyuqian.blog.pojo.Post">
+        delete from post_category
+        using ( values
+              <foreach collection="post.categories" separator="," item="item">
+                  (#{item.categoryId})
+              </foreach>
+              ) as cate(cateoryId)
+        where post_id=#{post.postId} and category_id=cate.cateoryId
+    </delete>
 </mapper>

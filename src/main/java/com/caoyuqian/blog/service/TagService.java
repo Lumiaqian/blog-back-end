@@ -12,4 +12,5 @@ public interface TagService {
     Tag getTagByName(String tagName);
     List<Tag> getTags();
     int getCount();
+    Tag getTagById(long tagId);
 }

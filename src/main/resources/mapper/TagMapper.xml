@@ -29,4 +29,7 @@
     <select id="getTags" resultMap="tag">
         select tag_id,tag_name from tag
     </select>
+    <select id="getTagById" parameterType="long" resultMap="tag">
+        select tag_id,tag_name from tag where tag_id=#{tag_id}
+    </select>
 </mapper>
