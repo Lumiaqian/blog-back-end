@@ -83,6 +83,12 @@
         where post.post_id!='20180315185058' and post.status=1
         order by post.public_date desc
     </select>
+    <select id="getPostByAdmin" resultMap="posts">
+        select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status
+        from post
+        where post.post_id!='20180315185058'
+        order by post.public_date desc
+    </select>
     <select id="getPubPostById" parameterType="String" resultMap="post">
         select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
                category.category_id,category.category_name,category.father_id,
@@ -140,6 +146,9 @@
     </select>
     <select id="getCount" resultType="int">
         select count(1) from post where post.post_id!='20180315185058' and post.status=1
+    </select>
+    <select id="getAllCount" resultType="int">
+        select count(1) from post where post.post_id!='20180315185058'
     </select>
     <select id="isExistsPostTag" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
         select count(1) from post_tag where post_id=#{post.postId} and tag_id in

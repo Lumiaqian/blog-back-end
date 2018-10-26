@@ -23,6 +23,7 @@ public interface PostMapper {
     List<Post> getPost();
     List<Post> getPostsByTag(@Param("tag_id") long tagId);
     List<Post> getPostsByCate(@Param("category_id") long categoryId);
+    List<Post> getPostByAdmin();
     Post getPostByTitle(String title);
     int savePost(@Param("post") Post post);
     int updatePost(@Param("post") Post post);
@@ -33,6 +34,7 @@ public interface PostMapper {
     int isExistsPostTag(@Param("post")Post post);
     int isExistsPostCate(@Param("post") Post post);
     int getCount();
+    int getAllCount();
     int updatePostTags(@Param("maps")ArrayList list);
     int updatePostCates(@Param("maps") ArrayList list);
     int deletePostTags(@Param("post") Post post);

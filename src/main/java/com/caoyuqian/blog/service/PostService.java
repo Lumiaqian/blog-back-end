@@ -17,6 +17,7 @@ public interface PostService {
     List<Post> getPost();
     List<Post> getPostsByTag(long tagId);
     List<Post> getPostsByCate(long categoryId);
+    PageInfo<Post> getPostByAdmin(int pageNo, int pageSize);
     PageInfo<Post> getPosts(int pageNo,int pageSize);
     int savePost(Post post);
     int getCountByTitile(String title);
@@ -26,6 +27,7 @@ public interface PostService {
     int isExistsPostTag(Post post);
     int isExistsPostCate(Post post);
     int getCount();
+    int getAllCount();
     int updatePost(Post post);
     int updatePostTags(ArrayList list);
     int deletePostTags(Post post);

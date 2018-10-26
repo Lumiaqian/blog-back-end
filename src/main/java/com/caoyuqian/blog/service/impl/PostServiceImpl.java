@@ -73,6 +73,15 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public PageInfo<Post> getPostByAdmin(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Post> posts=postMapper.getPostByAdmin();
+        PageInfo<Post> pageInfo=new PageInfo<>(posts);
+        return pageInfo;
+    }
+
+
+    @Override
     public PageInfo<Post> getPosts(int pageNo, int pageSize) {
         PageHelper.startPage(pageNo,pageSize);
         List<Post> posts=postMapper.getPost();
@@ -119,6 +128,11 @@ public class PostServiceImpl implements PostService{
     @Override
     public int getCount() {
         return postMapper.getCount();
+    }
+
+    @Override
+    public int getAllCount() {
+        return postMapper.getAllCount();
     }
 
     @Override

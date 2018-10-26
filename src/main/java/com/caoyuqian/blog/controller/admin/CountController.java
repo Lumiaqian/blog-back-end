@@ -40,12 +40,14 @@ public class CountController {
     public JsonResult getCount(){
         JsonResult jsonResult=new JsonResult();
         int postCount=postService.getCount();
+        int postAllCount=postService.getAllCount();
         int tagCount=tagService.getCount();
         int cateCount=categoryService.getCount();
         Map<String,Integer> map=new HashMap<>();
         map.put("postCount",postCount);
         map.put("tagCount",tagCount);
         map.put("cateCount",cateCount);
+        map.put("postAllCount",postAllCount);
         jsonResult.setData(map);
         return jsonResult;
     }
