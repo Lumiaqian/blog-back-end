@@ -24,6 +24,9 @@ public interface PostMapper {
     List<Post> getPostsByTag(@Param("tag_id") long tagId);
     List<Post> getPostsByCate(@Param("category_id") long categoryId);
     List<Post> getPostByAdmin();
+    List<Post> getDraftPost();
+    List<Post> getDeletedPost();
+    List<Post> search(@Param("post") Post post);
     Post getPostByTitle(String title);
     int savePost(@Param("post") Post post);
     int updatePost(@Param("post") Post post);
@@ -39,4 +42,6 @@ public interface PostMapper {
     int updatePostCates(@Param("maps") ArrayList list);
     int deletePostTags(@Param("post") Post post);
     int deletePostCates(@Param("post") Post post);
+    int deletePostById(@Param("postId") String postId);
+    int discardPostById(@Param("postId") String postId);//将文章扔进垃圾箱
 }

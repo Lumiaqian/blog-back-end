@@ -88,7 +88,121 @@ public class ApostController {
         }
         return jsonResult;
     }
-
+    @PostMapping("list")
+    public JsonResult getPosts(@RequestBody Map map) throws Exception {
+        JsonResult jsonResult=new JsonResult();
+        Post post=JSONUtil.mapToObj(map,Post.class);
+        int pageNo= (int) map.get("pageNo");
+        int pageSize=(int) map.get("pageSize");
+        logger.info("前台传过来的Post: "+post);
+        logger.info(String.valueOf(pageNo));
+        logger.info(String.valueOf(pageSize));
+        PageInfo<Post> pages=postService.search(post,pageNo,pageSize);
+        jsonResult.setData(pages);
+        jsonResult.setMessage("获取成功！");
+        return jsonResult;
+    }
+    @GetMapping("draftPosts")
+    public JsonResult draftPosts(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize){
+        JsonResult jsonResult=new JsonResult();
+        logger.info("pageNo: " + pageNo + " pageSize: " + pageSize);
+        try {
+            PageInfo<Post> pages= postService.getDraftPost(pageNo, pageSize);
+            jsonResult.setMessage("获取成功！");
+            jsonResult.setData(pages);
+            return jsonResult;
+        } catch (Exception e) {
+            logger.error("服务器异常！");
+            e.printStackTrace();
+        }
+        return jsonResult;
+    }
+    @GetMapping("deletedPosts")
+    public JsonResult getdeletedPosts(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize){
+        JsonResult jsonResult=new JsonResult();
+        logger.info("pageNo: " + pageNo + " pageSize: " + pageSize);
+        try {
+            PageInfo<Post> pages= postService.getDeletedPost(pageNo, pageSize);
+            jsonResult.setMessage("获取成功！");
+            jsonResult.setData(pages);
+            return jsonResult;
+        } catch (Exception e) {
+            logger.error("服务器异常！");
+            e.printStackTrace();
+        }
+        return jsonResult;
+    }
+    @GetMapping("{postId}")
+    public JsonResult getPostById(@PathVariable String postId){
+        JsonResult jsonResult=new JsonResult();
+        Post post=postService.getPostById(postId);
+        HashMap<String,Object> ret=new HashMap<>();
+        List<String> result=new ArrayList<>();
+        for (Category category : post.getCategories()){
+           result.add(String.valueOf(category.getCategoryId()));
+        }
+        ret.put("post",post);
+        ret.put("cates",result);
+        jsonResult.setMessage("获取post成功！");
+        jsonResult.setData(ret);
+        return jsonResult;
+    }
+    @DeleteMapping("discard/{postId}")
+    public JsonResult discardPostById(@PathVariable String postId){
+        JsonResult jsonResult=new JsonResult();
+        int code=postService.discardPostById(postId);
+        if (code>0){
+            jsonResult.setMessage("已经扔进垃圾箱！");
+        }else {
+            jsonResult.setMessage("没有扔进垃圾箱！");
+        }
+        return jsonResult;
+    }
+    @DeleteMapping("{postId}")
+    public JsonResult deletePostById(@PathVariable String postId){
+        JsonResult jsonResult=new JsonResult();
+        int code=postService.deletePostById(postId);
+        if (code>0){
+            jsonResult.setMessage("删除成功！");
+        }else {
+            jsonResult.setMessage("删除失败！");
+        }
+        return jsonResult;
+    }
+    @PutMapping("pub/{postId}")
+    public JsonResult pub(@PathVariable String postId){
+        JsonResult jsonResult=new JsonResult();
+        Post post=new Post();
+        post.setPostId(postId);
+        post.setStatus(1);
+        Post post1=postService.getPostById(postId);
+        if (post1.getPublicDate()==null)
+           post.setPublicDate(DateUtil.getNow());
+        else
+            post.setPublicDate(post1.getPublicDate());
+        int code=postService.updatePost(post);
+        jsonResult.setData(post);
+        if (code>0)
+            jsonResult.setMessage("更新文章状态为发布成功！");
+        else
+            jsonResult.setMessage("更新文章状态为发布失败！");
+        return jsonResult;
+    }
+    @PutMapping("draft/{postId}")
+    public JsonResult draft(@PathVariable String postId){
+        JsonResult jsonResult=new JsonResult();
+        Post post=new Post();
+        post.setPostId(postId);
+        post.setStatus(0);
+        post.setEditDate(DateUtil.getNow());
+        int code=postService.updatePost(post);
+        jsonResult.setData(post);
+        if (code>0)
+            jsonResult.setMessage("更新文章状态为草稿成功！");
+        else
+            jsonResult.setMessage("更新文章状态为草稿失败！");
+        return jsonResult;
+    }
     private JsonResult saveAndPub(Map map, String message) throws Exception {
         JsonResult jsonResult = new JsonResult();
         Post post = JSONUtil.mapToObj(map, Post.class);

@@ -19,6 +19,9 @@ public interface PostService {
     List<Post> getPostsByCate(long categoryId);
     PageInfo<Post> getPostByAdmin(int pageNo, int pageSize);
     PageInfo<Post> getPosts(int pageNo,int pageSize);
+    PageInfo<Post> getDraftPost(int pageNo,int pageSize);
+    PageInfo<Post> getDeletedPost(int pageNo,int pageSize);
+    PageInfo<Post> search(Post post,int pageNo,int pageSize);
     int savePost(Post post);
     int getCountByTitile(String title);
     int savePostTags(Post post);
@@ -33,4 +36,6 @@ public interface PostService {
     int deletePostTags(Post post);
     int updatePostCates(ArrayList list);
     int deletePostCates(Post post);
+    int deletePostById(String postId);
+    int discardPostById(String postId);
 }

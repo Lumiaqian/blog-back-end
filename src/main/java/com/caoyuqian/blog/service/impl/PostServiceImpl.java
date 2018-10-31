@@ -90,6 +90,30 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public PageInfo<Post> getDraftPost(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Post> posts=postMapper.getDraftPost();
+        PageInfo<Post> pageInfo=new PageInfo<>(posts);
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo<Post> getDeletedPost(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Post> posts=postMapper.getDeletedPost();
+        PageInfo<Post> pageInfo=new PageInfo<>(posts);
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo<Post> search(Post post,int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Post> posts=postMapper.search(post);
+        PageInfo<Post> pageInfo=new PageInfo<>(posts);
+        return pageInfo;
+    }
+
+    @Override
     public int savePost(Post post) {
         logger.info("service: "+post.getSaveDate().toString());
         return postMapper.savePost(post);
@@ -158,5 +182,15 @@ public class PostServiceImpl implements PostService{
     @Override
     public int deletePostCates(Post post) {
         return postMapper.deletePostCates(post);
+    }
+
+    @Override
+    public int deletePostById(String postId) {
+        return postMapper.deletePostById(postId);
+    }
+
+    @Override
+    public int discardPostById(String postId) {
+        return postMapper.discardPostById(postId);
     }
 }

@@ -87,7 +87,19 @@
         select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status
         from post
         where post.post_id!='20180315185058'
-        order by post.public_date desc
+        order by post.save_date desc
+    </select>
+    <select id="getDraftPost" resultMap="posts">
+        select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status
+        from post
+        where post.post_id!='20180315185058' and post.status=0
+        order by post.save_date desc
+    </select>
+    <select id="getDeletedPost" resultMap="posts">
+        select post.post_id ,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status
+        from post
+        where post.post_id!='20180315185058' and post.status=-1
+        order by post.save_date desc
     </select>
     <select id="getPubPostById" parameterType="String" resultMap="post">
         select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
@@ -124,6 +136,33 @@
         where post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
               tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
           and category.category_id=#{category_id} and post.status=1
+    </select>
+    <select id="search" parameterType="com.caoyuqian.blog.pojo.Post" resultMap="posts">
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
+               category.category_id,category.category_name,category.father_id,
+               tag.tag_id,tag.tag_name
+        from post,tag,category,post_tag,post_category
+        <where>
+            post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+            tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+            and post.post_id!='20180315185058'
+            <if test="post.tags!=null and post.tags.size()>0">
+                and tag.tag_name in
+                <foreach collection="post.tags" item="item" open="(" close=")" separator=",">
+                    #{item.tagName}
+                </foreach>
+            </if>
+            <if test="post.categories!=null and post.categories.size()>0">
+                and category.category_id in
+                <foreach collection="post.categories" item="item" open="(" close=")" separator=",">
+                    #{item.categoryId}
+                </foreach>
+            </if>
+            <if test="post.title!=null and post.title!=''">
+                and post.title = #{post.title}
+            </if>
+        </where>
+        order by post.save_date desc
     </select>
     <select id="about" parameterType="String" resultMap="post">
         select post_id,title,content,path,public_date,edit_date,save_date,status from post
@@ -162,7 +201,8 @@
             #{cate.categoryId}
         </foreach>
     </select>
-    <update id="updatePost" parameterType="com.caoyuqian.blog.pojo.Post">
+
+    <update id="updatePost" parameterType="com.caoyuqian.blog.pojo.Post" >
         update post
         <set>
             <if test="post.title != null">title=#{post.title},</if>
@@ -195,6 +235,10 @@
         where post_id=cate.postId and category_id=cate.oldId
     </update>
 
+    <update id="discardPostById" parameterType="String">
+        update post set status=-1 where post_id=#{postId}
+    </update>
+
     <delete id="deletePostTags" parameterType="com.caoyuqian.blog.pojo.Post">
         delete from  post_tag
                 using ( values
@@ -204,6 +248,7 @@
         ) as tag(tagId)
         where post_id=#{post.postId} and tag_id=tag.tagId
     </delete>
+
     <delete id="deletePostCates" parameterType="com.caoyuqian.blog.pojo.Post">
         delete from post_category
         using ( values
@@ -213,4 +258,8 @@
               ) as cate(cateoryId)
         where post_id=#{post.postId} and category_id=cate.cateoryId
     </delete>
+    <delete id="deletePostById" parameterType="String">
+        delete from post where post_id=#{postId}
+    </delete>
+
 </mapper>
