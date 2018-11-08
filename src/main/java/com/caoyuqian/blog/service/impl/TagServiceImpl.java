@@ -1,8 +1,11 @@
 package com.caoyuqian.blog.service.impl;
 
 import com.caoyuqian.blog.mapper.TagMapper;
+import com.caoyuqian.blog.pojo.Atag;
 import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.service.TagService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public int saveAtag(Atag tag) {
+        return tagMapper.saveAtag(tag);
+    }
+
+    @Override
     public int getCountByName(String tagName) {
         return tagMapper.getCountByName(tagName);
     }
@@ -48,6 +56,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public PageInfo<Atag> getAtags(int pageNo,int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Atag> atags=tagMapper.getAtags();
+        PageInfo<Atag> tags=new PageInfo<>(atags);
+        return tags;
+    }
+
+    @Override
     public int getCount() {
         return tagMapper.getCount();
     }
@@ -55,5 +71,20 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag getTagById(long tagId) {
         return tagMapper.getTagById(tagId);
+    }
+
+    @Override
+    public int updateTag(Atag tag) {
+        return tagMapper.updateTag(tag);
+    }
+
+    @Override
+    public int deleteTag(long tagId) {
+        return tagMapper.deleteTag(tagId);
+    }
+
+    @Override
+    public int recoveryTag(long tagId) {
+        return tagMapper.recoveryTag(tagId);
     }
 }

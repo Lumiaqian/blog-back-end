@@ -1,8 +1,11 @@
 package com.caoyuqian.blog.service.impl;
 
 import com.caoyuqian.blog.mapper.CategoryMapper;
+import com.caoyuqian.blog.pojo.Acate;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.service.CategoryService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public int saveCate(Acate acate) {
+        return categoryMapper.saveCate(acate);
+    }
+
+    @Override
     public int getCountByName(String cateName) {
         return categoryMapper.getCountByName(cateName);
     }
@@ -52,6 +60,20 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getCategories() {
         return categoryMapper.getCategories();
     }
+
+    @Override
+    public List<Category> getFatherCates() {
+        return categoryMapper.getFatherCates();
+    }
+
+    @Override
+    public PageInfo<Acate> getCates(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Acate> acates = categoryMapper.getCates();
+        PageInfo<Acate> cates=new PageInfo<>(acates);
+        return cates;
+    }
+
 
     @Override
     public int getCount() {

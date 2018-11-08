@@ -9,39 +9,71 @@
         <result property="fatherId" column="father_id"/>
         <collection property="count" select="getCountByCate" column="category_id"/>
     </resultMap>
-    <insert id="saveCategories" parameterType="List"  >
+    <resultMap id="Acate" type="com.caoyuqian.blog.pojo.Acate">
+        <result property="cateId" column="category_id"/>
+        <result property="cateName" column="category_name"/>
+        <result property="fatherId" column="father_id"/>
+        <result property="saveDate" column="save_date"/>
+        <result property="editDate" column="edit_date"/>
+        <result property="status" column="status"/>
+        <collection property="count" select="getCountByCate" column="category_id"/>
+    </resultMap>
+    <insert id="saveCategories" parameterType="List">
         insert into category(category_id,category_name,father_id) values
-              <foreach collection="categories" item="category"  separator=",">
-                  (#{category.categoryId},#{category.categoryName},#{category.fatherId})
-              </foreach>
+        <foreach collection="categories" item="category" separator=",">
+            (#{category.categoryId},#{category.categoryName},#{category.fatherId})
+        </foreach>
     </insert>
-    <insert id="saveCategory" useGeneratedKeys="true"  parameterType="com.caoyuqian.blog.pojo.Category">
-       insert into category(category_id,category_name,father_id)
-       values (#{category.categoryId},#{category.categoryName},#{category.fatherId})
+    <insert id="saveCategory" useGeneratedKeys="true" parameterType="com.caoyuqian.blog.pojo.Category">
+        insert into category (category_id, category_name, father_id)
+        values (#{category.categoryId}, #{category.categoryName}, #{category.fatherId})
+    </insert>
+    <insert id="saveCate" parameterType="com.caoyuqian.blog.pojo.Acate">
+        insert into category (category_id, category_name, father_id, save_date, edit_date, status)
+        values (#{cate.catId}, #{cate.cateName}, #{cate.fatherId}, #{cate.saveDate}, #{cate.editDate}, #{cate.status})
     </insert>
     <select id="getCount" resultType="int">
-        select count(1) from category
+        select count(1)
+        from category
     </select>
     <select id="getCountByName" parameterType="String" resultType="int">
-        select count(1) from category where category_name=#{category_name}
+        select count(1)
+        from category
+        where category_name = #{category_name}
     </select>
     <select id="getCategoryByName" parameterType="String" resultMap="cate">
-        select category_id,category_name,father_id from category where category_name=#{category_name}
+        select category_id, category_name, father_id
+        from category
+        where category_name = #{category_name}
     </select>
     <select id="getCateById" parameterType="long" resultMap="cate">
-        select category_id,category_name,father_id from category where category_id=#{category_id}
+        select category_id, category_name, father_id
+        from category
+        where category_id = #{category_id}
     </select>
     <select id="getCategories" resultMap="cate">
-        select category_id,category_name,father_id from category
+        select category_id, category_name, father_id
+        from category
+    </select>
+    <select id="getFatherCates" resultMap="cate">
+        select category_id, category_name, father_id
+        from category
+        where father_id = -1
+    </select>
+    <select id="getCates" resultMap="Acate">
+        select category_id, category_name, father_id, save_date, edit_date, status
+        from category
     </select>
     <select id="getCountByCate" resultType="int" parameterType="long">
-        select count(1) from category,post_category
-        where post_category.category_id=category.category_id
-        and category.category_id=#{category_id}
+        select count(1)
+        from category,
+             post_category
+        where post_category.category_id = category.category_id
+          and category.category_id = #{category_id}
     </select>
-    <update id="updateCategoryFatherId" parameterType="com.caoyuqian.blog.pojo.Category" >
-        update category set
-        father_id=#{category.fatherId}
-        where category_id=#{category.categoryId}
+    <update id="updateCategoryFatherId" parameterType="com.caoyuqian.blog.pojo.Category">
+        update category
+        set father_id = #{category.fatherId}
+        where category_id = #{category.categoryId}
     </update>
 </mapper>

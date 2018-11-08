@@ -29,26 +29,27 @@ import java.util.List;
 @RequestMapping("lumia/tags")
 @Transactional
 public class TagController {
-    private final Logger logger= LoggerFactory.getLogger(TagController.class);
+    private final Logger logger = LoggerFactory.getLogger(TagController.class);
     @Autowired
     private TagServiceImpl tagService;
     @Autowired
     private PostServiceImpl postService;
 
     @GetMapping("list")
-    public JsonResult list(){
-        JsonResult jsonResult=new JsonResult();
+    public JsonResult list() {
+        JsonResult jsonResult = new JsonResult();
         List<Tag> tags;
-        tags=tagService.getTags();
+        tags = tagService.getTags();
         jsonResult.setMessage("获取tags成功！");
         jsonResult.setData(tags);
         return jsonResult;
     }
+
     @GetMapping("posts/{tagId}")
-    public JsonResult getPostsByTag(@PathVariable long tagId){
-        JsonResult jsonResult=new JsonResult();
+    public JsonResult getPostsByTag(@PathVariable long tagId) {
+        JsonResult jsonResult = new JsonResult();
         List<Post> posts;
-        posts=postService.getPostsByTag(tagId);
+        posts = postService.getPostsByTag(tagId);
         posts.sort(Comparator.comparing(Post::getPublicDate).reversed());
         jsonResult.setMessage("获取成功！");
         jsonResult.setData(posts);

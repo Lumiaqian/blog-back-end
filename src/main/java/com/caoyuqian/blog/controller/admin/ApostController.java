@@ -3,6 +3,7 @@ package com.caoyuqian.blog.controller.admin;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.caoyuqian.blog.pojo.Atag;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.Tag;
@@ -344,12 +345,18 @@ public class ApostController {
             for (String name : tagList) {
                 Tag tag = tagService.getTagByName(name);
                 if (tag == null) {
-                    tag = new Tag();
-                    tag.setTagId(snowFlake.nextId());
-                    tag.setTagName(name);
+                    Atag atag = new Atag();
+                    atag.setTagName(name);
+                    atag.setTagId(snowFlake.nextId());
+                    atag.setSaveDate(DateUtil.getNow());
+                    atag.setStatus(0);
                     //存入数据库
-                    tagService.saveTag(tag);
-                }
+                    tagService.saveAtag(atag);
+
+                    tag = new Tag();
+                    tag.setTagId(atag.getTagId());
+                    tag.setTagName(atag.getTagName());
+;                }
                 //logger.info(tag.toString());
                 tags.add(tag);
             }

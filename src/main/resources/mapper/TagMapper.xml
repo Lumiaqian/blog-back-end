@@ -7,29 +7,73 @@
         <result column="tag_id" property="tagId"/>
         <result column="tag_name" property="tagName"/>
     </resultMap>
+    <resultMap id="Atag" type="com.caoyuqian.blog.pojo.Atag">
+        <result column="tag_id" property="tagId"/>
+        <result column="tag_name" property="tagName"/>
+        <result column="save_date" property="saveDate"/>
+        <result column="edit_date" property="editDate"/>
+        <result column="status" property="status"/>
+    </resultMap>
     <insert id="saveTags" parameterType="List">
         insert into tag(tag_id,tag_name) values
-            <foreach collection="tags" item="tag" separator="," index="index">
-                (#{tag.tagId},#{tag.tagName})
-            </foreach>
+        <foreach collection="tags" item="tag" separator="," index="index">
+            (#{tag.tagId},#{tag.tagName})
+        </foreach>
+    </insert>
+    <insert id="saveAtag" parameterType="com.caoyuqian.blog.pojo.Atag">
+        insert into tag (tag_id, tag_name, save_date, edit_date, status)
+        values (#{tag.tagId}, #{tag.tagName}, #{tag.saveDate}, #{tag.editDate}, #{tag.status})
     </insert>
     <insert id="saveTag" parameterType="com.caoyuqian.blog.pojo.Tag">
-        insert into tag(tag_id,tag_name)
-        values(#{tag.tagId},#{tag.tagName})
+        insert into tag (tag_id, tag_name)
+        values (#{tag.tagId}, #{tag.tagName})
     </insert>
     <select id="getCount" resultType="int">
-        select count(1) from tag
+        select count(1)
+        from tag
     </select>
     <select id="getCountByName" parameterType="String" resultType="int">
-        select count(1) from tag where tag_name=#{tag_name}
+        select count(1)
+        from tag
+        where tag_name = #{tag_name}
     </select>
     <select id="getTagByName" parameterType="String" resultMap="tag">
-        select tag_id,tag_name from tag where tag_name=#{tagName}
+        select tag_id, tag_name
+        from tag
+        where tag_name = #{tagName}
     </select>
     <select id="getTags" resultMap="tag">
-        select tag_id,tag_name from tag
+        select tag_id, tag_name
+        from tag
+        where status = 0
+    </select>
+    <select id="getAtags" resultMap="Atag">
+        select tag_id, tag_name, save_date, edit_date, status
+        from tag
     </select>
     <select id="getTagById" parameterType="long" resultMap="tag">
-        select tag_id,tag_name from tag where tag_id=#{tag_id}
+        select tag_id, tag_name
+        from tag
+        where tag_id = #{tag_id}
     </select>
+    <update id="updateTag" parameterType="com.caoyuqian.blog.pojo.Atag">
+        update tag
+        <set>
+            <if test="tag.tagName!=null">tag_name = #{tag.tagName},</if>
+            <if test="tag.saveDate!=null">save_date = #{tag.saveDate},</if>
+            <if test="tag.editDate!=null">edit_date = #{tag.editDate},</if>
+            <if test="tag.status!=null">status = #{tag.status}</if>
+        </set>
+        where tag_id = #{tag.tagId}
+    </update>
+    <update id="deleteTag" parameterType="long">
+        update tag
+        set status = 1
+        where tag_id = #{tagId}
+    </update>
+    <update id="recoveryTag" parameterType="long">
+        update tag
+        set status = 0
+        where tag_id = #{tagId}
+    </update>
 </mapper>

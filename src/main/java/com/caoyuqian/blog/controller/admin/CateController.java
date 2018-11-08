@@ -3,9 +3,11 @@ package com.caoyuqian.blog.controller.admin;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.CategoryService;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,38 +26,57 @@ import java.util.List;
  * @date 2018/10/9 下午8:09
  **/
 @RestController
-@RequestMapping("admin")
+@RequestMapping("admin/cates")
 @Transactional
 public class CateController {
-    private final Logger logger= LoggerFactory.getLogger(CateController.class);
+    private final Logger logger = LoggerFactory.getLogger(CateController.class);
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("cates/list")
-    public JsonResult list(){
-        JsonResult jsonResult=new JsonResult();
-        List<Category> categories=categoryService.getCategories();
-        List<HashMap<String,Object>> result=new ArrayList<>();
-        for(int i=0;i<categories.size();i++){
-            HashMap<String,Object> res=new HashMap<String, Object>();
-            List<HashMap<String,Object>> children=new ArrayList<>();
-            if (categories.get(i).getFatherId()==-1){
-                res.put("value",String.valueOf(categories.get(i).getCategoryId()));
-                res.put("label",categories.get(i).getCategoryName());
-                for (int j=0;j<categories.size();j++){
-                    if (categories.get(i).getCategoryId()==categories.get(j).getFatherId()){
-                        HashMap<String,Object> map=new HashMap<String, Object>();
-                        map.put("value",String.valueOf(categories.get(j).getCategoryId()));
-                        map.put("label",categories.get(j).getCategoryName());
+    @GetMapping("list")
+    public JsonResult list() {
+        JsonResult jsonResult = new JsonResult();
+        List<Category> categories = categoryService.getCategories();
+        List<HashMap<String, Object>> result = new ArrayList<>();
+        for (int i = 0; i < categories.size(); i++) {
+            HashMap<String, Object> res = new HashMap<String, Object>();
+            List<HashMap<String, Object>> children = new ArrayList<>();
+            if (categories.get(i).getFatherId() == -1) {
+                res.put("value", String.valueOf(categories.get(i).getCategoryId()));
+                res.put("label", categories.get(i).getCategoryName());
+                for (int j = 0; j < categories.size(); j++) {
+                    if (categories.get(i).getCategoryId() == categories.get(j).getFatherId()) {
+                        HashMap<String, Object> map = new HashMap<String, Object>();
+                        map.put("value", String.valueOf(categories.get(j).getCategoryId()));
+                        map.put("label", categories.get(j).getCategoryName());
                         children.add(map);
                     }
                 }
-                res.put("children",children);
+                res.put("children", children);
                 result.add(res);
             }
         }
         jsonResult.setMessage("获取categories列表成功！");
         jsonResult.setData(result);
+        return jsonResult;
+    }
+
+    @GetMapping("alist")
+    public JsonResult getCates(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
+        JsonResult jsonResult;
+        PageInfo cates = categoryService.getCates(pageNo, pageSize);
+        jsonResult = new JsonResult();
+        jsonResult.setMessage("获取category列表成功！");
+        jsonResult.setData(cates);
+        return jsonResult;
+    }
+    @GetMapping("flist")
+    public JsonResult getFatherCates(){
+        JsonResult jsonResult;
+        List<Category> categories=categoryService.getFatherCates();
+        jsonResult =new JsonResult();
+        jsonResult.setData(categories);
+        jsonResult.setMessage("获取category列表成功！");
         return jsonResult;
     }
 }

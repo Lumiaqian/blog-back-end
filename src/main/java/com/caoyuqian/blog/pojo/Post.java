@@ -32,7 +32,7 @@ public class Post implements Serializable {
     private List<Tag> tags;//标签
     private List<Category> categories;//类别
     private int watchCount;//阅读次数
-    private int status;//1表示已发布状态、0表示未发布状态、-1表示已经删除在垃圾箱中的状态
+    private int status;//1表示已发布状态、0表示未发布状态、-1表示已经删除在垃圾箱中的状态 默认为0
 
     public Date getSaveDate() {
         return saveDate;
