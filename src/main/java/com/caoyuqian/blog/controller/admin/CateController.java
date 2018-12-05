@@ -1,17 +1,19 @@
 package com.caoyuqian.blog.controller.admin;
 
+import com.caoyuqian.blog.pojo.Acate;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.result.JsonResult;
+import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.CategoryService;
+import com.caoyuqian.blog.utils.DateUtil;
+import com.caoyuqian.blog.utils.SnowFlake;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,4 +81,75 @@ public class CateController {
         jsonResult.setMessage("获取category列表成功！");
         return jsonResult;
     }
+    @PostMapping("cate")
+    public JsonResult addCate(@RequestBody Acate acate){
+        JsonResult jsonResult;
+        int flag = categoryService.getCountByName(acate.getCateName());
+        //flag =1;
+        //logger.info(acate.toString());
+        if (flag<1){
+            SnowFlake snowFlake = new SnowFlake(2, 3);
+            acate.setCateId(snowFlake.nextId());
+            if (acate.getFatherId()==0){
+                acate.setFatherId(-1);
+            }
+            categoryService.saveCate(acate);
+            jsonResult = new JsonResult();
+            jsonResult.setMessage("添加"+acate.getCateName()+"分类成功！");
+        }else {
+            jsonResult = new JsonResult(ResultCode.UNKONW_ERROR);
+            jsonResult.setMessage("该分类已经存在！");
+        }
+        return jsonResult;
+    }
+    @PutMapping("cate")
+    public JsonResult updateCate(@RequestBody Acate acate){
+        JsonResult jsonResult;
+        logger.info(acate.toString());
+        acate.setEditDate(DateUtil.getNow());
+        int code =categoryService.updateCate(acate);
+        if (code>0){
+            jsonResult = new JsonResult();
+            jsonResult.setMessage("更新分类成功！");
+        }else {
+            jsonResult = new JsonResult(ResultCode.UNKONW_ERROR);
+            jsonResult.setMessage("更新分类失败！");
+        }
+        return jsonResult;
+    }
+    @DeleteMapping("cate/{cateId}")
+    public JsonResult deleteCate(@PathVariable long cateId){
+        JsonResult jsonResult;
+        Acate acate = new Acate();
+        acate.setCateId(cateId);
+        acate.setStatus(1);
+        acate.setEditDate(DateUtil.getNow());
+        int code =categoryService.updateCate(acate);
+        if (code>0){
+            jsonResult = new JsonResult();
+            jsonResult.setMessage("删除分类成功！");
+        }else {
+            jsonResult = new JsonResult(ResultCode.UNKONW_ERROR);
+            jsonResult.setMessage("删除分类失败！");
+        }
+        return jsonResult;
+    }
+    @PutMapping("cate/{cateId}")
+    public JsonResult recoveryCate(@PathVariable long cateId){
+        JsonResult jsonResult;
+        Acate acate = new Acate();
+        acate.setCateId(cateId);
+        acate.setStatus(0);
+        acate.setEditDate(DateUtil.getNow());
+        int code =categoryService.updateCate(acate);
+        if (code>0){
+            jsonResult = new JsonResult();
+            jsonResult.setMessage("恢复分类成功！");
+        }else {
+            jsonResult = new JsonResult(ResultCode.UNKONW_ERROR);
+            jsonResult.setMessage("恢复分类失败！");
+        }
+        return jsonResult;
+    }
+
 }

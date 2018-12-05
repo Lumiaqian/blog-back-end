@@ -3,6 +3,7 @@ package com.caoyuqian.blog.service;
 import com.caoyuqian.blog.pojo.Acate;
 import com.caoyuqian.blog.pojo.Category;
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +20,5 @@ public interface CategoryService {
     PageInfo<Acate> getCates(int pageNo, int pageSize);
     int getCount();
     Category getCateById(long categoryId);
+    int updateCate(Acate acate);
 }

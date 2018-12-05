@@ -66,14 +66,4 @@
         </set>
         where tag_id = #{tag.tagId}
     </update>
-    <update id="deleteTag" parameterType="long">
-        update tag
-        set status = 1
-        where tag_id = #{tagId}
-    </update>
-    <update id="recoveryTag" parameterType="long">
-        update tag
-        set status = 0
-        where tag_id = #{tagId}
-    </update>
 </mapper>

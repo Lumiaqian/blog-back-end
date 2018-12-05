@@ -30,7 +30,7 @@
     </insert>
     <insert id="saveCate" parameterType="com.caoyuqian.blog.pojo.Acate">
         insert into category (category_id, category_name, father_id, save_date, edit_date, status)
-        values (#{cate.catId}, #{cate.cateName}, #{cate.fatherId}, #{cate.saveDate}, #{cate.editDate}, #{cate.status})
+        values (#{cate.cateId}, #{cate.cateName}, #{cate.fatherId}, #{cate.saveDate}, #{cate.editDate}, #{cate.status})
     </insert>
     <select id="getCount" resultType="int">
         select count(1)
@@ -75,5 +75,15 @@
         update category
         set father_id = #{category.fatherId}
         where category_id = #{category.categoryId}
+    </update>
+    <update id="updateCate" parameterType="com.caoyuqian.blog.pojo.Acate">
+        update category
+        <set>
+            <if test="cate.cateName!=null">category_name = #{cate.cateName},</if>
+            <if test="cate.saveDate!=null">save_date = #{cate.saveDate},</if>
+            <if test="cate.editDate!=null">edit_date = #{cate.editDate},</if>
+            <if test="cate.status!=null">status = #{cate.status}</if>
+        </set>
+        where category_id = #{cate.cateId}
     </update>
 </mapper>

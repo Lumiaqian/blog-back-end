@@ -20,6 +20,4 @@ public interface TagMapper {
     int getCount();
     Tag getTagById(@Param("tag_id") long tagId);
     int updateTag(@Param("tag") Atag atag);
-    int deleteTag(@Param("tagId") long tagId);
-    int recoveryTag(@Param("tagId") long tagId);
 }

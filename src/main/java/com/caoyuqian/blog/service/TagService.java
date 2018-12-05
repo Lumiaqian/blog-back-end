@@ -18,6 +18,4 @@ public interface TagService {
     int getCount();
     Tag getTagById(long tagId);
     int updateTag(Atag tag);
-    int deleteTag(long tagId);
-    int recoveryTag(long tagId);
 }

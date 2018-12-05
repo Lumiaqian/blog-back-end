@@ -78,13 +78,4 @@ public class TagServiceImpl implements TagService {
         return tagMapper.updateTag(tag);
     }
 
-    @Override
-    public int deleteTag(long tagId) {
-        return tagMapper.deleteTag(tagId);
-    }
-
-    @Override
-    public int recoveryTag(long tagId) {
-        return tagMapper.recoveryTag(tagId);
-    }
 }

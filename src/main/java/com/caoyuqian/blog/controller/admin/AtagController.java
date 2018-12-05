@@ -61,7 +61,7 @@ public class AtagController {
         }
     }
 
-    @PostMapping("add")
+    @PostMapping("tag")
     public JsonResult add(@RequestBody Map map) throws Exception {
         JsonResult jsonResult;
         Atag tag = JSONUtil.mapToObj(map, Atag.class);
@@ -99,30 +99,38 @@ public class AtagController {
         }
         return jsonResult;
     }
-    @DeleteMapping("discard/{tagId}")
+    @DeleteMapping("tag/{tagId}")
     public JsonResult deleteTag(@PathVariable long tagId){
         JsonResult jsonResult;
-        logger.info("tagId: "+tagId);
-        int code = tagService.deleteTag(tagId);
+        //logger.info("tagId: "+tagId);
+        Atag atag = new Atag();
+        atag.setTagId(tagId);
+        atag.setEditDate(DateUtil.getNow());
+        atag.setStatus(1);
+        int code = tagService.updateTag(atag);
         if (code>0){
             jsonResult=new JsonResult();
-            jsonResult.setMessage("删除成功！");
+            jsonResult.setMessage("删除标签成功！");
         }else {
             jsonResult = new JsonResult(ResultCode.UNKONW_ERROR);
-            jsonResult.setMessage("删除失败！");
+            jsonResult.setMessage("删除标签失败！");
         }
         return  jsonResult;
     }
-    @PutMapping("recovery/{tagId}")
+    @PutMapping("tag/{tagId}")
     public JsonResult recoveryTag(@PathVariable long tagId){
         JsonResult jsonResult;
-        int code = tagService.recoveryTag(tagId);
+        Atag atag = new Atag();
+        atag.setTagId(tagId);
+        atag.setEditDate(DateUtil.getNow());
+        atag.setStatus(0);
+        int code = tagService.updateTag(atag);
         if (code>0){
             jsonResult=new JsonResult();
-            jsonResult.setMessage("恢复成功！");
+            jsonResult.setMessage("恢复标签成功！");
         }else {
             jsonResult = new JsonResult(ResultCode.UNKONW_ERROR);
-            jsonResult.setMessage("恢复失败！");
+            jsonResult.setMessage("恢复标签失败！");
         }
         return  jsonResult;
     }

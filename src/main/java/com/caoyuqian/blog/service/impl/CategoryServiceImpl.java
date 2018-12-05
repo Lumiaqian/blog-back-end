@@ -84,4 +84,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCateById(long categoryId) {
         return categoryMapper.getCateById(categoryId);
     }
+
+    @Override
+    public int updateCate(Acate acate) {
+        return categoryMapper.updateCate(acate);
+    }
 }

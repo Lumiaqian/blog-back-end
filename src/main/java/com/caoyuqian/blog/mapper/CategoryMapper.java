@@ -21,4 +21,6 @@ public interface CategoryMapper {
     List<Category> getFatherCates();
     int getCount();
     Category getCateById(@Param("category_id") long categoryId);
+    int updateCate(@Param("cate")Acate acate);
+    //int deleteCate(@Param("cateId")long cateId);
 }
