@@ -99,8 +99,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status
+               post.save_date,
+               post.status
         from post
         where post.post_id != '20180315185058'
           and post.status = 1
@@ -113,8 +113,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status
+               post.save_date,
+               post.status
         from post
         where post.post_id != '20180315185058'
         order by post.save_date desc
@@ -126,8 +126,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status
+               post.save_date,
+               post.status
         from post
         where post.post_id != '20180315185058'
           and post.status = 0
@@ -140,8 +140,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status
+               post.save_date,
+               post.status
         from post
         where post.post_id != '20180315185058'
           and post.status = -1
@@ -180,8 +180,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status,
+               post.save_date,
+               post.status,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -205,8 +205,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status,
+               post.save_date,
+               post.status,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -231,8 +231,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status,
+               post.save_date,
+               post.status,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -296,8 +296,8 @@
                post.path,
                post.public_date,
                post.edit_date,
-               save_date,
-               status,
+               post.save_date,
+               post.status,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -342,10 +342,13 @@
         </foreach>
     </select>
     <select id="isExistsPostCate" parameterType="com.caoyuqian.blog.pojo.Post" resultType="int">
-        select count(1) from post_category where post_id=#{post.postId} and category_id in
-        <foreach collection="post.categories" item="cate" separator="," index="index" open="(" close=")">
-            #{cate.categoryId}
-        </foreach>
+        select count(1) from post_category where post_id=#{post.postId}
+        <if test="post.categories!=null and post.categories.size() > 0">
+            and category_id in
+            <foreach collection="post.categories" item="cate" separator="," index="index" open="(" close=")">
+                #{cate.categoryId}
+            </foreach>
+        </if>
     </select>
 
     <update id="updatePost" parameterType="com.caoyuqian.blog.pojo.Post">

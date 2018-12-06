@@ -316,7 +316,6 @@ public class ApostController {
                 logger.info("maps: " + cates.toString());
                 postService.updatePostCates(cates);
             }
-
             postService.updatePost(post);
             jsonResult.setMessage(message);
             jsonResult.setData(post.getPostId());
@@ -361,7 +360,6 @@ public class ApostController {
                     atag.setStatus(0);
                     //存入数据库
                     tagService.saveAtag(atag);
-
                     tag = new Tag();
                     tag.setTagId(atag.getTagId());
                     tag.setTagName(atag.getTagName());
