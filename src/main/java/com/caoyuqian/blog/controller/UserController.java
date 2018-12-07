@@ -64,6 +64,7 @@ public class UserController {
        JsonResult jsonResult=new JsonResult();
        SysUser user=userService.getUserById(username);
        user.setPassword(null);
+       logger.info(user.toString());
        jsonResult.setData(user);
        return jsonResult;
    }

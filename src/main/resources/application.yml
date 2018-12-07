@@ -50,3 +50,9 @@ appKey:
 
 prop:
   upload-folder: ../posts/
+
+qiniu:
+  accessKey: cH8YmWY4vG4JRONomuwhKgUdxVq9u4Aj4DKhP78e
+  secretKey: WE1kYmpa8UA2j12NsGh7OnJwUoaACEx3i2KaidXO
+  bucket: lumiaqian
+  path: http://pj9aecdab.bkt.clouddn.com/

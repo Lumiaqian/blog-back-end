@@ -19,9 +19,7 @@ public class SysUser implements Serializable {
     private String email;
     private Date createDate;//创建时间
     private Date lastLoginDate;//最后一次登录时间
-    private String introduction;//个人简介
-    private String avatar;//头像URL
-    private String motto;//格言
+    private Setting setting;
     private List<Role> roles;//用户拥有的角色
 
     @Override
@@ -33,35 +31,17 @@ public class SysUser implements Serializable {
                 ", email='" + email + '\'' +
                 ", createDate=" + createDate +
                 ", lastLoginDate=" + lastLoginDate +
-                ", introduction='" + introduction + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", motto='" + motto + '\'' +
+                ", setting=" + setting +
                 ", roles=" + roles +
                 '}';
     }
 
-    public String getIntroduction() {
-        return introduction;
+    public Setting getSetting() {
+        return setting;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getMotto() {
-        return motto;
-    }
-
-    public void setMotto(String motto) {
-        this.motto = motto;
+    public void setSetting(Setting setting) {
+        this.setting = setting;
     }
 
     public Date getCreateDate() {

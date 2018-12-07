@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
 import org.slf4j.Logger;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author qian
@@ -24,9 +27,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public JsonResult exception(HttpServletRequest request,Exception e){
+    public void exception(HttpServletRequest request, Exception e, HttpServletResponse response) throws IOException {
         logger.error("{}请求{}出现异常",request.getMethod(),request.getRequestURI(),e);
         JsonResult jsonResult=new JsonResult(ResultCode.SYS_ERROR);
-        return jsonResult;
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(JSON.toJSONString(jsonResult));
+        response.setStatus(500);
     }
 }

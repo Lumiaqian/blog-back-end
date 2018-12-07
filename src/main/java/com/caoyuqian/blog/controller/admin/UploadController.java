@@ -1,30 +1,34 @@
 package com.caoyuqian.blog.controller.admin;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONReader;
 import com.caoyuqian.blog.pojo.*;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
-import com.caoyuqian.blog.service.CategoryService;
-import com.caoyuqian.blog.service.PostService;
-import com.caoyuqian.blog.service.TagService;
+import com.caoyuqian.blog.service.*;
 import com.caoyuqian.blog.utils.DateUtil;
 import com.caoyuqian.blog.utils.JSONUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
+import com.qiniu.http.Response;
+import com.sun.org.apache.xml.internal.security.keys.KeyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.Yaml;
+import sun.misc.BASE64Encoder;
+import sun.security.util.KeyUtil;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -54,15 +58,32 @@ public class UploadController {
     private TagService tagService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    IQiniuUploadFileService iQiniuUploadFileService;
+    @Autowired
+    private SettingService settingService;
 
     @PostMapping("upload")
-    public JsonResult upload(MultipartFile file) throws Exception {
-        JsonResult jsonResult = new JsonResult();
+    public ResponseEntity<JsonResult> upload(MultipartFile file) throws Exception {
+        JsonResult jsonResult ;
+        // logger.info(constantQiniu.toString());
         if (Objects.isNull(file) || file.isEmpty()) {
             //上传文件为空
             logger.error("文件为空！");
-            jsonResult.setCode(ResultCode.File_Empty);
-            return jsonResult;
+            jsonResult = new JsonResult(ResultCode.File_Empty);
+            return new ResponseEntity<>(jsonResult, HttpStatus.BAD_REQUEST);
+        }
+        //获取文件名
+        String fileName = file.getOriginalFilename();
+        logger.info("上传的文件名为：" + fileName);
+        // 获取文件的后缀名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        logger.info(suffixName);
+        if (!suffixName.equals(".md")) {
+            //文件格式错误
+            logger.error("文件格式错误！");
+            jsonResult = new JsonResult(ResultCode.File_Format_ERROR);
+            return new ResponseEntity<>(jsonResult, HttpStatus.BAD_REQUEST);
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()));
         String context = FileCopyUtils.copyToString(br);
@@ -75,31 +96,6 @@ public class UploadController {
         //文件保存路径
         Path path = Paths.get(UPLOAD_FOLDER + "/" + file.getOriginalFilename());
         post.setPath(path.toString());
-        //保存到服务器中
-        //获取文件名
-        String fileName = file.getOriginalFilename();
-        logger.info("上传的文件名为：" + fileName);
-        // 获取文件的后缀名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        if (suffixName.equals("md")) {
-            //文件格式错误
-            logger.error("文件格式错误！");
-            jsonResult.setCode(ResultCode.File_Format_ERROR);
-            return jsonResult;
-        }
-        try {
-            byte[] bytes = file.getBytes();
-            //如果没有post/文件夹，则创建
-            if (!Files.isWritable(path)) {
-                Files.createDirectories(Paths.get(UPLOAD_FOLDER + "/"));
-            }
-            //文件写入指定路径
-            Files.write(path, bytes);
-            jsonResult.setMessage("解析成功！");
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("服务器异常");
-        }
         //更新数据库中的内容
         int code = 0;
         //更新category
@@ -114,6 +110,7 @@ public class UploadController {
                     //category.setFatherId(fatherId.get());
                     Acate acate = cateToAcate(category);
                     //categoryService.saveCategory(category);
+                    categoryService.saveCate(acate);
                 }else {
                     logger.info("category已经存在！");
                     category = categoryService.getCategoryByName(category.getCategoryName());
@@ -122,22 +119,6 @@ public class UploadController {
                 }
                 categories.add(category);
             });
-            /*for (Category category : post.getCategories()) {
-                code = categoryService.getCountByName(category.getCategoryName());
-                if (code == 0) {
-                    category.setFatherId(fatherId.get());
-                    code = categoryService.saveCategory(category);
-                    if (code == 0)
-                        logger.error("category存入数据库失败！");
-                } else {
-                    logger.info("category已经存在！");
-                    category = categoryService.getCategoryByName(category.getCategoryName());
-                    fatherId.set(category.getCategoryId());
-                    category.setCount(0);
-                }
-                logger.info(String.valueOf(fatherId.get()));
-                categories.add(category);
-            }*/
             post.setCategories(categories);
         }
         //更新tag
@@ -149,22 +130,12 @@ public class UploadController {
                 if (flag == 0){
                     Atag atag = tagToAtag(tag);
                     //tagService.saveTag(tag);
+                    tagService.saveAtag(atag);
                 }else {
                     tag = tagService.getTagByName(tag.getTagName());
                 }
                 tags.add(tag);
             });
-            /*for (Tag tag : post.getTags()) {
-                code = tagService.getCountByName(tag.getTagName());
-                if (code == 0) {
-                    code = tagService.saveTag(tag);
-                    if (code == 0)
-                        logger.error("tag存入数据库失败！");
-                } else {
-                    tag = tagService.getTagByName(tag.getTagName());
-                }
-                tags.add(tag);
-            }*/
             post.setTags(tags);
         }
 
@@ -172,28 +143,64 @@ public class UploadController {
         code = postService.getCountById(post.getPostId());
         if (code == 0) {
             post.setStatus(1);
-            //postService.savePost(post);
+            postService.savePost(post);
         }
         //更新post_tag,post_category
         code = 0;
         code = postService.isExistsPostTag(post);
         if (code == 0) {
             //post_tag关系不存在
-            //postService.savePostTags(post);
+            postService.savePostTags(post);
         }
         code = 0;
         code = postService.isExistsPostCate(post);
         if (code == 0) {
             //post_cate关系不存在
-            //postService.savePostCategories(post);
+            postService.savePostCategories(post);
         }
         logger.info("解析出的post为：" + post.toString());
         //保存到elasticsearch中
         //postRepositoryService.save(post);
-
-        return jsonResult;
+        //保存到服务器中
+        String key = post.getTitle();
+        Response response = iQiniuUploadFileService.uploadFile(file.getInputStream(), key);
+        //Response response = iQiniuUploadFileService.uploadFile((File) file);
+        logger.info(JSONObject.toJSON(response).toString());
+        logger.info(JSONObject.toJSON(response.bodyString()).toString());
+        logger.info(JSONObject.toJSON(response.url()).toString());
+       /* try {
+            byte[] bytes = file.getBytes();
+            //如果没有post/文件夹，则创建
+            if (!Files.isWritable(path)) {
+                Files.createDirectories(Paths.get(UPLOAD_FOLDER + "/"));
+            }
+            //文件写入指定路径
+            Files.write(path, bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("服务器异常");
+        }*/
+        jsonResult = new JsonResult();
+        jsonResult.setMessage("解析成功！");
+        return new ResponseEntity<>(jsonResult, HttpStatus.OK);
     }
 
+    @PostMapping("avatar")
+    public ResponseEntity<JsonResult> setAvatar(MultipartFile img,@RequestParam String id) throws IOException {
+        JsonResult jsonResult;
+        BASE64Encoder encoder=new BASE64Encoder();
+        logger.info("传入的文件参数：{}", JSON.toJSONString(img, true));
+        logger.info(img.getOriginalFilename());
+        logger.info(id);
+        String imgData= encoder.encode(img.getBytes());
+        Setting setting = new Setting();
+        SnowFlake snow = new SnowFlake(2, 3);
+        setting.setId(snow.nextId());
+        setting.setAvatar(imgData);
+        //settingService.saveSetting(setting);
+        jsonResult = new JsonResult();
+        return new ResponseEntity<>(jsonResult,HttpStatus.OK);
+    }
 
     private JSONObject parseArticle(String fileName, String context) throws ParseException {
         JSONObject rst = new JSONObject();

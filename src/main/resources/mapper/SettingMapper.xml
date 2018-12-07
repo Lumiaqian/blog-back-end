@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.SettingMapper">
+    <resultMap id="setting" type="com.caoyuqian.blog.pojo.Setting">
+        <result column="id" property="id"/>
+        <result column="avatar" property="avatar"/>
+        <result column="motto" property="motto"/>
+        <result column="introduction" property="introduction"/>
+    </resultMap>
+    <insert id="saveSetting" parameterType="com.caoyuqian.blog.pojo.Setting">
+        insert into setting(id, avatar, motto, introduction)
+        values (#{setting.id}, #{setting.avatar}, #{setting.motto}, #{setting.introduction})
+    </insert>
+    <select id="getSettingByUserId" resultMap="setting" parameterType="String">
+        select s.id,s.avatar,s.motto,s.introduction
+        from setting as s
+                 left join user_setting as us on s.id = us.avatar_id
+                 left join user as u on u.user_id = us.user_id
+        where
+            u.user_id = #{userId}
+    </select>
+</mapper>

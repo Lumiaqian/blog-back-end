@@ -11,9 +11,7 @@
         <result column="email" property="email"/>
         <result column="create_date" property="createDate"/>
         <result column="last_login_date" property="lastLoginDate"/>
-        <result column="introduction" property="introduction"/>
-        <result column="motto" property="motto"/>
-        <result column="avatar" property="avatar"/>
+        <association property="setting" column="user_id" select="com.caoyuqian.blog.mapper.SettingMapper.getSettingByUserId"/>
         <collection property="roles" ofType="com.caoyuqian.blog.pojo.Role">
             <result property="roleName" column="role_name"/>
         </collection>
@@ -24,8 +22,7 @@
     </select>
     <select id="getUserById" resultMap="userMap" parameterType="String">
         select  user.user_id,user.user_name,user.password,user.email,
-                user.create_date,user.last_login_date,user.motto,
-                user.avatar,user.introduction,
+                user.create_date,user.last_login_date,
                 role.role_name from user
             left join role_user on user.user_id=role_user.user_id
             left join role on role.role_id=role_user.role_id

@@ -27,5 +27,6 @@ public class UserAccessDeniedHandler implements AccessDeniedHandler {
         JsonResult jsonResult=new JsonResult(ResultCode.Need_Authorities);
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(JSON.toJSONString(jsonResult));
+        response.setStatus(403);
     }
 }

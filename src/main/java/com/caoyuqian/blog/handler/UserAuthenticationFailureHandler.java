@@ -27,5 +27,6 @@ public class UserAuthenticationFailureHandler implements AuthenticationFailureHa
         JsonResult jsonResult=new JsonResult(ResultCode.Login_Failure);
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(JSON.toJSONString(jsonResult));
+        response.setStatus(400);
     }
 }
