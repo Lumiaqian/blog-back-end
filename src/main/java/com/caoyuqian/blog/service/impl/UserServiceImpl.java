@@ -39,4 +39,9 @@ public class UserServiceImpl implements UserService{
     public int saveRoleUser(String userId) {
         return userMapper.saveRoleUser(userId);
     }
+
+    @Override
+    public int updateUser(SysUser user) {
+        return userMapper.updateUser(user);
+    }
 }

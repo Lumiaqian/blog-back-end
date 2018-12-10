@@ -15,4 +15,5 @@ public interface UserMapper {
    public int test();
    int register(@Param("user") SysUser sysUser);
    int saveRoleUser(@Param("user_id") String userId);
+   int updateUser(@Param("user")SysUser sysUser);
 }

@@ -62,6 +62,8 @@ public class UploadController {
     IQiniuUploadFileService iQiniuUploadFileService;
     @Autowired
     private SettingService settingService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("upload")
     public ResponseEntity<JsonResult> upload(MultipartFile file) throws Exception {
@@ -186,19 +188,24 @@ public class UploadController {
     }
 
     @PostMapping("avatar")
-    public ResponseEntity<JsonResult> setAvatar(MultipartFile img,@RequestParam String id) throws IOException {
+    public ResponseEntity<JsonResult> setAvatar(MultipartFile img,@RequestParam String userId) throws IOException {
         JsonResult jsonResult;
         BASE64Encoder encoder=new BASE64Encoder();
         logger.info("传入的文件参数：{}", JSON.toJSONString(img, true));
         logger.info(img.getOriginalFilename());
-        logger.info(id);
+        logger.info(userId);
         String imgData= encoder.encode(img.getBytes());
         Setting setting = new Setting();
         SnowFlake snow = new SnowFlake(2, 3);
         setting.setId(snow.nextId());
         setting.setAvatar(imgData);
-        //settingService.saveSetting(setting);
+        SysUser user = new SysUser();
+        user.setUserId(userId);
+        user.setSettingId(setting.getId());
+        settingService.saveSetting(setting);
+        userService.updateUser(user);
         jsonResult = new JsonResult();
+        jsonResult.setData(setting);
         return new ResponseEntity<>(jsonResult,HttpStatus.OK);
     }
 

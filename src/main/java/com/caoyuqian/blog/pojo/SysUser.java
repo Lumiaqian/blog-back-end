@@ -19,6 +19,7 @@ public class SysUser implements Serializable {
     private String email;
     private Date createDate;//创建时间
     private Date lastLoginDate;//最后一次登录时间
+    private long settingId;//配置ID
     private Setting setting;
     private List<Role> roles;//用户拥有的角色
 
@@ -31,9 +32,18 @@ public class SysUser implements Serializable {
                 ", email='" + email + '\'' +
                 ", createDate=" + createDate +
                 ", lastLoginDate=" + lastLoginDate +
+                ", settingId=" + settingId +
                 ", setting=" + setting +
                 ", roles=" + roles +
                 '}';
+    }
+
+    public long getSettingId() {
+        return settingId;
+    }
+
+    public void setSettingId(long settingId) {
+        this.settingId = settingId;
     }
 
     public Setting getSetting() {

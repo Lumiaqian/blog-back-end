@@ -13,12 +13,19 @@
         insert into setting(id, avatar, motto, introduction)
         values (#{setting.id}, #{setting.avatar}, #{setting.motto}, #{setting.introduction})
     </insert>
-    <select id="getSettingByUserId" resultMap="setting" parameterType="String">
-        select s.id,s.avatar,s.motto,s.introduction
-        from setting as s
-                 left join user_setting as us on s.id = us.avatar_id
-                 left join user as u on u.user_id = us.user_id
+    <select id="getSettingBySettingId" resultMap="setting" parameterType="long">
+        select id,avatar,motto,introduction
+        from setting
         where
-            u.user_id = #{userId}
+            id = #{settingId}
     </select>
+    <update id="updateSetting" parameterType="com.caoyuqian.blog.pojo.Setting">
+        update setting
+        <set>
+            <if test="setting.avatar!=null and setting.avatar!=''">avatar=#{setting.avatar},</if>
+            <if test="setting.motto!=null and setting.motto!=''">motto=#{setting.motto},</if>
+            <if test="setting.introduction!=null and setting.introduction!=''">introduction=#{setting.introduction}</if>
+        </set>
+        where id=#{setting.id}
+    </update>
 </mapper>

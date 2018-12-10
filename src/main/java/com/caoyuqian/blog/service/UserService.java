@@ -7,4 +7,5 @@ public interface UserService {
     int test();
     int register(SysUser user);
     int saveRoleUser(String userId);
+    int updateUser(SysUser user);
 }

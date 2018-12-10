@@ -23,4 +23,10 @@ public class SettingServiceImpl implements SettingService {
     public int saveSetting(Setting setting) {
         return settingMapper.saveSetting(setting);
     }
+
+    @Override
+    public int updateSetting(Setting setting) {
+        return settingMapper.updateSetting(setting);
+    }
+
 }
