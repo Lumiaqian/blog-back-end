@@ -1,5 +1,7 @@
 package com.caoyuqian.blog.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +24,34 @@ public class SysUser implements Serializable {
     private long settingId;//配置ID
     private Setting setting;
     private List<Role> roles;//用户拥有的角色
+    private String weibo;//微博
+    private String QQ;//QQ
+    private String github;//github
+
+    public String getWeibo() {
+        return weibo;
+    }
+
+    public void setWeibo(String weibo) {
+        this.weibo = weibo;
+    }
+
+    @JSONField(name = "QQ")
+    public String getQQ() {
+        return QQ;
+    }
+
+    public void setQQ(String QQ) {
+        this.QQ = QQ;
+    }
+
+    public String getGithub() {
+        return github;
+    }
+
+    public void setGithub(String github) {
+        this.github = github;
+    }
 
     @Override
     public String toString() {
@@ -35,6 +65,9 @@ public class SysUser implements Serializable {
                 ", settingId=" + settingId +
                 ", setting=" + setting +
                 ", roles=" + roles +
+                ", weibo='" + weibo + '\'' +
+                ", QQ='" + QQ + '\'' +
+                ", github='" + github + '\'' +
                 '}';
     }
 

@@ -50,4 +50,11 @@ public class SettingController {
         JsonResult jsonResult = new JsonResult();
         return new ResponseEntity<>(jsonResult, HttpStatus.OK);
     }
+    @PostMapping("social")
+    public ResponseEntity<JsonResult> updateSocial(@RequestBody SysUser user){
+        logger.info(user.toString());
+        userService.updateUser(user);
+        JsonResult jsonResult = new JsonResult();
+        return new ResponseEntity<>(jsonResult,HttpStatus.OK);
+    }
 }

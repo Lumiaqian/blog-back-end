@@ -7,22 +7,26 @@
     <resultMap id="userMap" type="com.caoyuqian.blog.pojo.SysUser">
         <result column="user_id" property="userId"/>
         <result column="user_name" property="userName"/>
-        <result column="password" property="password" />
+        <result column="password" property="password"/>
         <result column="email" property="email"/>
         <result column="create_date" property="createDate"/>
         <result column="last_login_date" property="lastLoginDate"/>
         <result column="setting_id" property="settingId"/>
-        <association property="setting" column="setting_id" select="com.caoyuqian.blog.mapper.SettingMapper.getSettingBySettingId"/>
+        <result column="QQ" property="QQ"/>
+        <result column="weibo" property="weibo"/>
+        <result column="github" property="github"/>
+        <association property="setting" column="setting_id"
+                     select="com.caoyuqian.blog.mapper.SettingMapper.getSettingBySettingId"/>
         <collection property="roles" ofType="com.caoyuqian.blog.pojo.Role">
             <result property="roleName" column="role_name"/>
         </collection>
     </resultMap>
 
-    <select  id="test" resultType="int">
+    <select id="test" resultType="int">
         select count(*) from user
     </select>
     <select id="getUserById" resultMap="userMap" parameterType="String">
-        select  user.user_id,user.user_name,user.password,user.email,
+        select  user.user_id,user.user_name,user.password,user.email,user.QQ,user.weibo,user.github,
                 user.create_date,user.last_login_date,user.setting_id,
                 role.role_name from user
             left join role_user on user.user_id=role_user.user_id
@@ -43,6 +47,9 @@
             <if test="user.userName!=null and user.userName!=''">user_name = #{user.userName},</if>
             <if test="user.password!=null and user.password!=''">password = #{user.password},</if>
             <if test="user.email!=null and user.email!=''">email = #{user.email},</if>
+            <if test="user.QQ!=null and user.QQ!=''">QQ = #{user.QQ},</if>
+            <if test="user.weibo!=null and user.weibo!=''">weibo=#{user.weibo},</if>
+            <if test="user.github!=null and user.github!=''">github=#{user.github},</if>
             <if test="user.settingId!=null and user.settingId!=0">setting_id = #{user.settingId}</if>
         </set>
         where user_id = #{user.userId}
