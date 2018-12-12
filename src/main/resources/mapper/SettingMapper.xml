@@ -24,7 +24,8 @@
         <set>
             <if test="setting.avatar!=null and setting.avatar!=''">avatar=#{setting.avatar},</if>
             <if test="setting.motto!=null and setting.motto!=''">motto=#{setting.motto},</if>
-            <if test="setting.introduction!=null and setting.introduction!=''">introduction=#{setting.introduction}</if>
+            <if test="setting.introduction!=null and setting.introduction!=''">introduction=#{setting.introduction},</if>
+            <if test="setting.blogName!=null and setting.blogName!=''">blog_name=#{setting.blogName}</if>
         </set>
         where id=#{setting.id}
     </update>

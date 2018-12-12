@@ -15,6 +15,7 @@ public class Setting implements Serializable {
     private String avatar;//头像URL
     private String motto;//格言
     private String introduction;//个人简介
+    private String blogName;//博客名称
 
     @Override
     public String toString() {
@@ -23,7 +24,16 @@ public class Setting implements Serializable {
                 ", avatar='" + avatar + '\'' +
                 ", motto='" + motto + '\'' +
                 ", introduction='" + introduction + '\'' +
+                ", blogName='" + blogName + '\'' +
                 '}';
+    }
+
+    public String getBlogName() {
+        return blogName;
+    }
+
+    public void setBlogName(String blogName) {
+        this.blogName = blogName;
     }
 
     public long getId() {
