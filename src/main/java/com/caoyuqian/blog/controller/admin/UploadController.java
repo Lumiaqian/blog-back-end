@@ -10,9 +10,12 @@ import com.caoyuqian.blog.service.*;
 import com.caoyuqian.blog.utils.DateUtil;
 import com.caoyuqian.blog.utils.JSONUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
+import com.github.pagehelper.PageInfo;
+import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.sun.org.apache.xml.internal.security.keys.KeyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +67,14 @@ public class UploadController {
     private SettingService settingService;
     @Autowired
     private UserService userService;
+    @Value("${qiniu.path}")
+    private String path;
+    @Autowired
+    private QiniuImageService qiniuImageService;
 
     @PostMapping("upload")
     public ResponseEntity<JsonResult> upload(MultipartFile file) throws Exception {
-        JsonResult jsonResult ;
+        JsonResult jsonResult;
         // logger.info(constantQiniu.toString());
         if (Objects.isNull(file) || file.isEmpty()) {
             //上传文件为空
@@ -106,14 +113,14 @@ public class UploadController {
         if (post.getCategories() != null) {
             logger.info(post.getCategories().toString());
             List<Category> categories = new ArrayList<>();
-            post.getCategories().forEach(category ->{
+            post.getCategories().forEach(category -> {
                 int flag = categoryService.getCountByName(category.getCategoryName());
-                if (flag == 0){
+                if (flag == 0) {
                     //category.setFatherId(fatherId.get());
                     Acate acate = cateToAcate(category);
                     //categoryService.saveCategory(category);
                     categoryService.saveCate(acate);
-                }else {
+                } else {
                     logger.info("category已经存在！");
                     category = categoryService.getCategoryByName(category.getCategoryName());
                     fatherId.set(category.getCategoryId());
@@ -129,11 +136,11 @@ public class UploadController {
             List<Tag> tags = new ArrayList<>();
             post.getTags().forEach(tag -> {
                 int flag = tagService.getCountByName(tag.getTagName());
-                if (flag == 0){
+                if (flag == 0) {
                     Atag atag = tagToAtag(tag);
                     //tagService.saveTag(tag);
                     tagService.saveAtag(atag);
-                }else {
+                } else {
                     tag = tagService.getTagByName(tag.getTagName());
                 }
                 tags.add(tag);
@@ -188,13 +195,13 @@ public class UploadController {
     }
 
     @PostMapping("avatar")
-    public ResponseEntity<JsonResult> setAvatar(MultipartFile img,@RequestParam String userId) throws IOException {
+    public ResponseEntity<JsonResult> setAvatar(MultipartFile img, @RequestParam String userId) throws IOException {
         JsonResult jsonResult;
-        BASE64Encoder encoder=new BASE64Encoder();
+        BASE64Encoder encoder = new BASE64Encoder();
         logger.info("传入的文件参数：{}", JSON.toJSONString(img, true));
         logger.info(img.getOriginalFilename());
         logger.info(userId);
-        String imgData= encoder.encode(img.getBytes());
+        String imgData = encoder.encode(img.getBytes());
         Setting setting = new Setting();
         SnowFlake snow = new SnowFlake(2, 3);
         setting.setId(snow.nextId());
@@ -206,7 +213,44 @@ public class UploadController {
         userService.updateUser(user);
         jsonResult = new JsonResult();
         jsonResult.setData(setting);
-        return new ResponseEntity<>(jsonResult,HttpStatus.OK);
+        return new ResponseEntity<>(jsonResult, HttpStatus.OK);
+    }
+
+    @PostMapping("qiniu/images")
+    public ResponseEntity<JsonResult> putImages(MultipartFile file) throws IOException {
+        logger.info(file.toString());
+        logger.info("传入的文件参数：{}", JSON.toJSONString(file, true));
+        BASE64Encoder encoder = new BASE64Encoder();
+        SnowFlake snow = new SnowFlake(2, 3);
+        String imgData = encoder.encode(file.getBytes());
+        QiniuImage qiniuImage = new QiniuImage();
+        qiniuImage.setData(imgData);
+        qiniuImage.setId(snow.nextId());
+        qiniuImage.setName(file.getOriginalFilename());
+        //保存到服务器中
+        try {
+            String key = file.getOriginalFilename();
+
+            String url = iQiniuUploadFileService.uploadImg(file.getInputStream(), key);
+            qiniuImage.setUrl(url);
+            //logger.info(qiniuImage.toString());
+            qiniuImageService.save(qiniuImage);
+        } catch (QiniuException e) {
+            e.printStackTrace();
+            Response r = e.response;
+            logger.error(r.bodyString());
+
+        }
+        JsonResult jsonResult = new JsonResult();
+        return new ResponseEntity<>(jsonResult, HttpStatus.OK);
+    }
+
+    @GetMapping("qiniu/images")
+    public ResponseEntity<JsonResult> getImages(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
+        JsonResult jsonResult = new JsonResult();
+        PageInfo<QiniuImage> pageInfo = qiniuImageService.getQinius(pageNo,pageSize);
+        jsonResult.setData(pageInfo);
+        return new ResponseEntity<>(jsonResult, HttpStatus.OK);
     }
 
     private JSONObject parseArticle(String fileName, String context) throws ParseException {
@@ -318,23 +362,25 @@ public class UploadController {
         }
         return rst;
     }
-    private Acate cateToAcate(Category category){
+
+    private Acate cateToAcate(Category category) {
         Acate acate = new Acate();
         acate.setCateId(category.getCategoryId());
         acate.setCateName(category.getCategoryName());
         acate.setFatherId(category.getFatherId());
         acate.setSaveDate(DateUtil.getNow());
         acate.setStatus(0);
-        logger.info("acte: "+acate.toString());
+        logger.info("acte: " + acate.toString());
         return acate;
     }
-    private Atag tagToAtag(Tag tag){
+
+    private Atag tagToAtag(Tag tag) {
         Atag atag = new Atag();
         atag.setTagId(tag.getTagId());
         atag.setTagName(tag.getTagName());
         atag.setSaveDate(DateUtil.getNow());
         atag.setStatus(0);
-        logger.info("atag: "+atag.toString());
+        logger.info("atag: " + atag.toString());
         return atag;
     }
 }

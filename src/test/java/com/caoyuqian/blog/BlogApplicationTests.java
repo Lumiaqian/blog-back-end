@@ -55,9 +55,10 @@ public class BlogApplicationTests {
     }
     @Test
     public void test(){
-        String password="123";
+       /* String password="123";
         password=new BCryptPasswordEncoder().encode(password);
-        logger.info("password: "+password);
+        logger.info("password: "+password);*/
+        logger.info(StringUtil.getUUID());
     }
     @Test
     public void OKHttp() throws Exception {
