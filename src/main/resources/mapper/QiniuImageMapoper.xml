@@ -6,13 +6,12 @@
     <resultMap id="qiniu" type="com.caoyuqian.blog.pojo.QiniuImage">
         <result property="id" column="id"/>
         <result column="url" property="url"/>
-        <result property="data" column="data"/>
         <result column="name" property="name"/>
     </resultMap>
     <insert id="save" parameterType="com.caoyuqian.blog.pojo.QiniuImage">
-        replace into qiniu_image(id,name,url,data) value (#{qiniu.id},#{qiniu.name},#{qiniu.url},#{qiniu.data})
+        replace into qiniu_image(id,name,url) value (#{qiniu.id},#{qiniu.name},#{qiniu.url})
     </insert>
     <select id="getQinius" resultMap="qiniu">
-        select id,name,url,data from qiniu_image
+        select id,name,url from qiniu_image
     </select>
 </mapper>

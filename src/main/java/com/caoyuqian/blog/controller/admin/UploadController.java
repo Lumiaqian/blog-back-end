@@ -224,7 +224,6 @@ public class UploadController {
         SnowFlake snow = new SnowFlake(2, 3);
         String imgData = encoder.encode(file.getBytes());
         QiniuImage qiniuImage = new QiniuImage();
-        qiniuImage.setData(imgData);
         qiniuImage.setId(snow.nextId());
         qiniuImage.setName(file.getOriginalFilename());
         //保存到服务器中

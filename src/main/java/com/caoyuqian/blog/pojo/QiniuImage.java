@@ -5,7 +5,6 @@ public class QiniuImage {
     private long id;
     private String name;
     private String url;
-    private String data;
 
     @Override
     public String toString() {
@@ -13,7 +12,6 @@ public class QiniuImage {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", url='" + url + '\'' +
-                ", data='" + data + '\'' +
                 '}';
     }
 
@@ -41,11 +39,4 @@ public class QiniuImage {
         this.url = url;
     }
 
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 }
