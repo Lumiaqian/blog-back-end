@@ -14,7 +14,7 @@ spring:
   datasource:
     name: blog
     #url: jdbc:postgresql://106.12.97.86:5432/blog
-    url: jdbc:mysql://39.108.115.109:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: root
     password: lumia
     #driver-class-name: org.postgresql.Driver
@@ -56,3 +56,6 @@ qiniu:
   secretKey: WE1kYmpa8UA2j12NsGh7OnJwUoaACEx3i2KaidXO
   bucket: lumiaqian
   path: http://pj9aecdab.bkt.clouddn.com/
+
+user:
+  userId: 17679123317

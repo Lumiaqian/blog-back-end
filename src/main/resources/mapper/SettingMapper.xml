@@ -8,13 +8,17 @@
         <result column="avatar" property="avatar"/>
         <result column="motto" property="motto"/>
         <result column="introduction" property="introduction"/>
+        <result column="blog_name" property="blogName"/>
+        <result column="start_year" property="startYear"/>
+        <result column="end_year" property="endYear"/>
     </resultMap>
     <insert id="saveSetting" parameterType="com.caoyuqian.blog.pojo.Setting">
-        insert into setting(id, avatar, motto, introduction)
-        values (#{setting.id}, #{setting.avatar}, #{setting.motto}, #{setting.introduction})
+        insert into setting(id, avatar, motto, introduction, blog_name, start_year, end_year)
+        values (#{setting.id}, #{setting.avatar}, #{setting.motto}, #{setting.introduction},
+                #{setting.blogName},#{setting.startYear},#{setting.endYear})
     </insert>
     <select id="getSettingBySettingId" resultMap="setting" parameterType="long">
-        select id,avatar,motto,introduction
+        select id,avatar,motto,introduction,blog_name,start_year,end_year
         from setting
         where
             id = #{settingId}
@@ -25,7 +29,9 @@
             <if test="setting.avatar!=null and setting.avatar!=''">avatar=#{setting.avatar},</if>
             <if test="setting.motto!=null and setting.motto!=''">motto=#{setting.motto},</if>
             <if test="setting.introduction!=null and setting.introduction!=''">introduction=#{setting.introduction},</if>
-            <if test="setting.blogName!=null and setting.blogName!=''">blog_name=#{setting.blogName}</if>
+            <if test="setting.blogName!=null and setting.blogName!=''">blog_name=#{setting.blogName},</if>
+            <if test="setting.startYear!=null and setting.startYear!= ''">start_year=#{setting.startYear},</if>
+            <if test="setting.endYear!=null and setting.endYear!=''">end_year=#{setting.endYear}</if>
         </set>
         where id=#{setting.id}
     </update>

@@ -30,26 +30,46 @@ import org.springframework.web.cors.CorsUtils;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * 未登录
+     * */
     @Autowired
-    private EntryPointUnauthorizedHandler entryPointUnauthorizedHandler;//未登录
+    private EntryPointUnauthorizedHandler entryPointUnauthorizedHandler;
 
+    /**
+     * 无权限访问
+     * */
     @Autowired
-    private UserAccessDeniedHandler userAccessDeniedHandler;//无权限访问
+    private UserAccessDeniedHandler userAccessDeniedHandler;
+    /**
+     * 登录失败
+     */
+    @Autowired
+    private UserAuthenticationFailureHandler userAuthenticationFailureHandler;
 
+    /**
+     * 登录成功
+     * */
     @Autowired
-    private UserAuthenticationFailureHandler userAuthenticationFailureHandler;//登录失败
+    private UserAuthenticationSuccessHandler userAuthenticationSuccessHandler;
 
+    /**
+    *角色验证
+    **/
     @Autowired
-    private UserAuthenticationSuccessHandler userAuthenticationSuccessHandler;//登录成功
+    private AuthUserDetailsService authUserDetailsService;
 
+    /**
+     * token验证拦截器
+     **/
     @Autowired
-    private AuthUserDetailsService authUserDetailsService;//角色验证
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    /**
+     * 跨域拦截器
+     * */
     @Autowired
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;//token验证拦截器
-
-    @Autowired
-    private CorsFilter corsFilter;//跨域拦截器
+    private CorsFilter corsFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -66,6 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers("/utils/*").permitAll()
                 .antMatchers("/utils/*/*").permitAll()
+                .antMatchers("/lumia/*").permitAll()
                 .antMatchers("/lumia/*/*").permitAll()
                 .antMatchers("/lumia/*/*/*").permitAll()
                 //.antMatchers("/posts/qian/*").hasAnyRole("ADMIN")
