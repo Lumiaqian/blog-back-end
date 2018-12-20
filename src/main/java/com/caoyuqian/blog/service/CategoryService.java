@@ -16,6 +16,7 @@ public interface CategoryService {
     Category getCategoryByName(String categoryName);
     int updateCategoryFatherId(Category category);
     List<Category> getCategories();
+    PageInfo<Category> getCategories(int pageNo,int pageSize);
     List<Category> getFatherCates();
     PageInfo<Acate> getCates(int pageNo, int pageSize);
     int getCount();

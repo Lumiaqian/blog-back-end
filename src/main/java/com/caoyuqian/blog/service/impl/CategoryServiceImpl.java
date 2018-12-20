@@ -62,6 +62,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public PageInfo<Category> getCategories(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo,pageSize);
+        List<Category> categories = categoryMapper.getCategories();
+        PageInfo<Category> pageInfo = new PageInfo<>(categories);
+        return pageInfo;
+    }
+
+    @Override
     public List<Category> getFatherCates() {
         return categoryMapper.getFatherCates();
     }

@@ -53,4 +53,5 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-elasticsearch', version: '2.0.4.RELEASE'
     compile 'com.qiniu:qiniu-java-sdk:7.2.+'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+//    compile group: 'org.yaml', name: 'snakeyaml', version: '1.23'
 }

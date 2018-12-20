@@ -39,11 +39,12 @@ public class CategoryController {
     private PostServiceImpl postService;
 
     @GetMapping("list")
-    public JsonResult list(){
+    public JsonResult list(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize){
         JsonResult jsonResult=new JsonResult();
-        List<Category> categories=categoryService.getCategories();
+        // List<Category> categories=categoryService.getCategories();
+        PageInfo<Category> pageInfo = categoryService.getCategories(pageNo,pageSize);
         jsonResult.setMessage("获取categories成功！");
-        jsonResult.setData(categories);
+        jsonResult.setData(pageInfo);
         return jsonResult;
     }
     @GetMapping("posts/{categoryId}")
