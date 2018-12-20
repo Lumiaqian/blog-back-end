@@ -14,6 +14,7 @@ public interface TagService {
     int getCountByName(String tagName);
     Tag getTagByName(String tagName);
     List<Tag> getTags();
+    PageInfo<Tag> getTags(int pageNo,int pageSize);
     PageInfo<Atag> getAtags(int pageNo,int pageSize);
     int getCount();
     Tag getTagById(long tagId);

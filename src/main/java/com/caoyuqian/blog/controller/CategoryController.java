@@ -5,9 +5,11 @@ import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.impl.CategoryServiceImpl;
 import com.caoyuqian.blog.service.impl.PostServiceImpl;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,12 +47,16 @@ public class CategoryController {
         return jsonResult;
     }
     @GetMapping("posts/{categoryId}")
-    public JsonResult getPostsByTag(@PathVariable long categoryId){
+    public JsonResult getPostsByTag(@PathVariable long categoryId,
+                                    @Param("pageNo") int pageNo,
+                                    @Param("pageSize") int pageSize){
         JsonResult jsonResult=new JsonResult();
-        List<Post> posts=postService.getPostsByCate(categoryId);
-        posts.sort(Comparator.comparing(Post::getPublicDate).reversed());
+        /*List<Post> posts=postService.getPostsByCate(categoryId);
+        posts.sort(Comparator.comparing(Post::getPublicDate).reversed());*/
+        PageInfo<Post> pageInfo = postService.getPostsByCate(categoryId,pageNo,pageSize);
+        pageInfo.getList().sort(Comparator.comparing(Post::getPublicDate).reversed());
         jsonResult.setMessage("获取成功！");
-        jsonResult.setData(posts);
+        jsonResult.setData(pageInfo);
         return jsonResult;
     }
 

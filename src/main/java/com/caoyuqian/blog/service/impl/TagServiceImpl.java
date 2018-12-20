@@ -56,6 +56,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public PageInfo<Tag> getTags(int pageNo,int pageSize){
+        PageHelper.startPage(pageNo,pageSize);
+        List<Tag> tags = tagMapper.getTags();
+        PageInfo<Tag> pageInfo = new PageInfo<>(tags);
+        return pageInfo;
+    }
+
+    @Override
     public PageInfo<Atag> getAtags(int pageNo,int pageSize) {
         PageHelper.startPage(pageNo,pageSize);
         List<Atag> atags=tagMapper.getAtags();

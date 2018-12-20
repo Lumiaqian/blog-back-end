@@ -16,7 +16,9 @@ public interface PostService {
     Post getPostByTitle(String title);
     List<Post> getPost();
     List<Post> getPostsByTag(long tagId);
+    PageInfo<Post> getPostsByTag(long tagId,int pageNo,int pageSize);
     List<Post> getPostsByCate(long categoryId);
+    PageInfo<Post> getPostsByCate(long categoryId,int pageNo,int pageSize);
     PageInfo<Post> getPostByAdmin(int pageNo, int pageSize);
     PageInfo<Post> getPosts(int pageNo,int pageSize);
     PageInfo<Post> getDraftPost(int pageNo,int pageSize);

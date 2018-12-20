@@ -5,9 +5,11 @@ import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.impl.PostServiceImpl;
 import com.caoyuqian.blog.service.impl.TagServiceImpl;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,13 +48,17 @@ public class TagController {
     }
 
     @GetMapping("posts/{tagId}")
-    public JsonResult getPostsByTag(@PathVariable long tagId) {
+    public JsonResult getPostsByTag(@PathVariable long tagId, @Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
         JsonResult jsonResult = new JsonResult();
-        List<Post> posts;
+       /* List<Post> posts;
         posts = postService.getPostsByTag(tagId);
         posts.sort(Comparator.comparing(Post::getPublicDate).reversed());
+        */
+        logger.info("pageNo: " + pageNo + " pageSize: " + pageSize);
+        PageInfo<Post> pageInfo = postService.getPostsByTag(tagId,pageNo,pageSize);
+        pageInfo.getList().sort(Comparator.comparing(Post::getPublicDate).reversed());
         jsonResult.setMessage("获取成功！");
-        jsonResult.setData(posts);
+        jsonResult.setData(pageInfo);
         return jsonResult;
     }
 }
