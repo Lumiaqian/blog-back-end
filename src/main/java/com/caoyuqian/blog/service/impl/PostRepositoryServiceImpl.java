@@ -5,6 +5,7 @@ import com.caoyuqian.blog.repository.PostRepository;
 import com.caoyuqian.blog.service.PostRepositoryService;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.slf4j.Logger;
@@ -58,21 +59,29 @@ public class PostRepositoryServiceImpl implements PostRepositoryService {
 
     @Override
     public Page<Post> getListByKey(Integer pageNum, Integer pageSize, String searchContent) {
-        if (pageNum==null)
-            pageNum=0;
+        if (pageNum==null) {
+            pageNum = 0;
+        }
         // 分页参数
         logger.info("pageNum: "+pageNum+"pageSize: "+pageSize);
+        logger.info("kw: "+searchContent);
         Pageable pageable = PageRequest.of(pageNum,pageSize);
         // 创建QueryBuild
         BoolQueryBuilder boolQueryBuilder=QueryBuilders.boolQuery();
         // 设置模糊查询
-        boolQueryBuilder.must(QueryBuilders.fuzzyQuery("content",searchContent).fuzziness(Fuzziness.AUTO));
-        //boolQueryBuilder.must(new QueryStringQueryBuilder("title").field(searchContent));
+        // boolQueryBuilder.must(QueryBuilders.fuzzyQuery("content",searchContent).fuzziness(Fuzziness.AUTO));
+        // boolQueryBuilder.must(new QueryStringQueryBuilder("title").field(searchContent));
+        boolQueryBuilder.must(QueryBuilders.matchQuery("title",searchContent));
+        //  boolQueryBuilder.must(QueryBuilders.matchQuery("title",searchContent));
         // 构建查询
-        NativeSearchQueryBuilder nativeSearchQueryBuilder=new NativeSearchQueryBuilder();
-        nativeSearchQueryBuilder.withQuery(boolQueryBuilder).withPageable(pageable);
+//        NativeSearchQueryBuilder nativeSearchQueryBuilder=new NativeSearchQueryBuilder();
+//        nativeSearchQueryBuilder.withQuery(boolQueryBuilder).withPageable(pageable);
         // 生成search
-        SearchQuery searchQuery=nativeSearchQueryBuilder.build();
+        SearchQuery searchQuery=new NativeSearchQueryBuilder()
+                .withQuery(boolQueryBuilder)
+                .withPageable(pageable)
+                .build();
+        logger.info("searchQuery:"+searchQuery.toString());
         /*SearchQuery searchQuery= new NativeSearchQueryBuilder()
                 .withPageable(pageable)
                 .withQuery(fuzzyQuery("content",searchContent))

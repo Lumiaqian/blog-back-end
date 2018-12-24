@@ -3,6 +3,7 @@ package com.caoyuqian.blog.pojo;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 
 import java.io.Serializable;
@@ -17,19 +18,23 @@ import java.util.List;
  * @Description: Post文章类
  * @date 2018/8/14 下午2:24
  **/
-@Document(indexName = "posts_index",type = "post")
-@Mapping(mappingPath = "post_mapping.json")
+@Document(indexName = "posts_index", type = "post")
+// @Mapping(mappingPath = "post_mapping.json")
 public class Post implements Serializable {
 
     @Id
     private String postId;//ID
+    @Field(searchAnalyzer = "ik_smart",analyzer = "ik_max_word",type = FieldType.Text)
     private String title;//文章标题
+    @Field(searchAnalyzer = "ik_smart",analyzer = "ik_max_word",type = FieldType.Text)
     private String content;//文章内容
     private Date publicDate;//发表时间
     private Date editDate;//修改时间
     private Date saveDate;//保存时间
     private String path;//保存路径
+    // @Field(searchAnalyzer = "ik_smart",analyzer = "ik_smart")
     private List<Tag> tags;//标签
+    // @Field(searchAnalyzer = "ik_smart",analyzer = "ik_smart")
     private List<Category> categories;//类别
     private int watchCount;//阅读次数
     private int status;//1表示已发布状态、0表示未发布状态、-1表示已经删除在垃圾箱中的状态 默认为0

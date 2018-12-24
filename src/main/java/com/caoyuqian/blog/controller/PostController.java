@@ -279,9 +279,11 @@ public class PostController {
         JsonResult jsonResult = new JsonResult();
         Integer pageNum = (Integer) map.get("pageNum");
         Integer pageSize = (Integer) map.get("pageSize");
-        logger.info("pageNum: " + pageNum + "pageSize: " + pageSize);
-        String key = (String) map.get("keyWorld");
+        logger.info("pageNum: " + pageNum + " pageSize: " + pageSize);
+        String key = (String) map.get("keyWord");
         Page<Post> posts = postRepositoryService.getListByKey(pageNum, pageSize, key);
+        List<Post> postList = posts.getContent();
+        logger.info(postList.toString());
         jsonResult.setData(posts);
         return jsonResult;
     }
