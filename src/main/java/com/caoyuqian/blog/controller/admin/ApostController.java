@@ -76,12 +76,15 @@ public class ApostController {
     @PostMapping("edit")
     public JsonResult edit(@RequestBody Map map) throws Exception {
         JsonResult jsonResult = new JsonResult();
+        //前端提交过来的需要更新的post
         Post post = JSONUtil.mapToObj(map,Post.class);
+        //数据库中原始的post
         Post post1 = postService.getPostById(post.getPostId());
         // logger.info(post.toString());
         //根据前端的categoryI得到相应的category
         JSONArray cateArray = (JSONArray) map.get("cateList");
         List<Long> cateList = JSONObject.parseArray(cateArray.toJSONString(), Long.class);
+        //前端提交过来的categories
         List<Category> categories = new ArrayList<Category>();
         cateList.forEach(aLong -> {
             Category category = categoryService.getCateById(aLong);
@@ -90,30 +93,46 @@ public class ApostController {
         //tag
         JSONArray tagArray = (JSONArray) map.get("tagList");
         List<String> tagList = JSONObject.parseArray(tagArray.toJSONString(), String.class);
-        // logger.info(tagList.toString());
+        //前端提交过来的tag
         List<Tag> tagList1 = new ArrayList<>();
+        //前端提交过来的但数据库中不存在的
+        List<Tag> emptyTag = new ArrayList<>();
+        SnowFlake snowFlake = new SnowFlake(2, 3);//雪花算法生成ID
         tagList.forEach(s -> {
-            Tag tag = tagService.getTagByName(s);
-            tagList1.add(tag);
+            if (tagService.getCountByName(s)<1){
+                //如果前端提交过来的tag数据库中没有，那么就添加到数据库中
+                Tag tag = new Tag();
+                tag.setTagId(snowFlake.nextId());
+                tag.setTagName(s);
+                emptyTag.add(tag);
+                tagList1.add(tag);
+            }else {
+                Tag tag = tagService.getTagByName(s);
+                tagList1.add(tag);
+            }
         });
         logger.info(tagList1.toString());
         post.setCategories(categories);
         post.setTags(tagList1);
-        // logger.info(post.toString());
-        // logger.info("数据库中的post：" + post1.toString());
         List<Tag> tags = post1.getTags();
-        List<Category> categories1 = post1.getCategories();
+        /*List<Category> categories1 = post1.getCategories();*/
         logger.info("数据库中" + tags.toString());
-        List<Tag> reduce = new ArrayList<>();
-        tagList1.forEach(tag -> {
-            tags.forEach(tag1 -> {
-                if (tag.getTagId()!=tag1.getTagId()){
-                    reduce.add(tag);
-                }
-            });
-        });
-        logger.info("差集："+reduce.toString());
-        // postService.updatePost(post);
+        //更新post_tag:先删除旧的，再新增新的
+        if (tagList1.size()>tags.size()){
+            //增加了tag
+            List<Tag> reduce = getTagReduce(tagList1,tags);
+            logger.info("Tags差集："+reduce.toString());
+        }else {
+            //减少的tag
+            List<Tag> reduce = getTagReduce(tags,tagList1);
+            logger.info("Tags差集："+reduce.toString());
+        }
+        ArrayList<HashMap<String,Object>> maps = tagsToMap(post);
+        logger.info("需要更新的post_tag："+maps.toString());
+        // logger.info("Cates差集："+categoryList.toString());
+        //更新
+        postService.updatePost(post);
+        postService.updatePostTags(maps);
 
         return jsonResult;
     }
@@ -186,11 +205,16 @@ public class ApostController {
         Post post = postService.getPostById(postId);
         HashMap<String, Object> ret = new HashMap<>();
         List<String> result = new ArrayList<>();
-        for (Category category : post.getCategories()) {
+        post.getCategories().forEach(category -> {
             result.add(String.valueOf(category.getCategoryId()));
-        }
+        });
+        List<String> tags = new ArrayList<>();
+        post.getTags().forEach(tag -> {
+            tags.add(tag.getTagName());
+        });
         ret.put("post", post);
         ret.put("cates", result);
+        ret.put("tags", tags);
         jsonResult.setMessage("获取post成功！");
         jsonResult.setData(ret);
         return jsonResult;
@@ -455,6 +479,51 @@ public class ApostController {
             postService.savePostTags(post);
         }
         return post;
+    }
+
+    /*
+     * 获取两个tags的差集
+     */
+    private  List<Tag> getTagReduce(List<Tag> tagList,List<Tag> tags){
+        List<Tag> reduce = new ArrayList<>();
+        tagList.forEach(tag -> {
+            tags.forEach(tag1 -> {
+                if (tag.getTagId()!=tag1.getTagId()){
+                    reduce.add(tag);
+                }
+            });
+        });
+        return reduce;
+    }
+
+    /*
+     * 获取两个cates的差集
+     */
+    private List<Category> getCateReduce(List<Category> categoryList,List<Category> categories){
+        List<Category> reduce = new ArrayList<>();
+        categoryList.forEach(category -> {
+            categories.forEach(category1 -> {
+                if (category.getCategoryId()!=category1.getCategoryId()){
+                    reduce.add(category);
+                }
+            });
+        });
+        return reduce;
+    }
+
+    /*
+     * 获得post_tag
+     */
+    private ArrayList<HashMap<String,Object>> tagsToMap(Post post){
+        ArrayList<HashMap<String, Object>> maps = new ArrayList<>();
+        post.getTags().forEach(tag -> {
+            HashMap<String, Object> saveMap = new HashMap<>();
+            saveMap.put("oldId", tag.getTagId());
+            saveMap.put("newId", tag.getTagId());
+            saveMap.put("postId", post.getPostId());
+            maps.add(saveMap);
+        });
+        return maps;
     }
 
 }

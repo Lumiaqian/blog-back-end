@@ -370,15 +370,20 @@
             set tag_id = #{item.newId}
             where post_id=#{item.postId} and tag_id=#{item.oldId}
         </foreach>
-        <!--update post_tag
+       <!-- update post_tag
         <trim prefix="set" suffixOverrides=",">
-            <trim prefix="tag_id =case" suffix="end,">
+            <trim prefix="tag_id = case" suffix="end,">
                 <foreach collection="maps" item="item">
                     when post_id=#{item.postId} and tag_id=#{item.oldId}
                     then #{item.newId}
                 </foreach>
             </trim>
-        </trim>-->
+        </trim>
+        <where>
+            <foreach collection="maps" item="item" open="( " separator=") or (" close=" )">
+                post_id=#{item.postId} and tag_id=#{item.oldId}
+            </foreach>
+        </where>-->
 
     </update>
 
@@ -396,23 +401,17 @@
     </update>
 
     <delete id="deletePostTags" parameterType="com.caoyuqian.blog.pojo.Post">
-        delete from post_tag
-        using ( values
-        <foreach collection="post.tags" item="item" separator=",">
-            (#{item.tagId})
+        delete from post_tag where post_id=#{post.postId} and tag_id in
+        <foreach collection="post.tags" item="item" separator="," open="(" close=")" index="index">
+          #{item.tagId}
         </foreach>
-        ) as tag(tagId)
-        where post_id=#{post.postId} and tag_id=tag.tagId
     </delete>
 
     <delete id="deletePostCates" parameterType="com.caoyuqian.blog.pojo.Post">
-        delete from post_category
-        using ( values
-        <foreach collection="post.categories" separator="," item="item">
-            (#{item.categoryId})
+        delete from post_category  where post_id=#{post.postId} and category_id in
+        <foreach collection="post.categories" index="index" open="(" close=")" separator="," item="item">
+            #{item.categoryId}
         </foreach>
-        ) as cate(cateoryId)
-        where post_id=#{post.postId} and category_id=cate.cateoryId
     </delete>
     <delete id="deletePostById" parameterType="String">
         delete
