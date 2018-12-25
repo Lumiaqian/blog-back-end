@@ -365,23 +365,28 @@
         where post_id=#{post.postId}
     </update>
     <update id="updatePostTags" parameterType="ArrayList">
-        update post_tag set tag_id=tag.newId
-        from (values
-        <foreach collection="maps" item="item" separator="," close="" open="" index="index">
-            (#{item.oldId},#{item.newId},#{item.postId})
+        <foreach collection="maps" item="item" separator=";">
+            update post_tag
+            set tag_id = #{item.newId}
+            where post_id=#{item.postId} and tag_id=#{item.oldId}
         </foreach>
-        ) as tag(oldId,newId,postId)
-        where post_id=tag.postId and tag_id=tag.oldId
+        <!--update post_tag
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="tag_id =case" suffix="end,">
+                <foreach collection="maps" item="item">
+                    when post_id=#{item.postId} and tag_id=#{item.oldId}
+                    then #{item.newId}
+                </foreach>
+            </trim>
+        </trim>-->
+
     </update>
 
     <update id="updatePostCates" parameterType="ArrayList">
-        update post_category set category_id=cate.newId
-        from (values
-        <foreach collection="maps" item="item" separator="," index="index" open="" close="">
-            (#{item.oldId},#{item.newId},#{item.postId})
+        <foreach collection="maps" item="item" separator=";">
+            update post_category set category_id=#{item.newId}
+            where post_id=#{item.postId} and category_id=#{item.oldId}
         </foreach>
-        ) as cate(oldId,newId,postId)
-        where post_id=cate.postId and category_id=cate.oldId
     </update>
 
     <update id="discardPostById" parameterType="String">

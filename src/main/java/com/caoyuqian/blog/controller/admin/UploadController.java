@@ -71,6 +71,8 @@ public class UploadController {
     private String path;
     @Autowired
     private QiniuImageService qiniuImageService;
+    @Autowired
+    private PostRepositoryService postRepositoryService;
 
     @PostMapping("upload")
     public ResponseEntity<JsonResult> upload(MultipartFile file) throws Exception {
@@ -169,7 +171,7 @@ public class UploadController {
         }
         logger.info("解析出的post为：" + post.toString());
         //保存到elasticsearch中
-        //postRepositoryService.save(post);
+        postRepositoryService.save(post);
         //保存到服务器中
         String key = post.getTitle();
         Response response = iQiniuUploadFileService.uploadFile(file.getInputStream(), key);

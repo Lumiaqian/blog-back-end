@@ -10,6 +10,7 @@ import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.CategoryService;
+import com.caoyuqian.blog.service.PostRepositoryService;
 import com.caoyuqian.blog.service.PostService;
 import com.caoyuqian.blog.service.TagService;
 import com.caoyuqian.blog.utils.DateUtil;
@@ -17,7 +18,6 @@ import com.caoyuqian.blog.utils.JSONUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
 import com.github.pagehelper.PageInfo;
 import javafx.geometry.Pos;
-import org.omg.PortableServer.POA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author qian
@@ -49,6 +47,8 @@ public class ApostController {
     private TagService tagService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private PostRepositoryService postRepositoryService;
 
     @PostMapping("save")
     public JsonResult save(@RequestBody Map map) throws Exception {
@@ -73,7 +73,50 @@ public class ApostController {
         jsonResult = saveAndPub(map, message);
         return jsonResult;
     }
+    @PostMapping("edit")
+    public JsonResult edit(@RequestBody Map map) throws Exception {
+        JsonResult jsonResult = new JsonResult();
+        Post post = JSONUtil.mapToObj(map,Post.class);
+        Post post1 = postService.getPostById(post.getPostId());
+        // logger.info(post.toString());
+        //根据前端的categoryI得到相应的category
+        JSONArray cateArray = (JSONArray) map.get("cateList");
+        List<Long> cateList = JSONObject.parseArray(cateArray.toJSONString(), Long.class);
+        List<Category> categories = new ArrayList<Category>();
+        cateList.forEach(aLong -> {
+            Category category = categoryService.getCateById(aLong);
+            categories.add(category);
+        });
+        //tag
+        JSONArray tagArray = (JSONArray) map.get("tagList");
+        List<String> tagList = JSONObject.parseArray(tagArray.toJSONString(), String.class);
+        // logger.info(tagList.toString());
+        List<Tag> tagList1 = new ArrayList<>();
+        tagList.forEach(s -> {
+            Tag tag = tagService.getTagByName(s);
+            tagList1.add(tag);
+        });
+        logger.info(tagList1.toString());
+        post.setCategories(categories);
+        post.setTags(tagList1);
+        // logger.info(post.toString());
+        // logger.info("数据库中的post：" + post1.toString());
+        List<Tag> tags = post1.getTags();
+        List<Category> categories1 = post1.getCategories();
+        logger.info("数据库中" + tags.toString());
+        List<Tag> reduce = new ArrayList<>();
+        tagList1.forEach(tag -> {
+            tags.forEach(tag1 -> {
+                if (tag.getTagId()!=tag1.getTagId()){
+                    reduce.add(tag);
+                }
+            });
+        });
+        logger.info("差集："+reduce.toString());
+        // postService.updatePost(post);
 
+        return jsonResult;
+    }
     @GetMapping("list")
     public JsonResult getPosts(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
         JsonResult jsonResult = new JsonResult();
@@ -159,6 +202,8 @@ public class ApostController {
         int code = postService.discardPostById(postId);
         if (code > 0) {
             jsonResult.setMessage("已经扔进垃圾箱！");
+            Post post = postService.getPostById(postId);
+            postRepositoryService.save(post);
         } else {
             jsonResult.setMessage("没有扔进垃圾箱！");
         }
@@ -171,6 +216,8 @@ public class ApostController {
         int code = postService.deletePostById(postId);
         if (code > 0) {
             jsonResult.setMessage("删除成功！");
+            Post post = postService.getPostById(postId);
+            postRepositoryService.save(post);
         } else {
             jsonResult.setMessage("删除失败！");
         }
@@ -184,16 +231,22 @@ public class ApostController {
         post.setPostId(postId);
         post.setStatus(1);
         Post post1 = postService.getPostById(postId);
-        if (post1.getPublicDate() == null)
+        if (post1.getPublicDate() == null) {
             post.setPublicDate(DateUtil.getNow());
-        else
+        }
+        else {
             post.setPublicDate(post1.getPublicDate());
+        }
         int code = postService.updatePost(post);
         jsonResult.setData(post);
-        if (code > 0)
+        if (code > 0) {
             jsonResult.setMessage("更新文章状态为发布成功！");
-        else
+            post = postService.getPostById(postId);
+            postRepositoryService.save(post);
+        }
+        else {
             jsonResult.setMessage("更新文章状态为发布失败！");
+        }
         return jsonResult;
     }
 
@@ -206,10 +259,14 @@ public class ApostController {
         post.setEditDate(DateUtil.getNow());
         int code = postService.updatePost(post);
         jsonResult.setData(post);
-        if (code > 0)
+        if (code > 0) {
             jsonResult.setMessage("更新文章状态为草稿成功！");
-        else
+            post = postService.getPostById(postId);
+            postRepositoryService.save(post);
+        }
+        else {
             jsonResult.setMessage("更新文章状态为草稿失败！");
+        }
         return jsonResult;
     }
 
@@ -329,6 +386,7 @@ public class ApostController {
                 jsonResult.setData(post.getPostId());
             }
         }
+        postRepositoryService.save(post);
         return jsonResult;
     }
 

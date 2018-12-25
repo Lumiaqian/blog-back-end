@@ -283,7 +283,7 @@ public class PostController {
         String key = (String) map.get("keyWord");
         Page<Post> posts = postRepositoryService.getListByKey(pageNum, pageSize, key);
         List<Post> postList = posts.getContent();
-        logger.info(postList.toString());
+        // logger.info(postList.toString());
         jsonResult.setData(posts);
         return jsonResult;
     }

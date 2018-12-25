@@ -6,8 +6,12 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.repository.ElasticsearchCrudRepository;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+/**
+ * @author lumiaqian
+ */
+@Repository
 public interface PostRepository extends ElasticsearchRepository<Post,String> {
     //Page<Post> search(SearchQuery searchQuery);
 }
