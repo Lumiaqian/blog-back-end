@@ -1,17 +1,22 @@
 package com.caoyuqian.blog.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.caoyuqian.blog.pojo.City;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.impl.OkHttpService;
 import com.caoyuqian.blog.utils.NetworkUtil;
+import com.caoyuqian.blog.utils.OkHttpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +39,39 @@ public class WeatherController {
 
     @GetMapping("weather/{ip}")
     public JsonResult getWeather(@PathVariable String ip){
+        JsonResult jsonResult =getWeatherByIP(ip);
+        return jsonResult;
+    }
+
+    @GetMapping("ip")
+    public JsonResult getWeather(HttpServletRequest request){
+        JsonResult jsonResult=new JsonResult();
+        String ip= NetworkUtil.getIpAddress(request);
+        JSONObject jsonObject = getIP();
+        HashMap<String,Object> hashMap = new HashMap();
+        hashMap.put("ip",ip);
+        hashMap.put("data",jsonObject);
+        jsonResult.setData(hashMap);
+        return jsonResult;
+    }
+    @GetMapping("weather")
+    public JsonResult getWeatherByIP(HttpServletRequest request){
+        JsonResult jsonResult ;
+        JSONObject jsonObject = getIP();
+        String ip = (String) jsonObject.get("cip");
+//        String ip = NetworkUtil.getIpAddress(request);
+        jsonResult = getWeatherByIP(ip);
+        return jsonResult;
+    }
+    private JSONObject getIP(){
+        String url = "http://pv.sohu.com/cityjson?ie=utf-8";
+        Map<String,String> map = new HashMap<>();
+        String data=OkHttpUtil.get(url,map);
+        HashMap<String ,Object> hashMap = new HashMap<>();
+        JSONObject jsonObject = JSON.parseObject(data.substring(19,data.length()-1));
+        return  jsonObject;
+    }
+    private JsonResult getWeatherByIP(String ip){
         JSONArray weather;
         JsonResult jsonResult=new JsonResult();
         City city=new City();
@@ -65,14 +103,5 @@ public class WeatherController {
         }
         return jsonResult;
     }
-
-    @GetMapping("weather")
-    public JsonResult getWeather(HttpServletRequest request){
-        JsonResult jsonResult=new JsonResult();
-        String ip= NetworkUtil.getIpAddress(request);
-        jsonResult.setData(ip);
-        return jsonResult;
-    }
-
 
 }

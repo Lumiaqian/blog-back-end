@@ -13,7 +13,6 @@ import com.caoyuqian.blog.utils.SnowFlake;
 import com.github.pagehelper.PageInfo;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
-import com.sun.org.apache.xml.internal.security.keys.KeyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -27,14 +26,13 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.Yaml;
-import sun.misc.BASE64Encoder;
-import sun.security.util.KeyUtil;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.BufferedReader;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -199,11 +197,10 @@ public class UploadController {
     @PostMapping("avatar")
     public ResponseEntity<JsonResult> setAvatar(MultipartFile img, @RequestParam String userId) throws IOException {
         JsonResult jsonResult;
-        BASE64Encoder encoder = new BASE64Encoder();
         logger.info("传入的文件参数：{}", JSON.toJSONString(img, true));
         logger.info(img.getOriginalFilename());
         logger.info(userId);
-        String imgData = encoder.encode(img.getBytes());
+        String imgData = Base64.encodeBase64String(img.getBytes());
         Setting setting = new Setting();
         SnowFlake snow = new SnowFlake(2, 3);
         setting.setId(snow.nextId());
@@ -222,9 +219,7 @@ public class UploadController {
     public ResponseEntity<JsonResult> putImages(MultipartFile file) throws IOException {
         logger.info(file.toString());
         logger.info("传入的文件参数：{}", JSON.toJSONString(file, true));
-        BASE64Encoder encoder = new BASE64Encoder();
         SnowFlake snow = new SnowFlake(2, 3);
-        String imgData = encoder.encode(file.getBytes());
         QiniuImage qiniuImage = new QiniuImage();
         qiniuImage.setId(snow.nextId());
         qiniuImage.setName(file.getOriginalFilename());

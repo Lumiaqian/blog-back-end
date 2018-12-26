@@ -17,7 +17,6 @@ import com.caoyuqian.blog.utils.DateUtil;
 import com.caoyuqian.blog.utils.JSONUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
 import com.github.pagehelper.PageInfo;
-import javafx.geometry.Pos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +79,6 @@ public class ApostController {
         Post post = JSONUtil.mapToObj(map,Post.class);
         //数据库中原始的post
         Post post1 = postService.getPostById(post.getPostId());
-        // logger.info(post.toString());
         //根据前端的categoryI得到相应的category
         JSONArray cateArray = (JSONArray) map.get("cateList");
         List<Long> cateList = JSONObject.parseArray(cateArray.toJSONString(), Long.class);
@@ -97,7 +95,8 @@ public class ApostController {
         List<Tag> tagList1 = new ArrayList<>();
         //前端提交过来的但数据库中不存在的
         List<Tag> emptyTag = new ArrayList<>();
-        SnowFlake snowFlake = new SnowFlake(2, 3);//雪花算法生成ID
+        //雪花算法生成ID
+        SnowFlake snowFlake = new SnowFlake(2, 3);
         tagList.forEach(s -> {
             if (tagService.getCountByName(s)<1){
                 //如果前端提交过来的tag数据库中没有，那么就添加到数据库中
@@ -115,25 +114,14 @@ public class ApostController {
         post.setCategories(categories);
         post.setTags(tagList1);
         List<Tag> tags = post1.getTags();
-        /*List<Category> categories1 = post1.getCategories();*/
         logger.info("数据库中" + tags.toString());
-        //更新post_tag:先删除旧的，再新增新的
-        if (tagList1.size()>tags.size()){
-            //增加了tag
-            List<Tag> reduce = getTagReduce(tagList1,tags);
-            logger.info("Tags差集："+reduce.toString());
-        }else {
-            //减少的tag
-            List<Tag> reduce = getTagReduce(tags,tagList1);
-            logger.info("Tags差集："+reduce.toString());
-        }
-        ArrayList<HashMap<String,Object>> maps = tagsToMap(post);
-        logger.info("需要更新的post_tag："+maps.toString());
-        // logger.info("Cates差集："+categoryList.toString());
+        //更新post_tag和post_cate情况过于复杂，逻辑太多，所以采用最简单的:先删除旧的，再新增新的
         //更新
         postService.updatePost(post);
-        postService.updatePostTags(maps);
-
+        postService.updatePostTags(post1,post);
+        postService.updatePostCates(post1,post);
+        //更新elasticsearch中的post
+        postRepositoryService.save(post);
         return jsonResult;
     }
     @GetMapping("list")
@@ -317,28 +305,14 @@ public class ApostController {
             if (tagList.size() > tags.size()) {
                 //增加一条记录在post_tag
                 //去除tagList中已经在tags中的元素得到数据库post_tag表中没有的的tag元素
-                List<Tag> list = new ArrayList<>();
-                for (int i = 0; i < tagList.size(); i++) {
-                    for (int j = 0; j < tags.size(); j++) {
-                        if (tagList.get(i).getTagId() != tags.get(j).getTagId()) {
-                            list.add(tagList.get(i));
-                        }
-                    }
-                }
+                List<Tag> list =getTagReduce(tagList,tags);
                 logger.info(list.toString());
                 Post post2 = post;
                 post2.setTags(list);
                 postService.savePostTags(post2);
             } else if (tagList.size() < tags.size()) {
                 //删除多余的post_tag记录
-                List<Tag> list = new ArrayList<>();
-                for (int i = 0; i < tagList.size(); i++) {
-                    for (int j = 0; j < tags.size(); j++) {
-                        if (tagList.get(i).getTagId() == tags.get(j).getTagId()) {
-                            list.add(tagList.get(i));
-                        }
-                    }
-                }
+                List<Tag> list = getTagIntersection(tagList,tags);
                 logger.info(list.toString());
                 Post post2 = post;
                 post2.setTags(list);
@@ -360,27 +334,13 @@ public class ApostController {
             if (categoryList.size() > categories.size()) {
                 //增加一条post_category
                 //去除categoryList中在数据表post_category中已存在的数据，添加不存在的数据
-                List<Category> list = new ArrayList<>();
-                for (int i = 0; i < categoryList.size(); i++) {
-                    for (int j = 0; j < categories.size(); j++) {
-                        if (categoryList.get(i).getCategoryId() != categories.get(j).getCategoryId()) {
-                            list.add(categoryList.get(i));
-                        }
-                    }
-                }
+                List<Category> list = getCateReduce(categoryList,categories);
                 logger.info(list.toString());
                 Post post2 = post;
                 post2.setCategories(list);
                 postService.savePostCategories(post2);
             } else if (categoryList.size() < categories.size()) {
-                List<Category> list = new ArrayList<>();
-                for (int i = 0; i < categoryList.size(); i++) {
-                    for (int j = 0; j < categories.size(); j++) {
-                        if (categoryList.get(i).getCategoryId() == categories.get(j).getCategoryId()) {
-                            list.add(categoryList.get(i));
-                        }
-                    }
-                }
+                List<Category> list = getCateIntersection(categoryList,categories);
                 logger.info(list.toString());
                 Post post2 = post;
                 post2.setCategories(list);
@@ -495,11 +455,26 @@ public class ApostController {
         });
         return reduce;
     }
+    /*
+     * 获取两个tags的交集
+     */
+    private List<Tag> getTagIntersection(List<Tag> tagList,List<Tag> tags){
+        List<Tag> intersection = new ArrayList<>();
+        tagList.forEach(tag -> {
+            tags.forEach(tag1 -> {
+                if (tag.getTagId()==tag1.getTagId()){
+                    intersection.add(tag);
+                }
+            });
+        });
+        return intersection;
+    }
 
     /*
      * 获取两个cates的差集
      */
-    private List<Category> getCateReduce(List<Category> categoryList,List<Category> categories){
+    private List<Category> getCateReduce(List<Category> categoryList,
+                                         List<Category> categories){
         List<Category> reduce = new ArrayList<>();
         categoryList.forEach(category -> {
             categories.forEach(category1 -> {
@@ -510,20 +485,21 @@ public class ApostController {
         });
         return reduce;
     }
-
     /*
-     * 获得post_tag
+     * 获取两个cates的交集
      */
-    private ArrayList<HashMap<String,Object>> tagsToMap(Post post){
-        ArrayList<HashMap<String, Object>> maps = new ArrayList<>();
-        post.getTags().forEach(tag -> {
-            HashMap<String, Object> saveMap = new HashMap<>();
-            saveMap.put("oldId", tag.getTagId());
-            saveMap.put("newId", tag.getTagId());
-            saveMap.put("postId", post.getPostId());
-            maps.add(saveMap);
+    private List<Category> getCateIntersection(List<Category> categoryList,
+                                               List<Category> categories){
+        List<Category> intersection = new ArrayList<>();
+        categoryList.forEach(category -> {
+            categories.forEach(category1 -> {
+                if (category.getCategoryId()==category1.getCategoryId()){
+                    intersection.add(category);
+                }
+            });
         });
-        return maps;
+        return intersection;
     }
+
 
 }

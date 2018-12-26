@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
  * @Description: TOTO
  * @date 2018/8/14 下午3:16
  **/
+@Transactional
 @Service
 public class PostServiceImpl implements PostService{
 
@@ -184,6 +186,16 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public int updatePostTags(Post oldPost, Post newPost) {
+        int flag = postMapper.deletePostTags(oldPost);
+        if (flag>0){
+            postMapper.savePostTags(newPost);
+            return flag;
+        }
+        return 0;
+    }
+
+    @Override
     public int deletePostTags(Post post) {
         return postMapper.deletePostTags(post);
     }
@@ -191,6 +203,16 @@ public class PostServiceImpl implements PostService{
     @Override
     public int updatePostCates(ArrayList list) {
         return postMapper.updatePostCates(list);
+    }
+
+    @Override
+    public int updatePostCates(Post oldPost, Post newPost) {
+        int flag = postMapper.deletePostCates(oldPost);
+        if (flag>0){
+            postMapper.savePostCategories(newPost);
+            return flag;
+        }
+        return 0;
     }
 
     @Override

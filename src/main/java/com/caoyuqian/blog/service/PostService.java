@@ -59,9 +59,13 @@ public interface PostService {
 
     int updatePostTags(ArrayList list);
 
+    int updatePostTags(Post oldPost,Post newPost);
+
     int deletePostTags(Post post);
 
     int updatePostCates(ArrayList list);
+
+    int updatePostCates(Post oldPost,Post newPost);
 
     int deletePostCates(Post post);
 

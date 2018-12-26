@@ -13,7 +13,7 @@ spring:
       cluster-nodes: 106.12.97.86:9300
   datasource:
     name: blog
-    #url: jdbc:postgresql://106.12.97.86:5432/blog
+    #url: jdbc:postgresql://106.12.97.86:5432/blog 39.108.115.109
     url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: root
     password: lumia
