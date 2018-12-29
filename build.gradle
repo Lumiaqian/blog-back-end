@@ -58,4 +58,6 @@ dependencies {
     compile 'com.qiniu:qiniu-java-sdk:7.2.+'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 //    compile group: 'org.yaml', name: 'snakeyaml', version: '1.23'
+    // https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils
+    compile group: 'eu.bitwalker', name: 'UserAgentUtils', version: '1.21'
 }

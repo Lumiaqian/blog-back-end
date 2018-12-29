@@ -20,9 +20,10 @@ spring:
     #driver-class-name: org.postgresql.Driver
     driver-class-name: com.mysql.jdbc.Driver
   redis:
-    host: 106.12.97.86
+#    host: 106.12.97.86
+    host: 127.0.0.1
     port: 6379
-    password: lumiaqian
+#    password: lumiaqian
     pool:
       max-idle: 5000
       max-active: 5000

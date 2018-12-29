@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 import java.util.Date;
 
 /**
@@ -25,7 +25,7 @@ public class JwtTokenUtil {
       **/
     public static SecretKey generalKey(){
         String stringKey="LumiaQian";
-        byte[] encodeKey= Base64.getEncoder().encode(stringKey.getBytes());
+        byte[] encodeKey= Base64.encodeBase64(stringKey.getBytes());
         SecretKey key=new SecretKeySpec(encodeKey,0,encodeKey.length,"AES");
         return key;
     }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.DeviceMapper">
+    <resultMap id="device" type="com.caoyuqian.blog.pojo.Device">
+        <result property="ip" column="ip"/>
+        <result property="deviceManufacturer" column="device_manufacturer"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="os" column="os"/>
+        <result property="osName" column="os_name"/>
+        <result property="osVersion" column="os_version"/>
+        <result property="borderGroup" column="border_group"/>
+        <result property="borderName" column="border_name"/>
+        <result property="borderType" column="border_type"/>
+        <result property="browserManufacturer" column="browser_manufacturer"/>
+        <result property="browserVersion" column="browser_version"/>
+        <result property="browserEngine" column="browser_engine"/>
+    </resultMap>
+    <insert id="saveDevice" parameterType="com.caoyuqian.blog.pojo.Device">
+        insert into device(ip, device_manufacturer, device_type, os, os_name, os_version, border_group, border_name,
+                           border_type, browser_manufacturer, browser_version, browser_engine)
+        values (#{device.ip}, #{device.deviceManufacturer}, #{device.deviceType}, #{device.os}, #{device.osName},
+                #{device.osVersion}, #{device.borderGroup},
+                #{device.borderName}, #{device.borderType}, #{device.browserManufacturer}, #{device.browserVersion},
+                #{device.browserEngine})
+    </insert>
+    <select id="getDevices" resultMap="device">
+        select ip, device_manufacturer, device_type, os, os_name, os_version, border_group, border_name,
+               border_type, browser_manufacturer, browser_version, browser_engine
+        from device
+    </select>
+</mapper>

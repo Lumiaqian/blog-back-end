@@ -203,13 +203,21 @@ public class UploadController {
         String imgData = Base64.encodeBase64String(img.getBytes());
         Setting setting = new Setting();
         SnowFlake snow = new SnowFlake(2, 3);
-        setting.setId(snow.nextId());
-        setting.setAvatar(imgData);
-        SysUser user = new SysUser();
-        user.setUserId(userId);
-        user.setSettingId(setting.getId());
-        settingService.saveSetting(setting);
-        userService.updateUser(user);
+        SysUser sysUser = userService.getUserById(userId);
+        if (sysUser.getSettingId()==0){
+            //没有头像信息，则新建
+            setting.setId(snow.nextId());
+            setting.setAvatar(imgData);
+            sysUser.setSettingId(setting.getId());
+            userService.updateUser(sysUser);
+            settingService.saveSetting(setting);
+        }else {
+            //如果用户已经有了头像信息，那么只需更新即可
+            setting = sysUser.getSetting();
+            setting.setId(sysUser.getSettingId());
+            setting.setAvatar(imgData);
+            settingService.updateSetting(setting);
+        }
         jsonResult = new JsonResult();
         jsonResult.setData(setting);
         return new ResponseEntity<>(jsonResult, HttpStatus.OK);
