@@ -32,72 +32,75 @@ import java.util.regex.Pattern;
 @RestController
 public class WeatherController {
 
-    private final Logger logger= LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private OkHttpService okHttpService;
 
     @GetMapping("weather/{ip}")
-    public JsonResult getWeather(@PathVariable String ip){
-        JsonResult jsonResult =getWeatherByIP(ip);
+    public JsonResult getWeather(@PathVariable String ip) {
+        JsonResult jsonResult = getWeatherByIP(ip);
         return jsonResult;
     }
 
     @GetMapping("ip")
-    public JsonResult getWeather(HttpServletRequest request){
-        JsonResult jsonResult=new JsonResult();
-        String ip= NetworkUtil.getIpAddress(request);
+    public JsonResult getWeather(HttpServletRequest request) {
+        JsonResult jsonResult = new JsonResult();
+        String ip = NetworkUtil.getIpAddress(request);
         JSONObject jsonObject = getIP();
-        HashMap<String,Object> hashMap = new HashMap();
-        hashMap.put("ip",ip);
-        hashMap.put("data",jsonObject);
+        HashMap<String, Object> hashMap = new HashMap();
+        hashMap.put("ip", ip);
+        hashMap.put("data", jsonObject);
         jsonResult.setData(hashMap);
         return jsonResult;
     }
+
     @GetMapping("weather")
-    public JsonResult getWeatherByIP(HttpServletRequest request){
-        JsonResult jsonResult ;
+    public JsonResult getWeatherByIP(HttpServletRequest request) {
+        JsonResult jsonResult;
         JSONObject jsonObject = getIP();
-        String ip = (String) jsonObject.get("cip");
-//        String ip = NetworkUtil.getIpAddress(request);
+        // String ip = (String) jsonObject.get("cip");
+        String ip = NetworkUtil.getIpAddress(request);
         jsonResult = getWeatherByIP(ip);
         return jsonResult;
     }
-    private JSONObject getIP(){
+
+    private JSONObject getIP() {
         String url = "http://pv.sohu.com/cityjson?ie=utf-8";
-        Map<String,String> map = new HashMap<>();
-        String data=OkHttpUtil.get(url,map);
-        HashMap<String ,Object> hashMap = new HashMap<>();
-        JSONObject jsonObject = JSON.parseObject(data.substring(19,data.length()-1));
-        return  jsonObject;
+        Map<String, String> map = new HashMap<>();
+        String data = OkHttpUtil.get(url, map);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        JSONObject jsonObject = JSON.parseObject(data.substring(19, data.length() - 1));
+        return jsonObject;
     }
-    private JsonResult getWeatherByIP(String ip){
+
+    private JsonResult getWeatherByIP(String ip) {
         JSONArray weather;
-        JsonResult jsonResult=new JsonResult();
-        City city=new City();
-        logger.info("ip: "+ip);
+        JsonResult jsonResult = new JsonResult();
+        City city ;
+        logger.info("ip: " + ip);
         //ipv4的正则规则
-        String regEx="(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
-        Pattern pattern=Pattern.compile(regEx);
-        Matcher matcher=pattern.matcher(ip);
-        boolean flag=matcher.matches();
-        logger.info("ip格式是否正确："+flag);
-        if (flag){
-            city=okHttpService.getCityByIp(ip);
-            if (city!=null){
-                weather=okHttpService.getWeatherByCityId(city.getCityId());
-                if (weather!=null){
+        String regEx = "(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
+        Pattern pattern = Pattern.compile(regEx);
+        Matcher matcher = pattern.matcher(ip);
+        boolean flag = matcher.matches();
+        logger.info("ip格式是否正确：" + flag);
+        if (flag) {
+            city = okHttpService.getCityByIp(ip);
+            if (city != null) {
+                weather = okHttpService.getWeatherByCityId(city.getCityId());
+                if (weather != null) {
                     jsonResult.setMessage("获取天气成功！");
                     jsonResult.setData(weather);
-                }else {
+                } else {
                     jsonResult.setCode(ResultCode.UNKONW_ERROR);
                     jsonResult.setMessage("获取天气失败！");
                 }
-            }else {
+            } else {
                 jsonResult.setCode(ResultCode.UNKONW_ERROR);
                 jsonResult.setMessage("ip地址不正确！");
             }
-        }else {
+        } else {
             jsonResult.setCode(ResultCode.UNKONW_ERROR);
             jsonResult.setMessage("ip地址格式不正确！");
         }

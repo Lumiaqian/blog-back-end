@@ -30,7 +30,7 @@ configurations {
 }
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-redis')
-    compile('org.springframework.boot:spring-boot-starter-data-redis-reactive')
+    //compile('org.springframework.boot:spring-boot-starter-data-redis-reactive')
     compile('org.springframework.boot:spring-boot-starter-data-rest')
     compile('org.springframework.boot:spring-boot-starter-security')
     // compile('org.springframework.boot:spring-boot-starter-thymeleaf')
