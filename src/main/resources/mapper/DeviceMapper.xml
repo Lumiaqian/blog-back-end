@@ -4,7 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.caoyuqian.blog.mapper.DeviceMapper">
     <resultMap id="device" type="com.caoyuqian.blog.pojo.Device">
+        <result property="id" column="id"/>
         <result property="ip" column="ip"/>
+        <result property="city" column="city"/>
         <result property="deviceManufacturer" column="device_manufacturer"/>
         <result property="deviceType" column="device_type"/>
         <result property="os" column="os"/>
@@ -18,16 +20,59 @@
         <result property="browserEngine" column="browser_engine"/>
     </resultMap>
     <insert id="saveDevice" parameterType="com.caoyuqian.blog.pojo.Device">
-        insert into device(ip, device_manufacturer, device_type, os, os_name, os_version, border_group, border_name,
-                           border_type, browser_manufacturer, browser_version, browser_engine)
-        values (#{device.ip}, #{device.deviceManufacturer}, #{device.deviceType}, #{device.os}, #{device.osName},
+        replace into device(id, ip, city, device_manufacturer, device_type, os, os_name, os_version, border_group,
+                            border_name,
+                            border_type, browser_manufacturer, browser_version, browser_engine)
+        values (#{device.id}, #{device.ip}, #{device.city}, #{device.deviceManufacturer}, #{device.deviceType},
+                #{device.os}, #{device.osName},
                 #{device.osVersion}, #{device.borderGroup},
                 #{device.borderName}, #{device.borderType}, #{device.browserManufacturer}, #{device.browserVersion},
                 #{device.browserEngine})
     </insert>
     <select id="getDevices" resultMap="device">
-        select ip, device_manufacturer, device_type, os, os_name, os_version, border_group, border_name,
-               border_type, browser_manufacturer, browser_version, browser_engine
+        select id,
+               ip,
+               city,
+               device_manufacturer,
+               device_type,
+               os,
+               os_name,
+               os_version,
+               border_group,
+               border_name,
+               border_type,
+               browser_manufacturer,
+               browser_version,
+               browser_engine
         from device
+    </select>
+    <select id="isExistDevice" parameterType="com.caoyuqian.blog.pojo.Device" resultType="int">
+        select count(1)
+        from device
+        where ip = #{device.ip}
+          and
+            city = #{device.city}
+          and
+            device_manufacturer = #{device.deviceManufacturer}
+          and
+            device_type = #{device.deviceType}
+          and
+            os = #{device.os}
+          and
+            os_name = #{device.osName}
+          and
+            os_version = #{device.osVersion}
+          and
+            border_group = #{device.borderGroup}
+          and
+            border_name = #{device.borderName}
+          and
+            border_type = #{device.borderType}
+          and
+            browser_manufacturer = #{device.browserManufacturer}
+          and
+            browser_version = #{device.browserVersion}
+          and
+            browser_engine = #{device.browserEngine}
     </select>
 </mapper>

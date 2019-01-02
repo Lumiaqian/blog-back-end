@@ -9,7 +9,9 @@ package com.caoyuqian.blog.pojo;
  * @date 2018-12-29 10:47
  **/
 public class Device {
+    private long id;
     private String ip;
+    private String city;
     private String deviceManufacturer;
     private String deviceType;
     private String os;
@@ -25,7 +27,9 @@ public class Device {
     @Override
     public String toString() {
         return "Device{" +
-                "ip='" + ip + '\'' +
+                "id=" + id +
+                ", ip='" + ip + '\'' +
+                ", city='" + city + '\'' +
                 ", deviceManufacturer='" + deviceManufacturer + '\'' +
                 ", deviceType='" + deviceType + '\'' +
                 ", os='" + os + '\'' +
@@ -38,6 +42,22 @@ public class Device {
                 ", browserVersion='" + browserVersion + '\'' +
                 ", browserEngine='" + browserEngine + '\'' +
                 '}';
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getIp() {

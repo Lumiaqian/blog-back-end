@@ -24,7 +24,10 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public int saveDevice(Device device) {
-        return deviceMapper.saveDevice(device);
+        if (deviceMapper.isExistDevice(device)<1){
+            deviceMapper.saveDevice(device);
+        }
+        return 0;
     }
 
     @Override

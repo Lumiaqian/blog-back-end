@@ -20,4 +20,5 @@ public interface DeviceMapper {
 
     int saveDevice(@Param("device")Device device);
     List<Device> getDevices();
+    int isExistDevice(@Param("device")Device device);
 }

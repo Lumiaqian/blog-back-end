@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.utils;
 
+import com.caoyuqian.blog.pojo.Device;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -319,9 +320,38 @@ public class UserAgentUtils {
      */
     public static String getBrowserVersion(String userAgent) {
         Browser browser = getBrowser(userAgent);
-        String borderVersion = browser.getVersion(userAgent).toString();
+        String borderVersion;
+        borderVersion = browser.getVersion(userAgent).toString();
         return borderVersion;
     }
+    /**
+     * 获取device所有信息
+     *
+     * @param request
+     * @return
+     */
+    public static Device getDevice(HttpServletRequest request){
+        String userAgent = getUserAgent(request);
+        Device device = getDevice(userAgent);
+        return device;
+    }
 
+    public static Device getDevice(String userAgent){
+        Device device = new Device();
+        SnowFlake snowFlake = new SnowFlake(2,3);
+        device.setId(snowFlake.nextId());
+        device.setBorderGroup(getBorderGroup(userAgent));
+        device.setBorderName(getBorderName(userAgent));
+        device.setBorderType(getBorderType(userAgent));
+        device.setBrowserEngine(getBorderRenderingEngine(userAgent));
+        device.setBrowserVersion(getBrowserVersion(userAgent));
+        device.setBrowserManufacturer(getBrowserManufacturer(userAgent));
+        device.setDeviceManufacturer(getDeviceManufacturer(userAgent));
+        device.setDeviceType(getBorderType(userAgent));
+        device.setOs(getOs(userAgent));
+        device.setOsName(getOsName(userAgent));
+        device.setOsVersion(getOsVersion(userAgent));
+        return device;
+    }
 
 }

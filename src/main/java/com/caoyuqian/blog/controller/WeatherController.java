@@ -4,11 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.caoyuqian.blog.pojo.City;
+import com.caoyuqian.blog.pojo.Device;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
+import com.caoyuqian.blog.service.DeviceService;
 import com.caoyuqian.blog.service.impl.OkHttpService;
 import com.caoyuqian.blog.utils.NetworkUtil;
 import com.caoyuqian.blog.utils.OkHttpUtil;
+import com.caoyuqian.blog.utils.UserAgentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +39,12 @@ public class WeatherController {
 
     @Autowired
     private OkHttpService okHttpService;
+    @Autowired
+    private DeviceService deviceService;
 
     @GetMapping("weather/{ip}")
-    public JsonResult getWeather(@PathVariable String ip) {
-        JsonResult jsonResult = getWeatherByIP(ip);
+    public JsonResult getWeather(@PathVariable String ip,HttpServletRequest r) {
+        JsonResult jsonResult = getWeatherByIP(ip,r);
         return jsonResult;
     }
 
@@ -59,9 +64,9 @@ public class WeatherController {
     public JsonResult getWeatherByIP(HttpServletRequest request) {
         JsonResult jsonResult;
         JSONObject jsonObject = getIP();
-        // String ip = (String) jsonObject.get("cip");
-        String ip = NetworkUtil.getIpAddress(request);
-        jsonResult = getWeatherByIP(ip);
+        String ip = (String) jsonObject.get("cip");
+        // String ip = NetworkUtil.getIpAddress(request);
+        jsonResult = getWeatherByIP(ip,request);
         return jsonResult;
     }
 
@@ -74,10 +79,11 @@ public class WeatherController {
         return jsonObject;
     }
 
-    private JsonResult getWeatherByIP(String ip) {
+    private JsonResult getWeatherByIP(String ip,HttpServletRequest request) {
         JSONArray weather;
         JsonResult jsonResult = new JsonResult();
         City city ;
+        Device device = UserAgentUtils.getDevice(request);
         logger.info("ip: " + ip);
         //ipv4的正则规则
         String regEx = "(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
@@ -88,6 +94,9 @@ public class WeatherController {
         if (flag) {
             city = okHttpService.getCityByIp(ip);
             if (city != null) {
+                device.setIp(ip);
+                device.setCity(city.getCityName());
+                deviceService.saveDevice(device);
                 weather = okHttpService.getWeatherByCityId(city.getCityId());
                 if (weather != null) {
                     jsonResult.setMessage("获取天气成功！");
