@@ -54,7 +54,13 @@ public class UserAgentUtils {
         if (StringUtils.isBlank(userAgent)) {
             return osVersion;
         }
-        String[] strArr = userAgent.substring(userAgent.indexOf("(") + 1, userAgent.indexOf(")")).split(";");
+        String[] strArr = new String[0];
+        try {
+            strArr = userAgent.substring(userAgent.indexOf("(") + 1, userAgent.indexOf(")")).split(";");
+        } catch (Exception e) {
+            e.printStackTrace();
+            strArr = null;
+        }
         if (null == strArr || strArr.length == 0) {
             return osVersion;
         }
@@ -320,8 +326,11 @@ public class UserAgentUtils {
      */
     public static String getBrowserVersion(String userAgent) {
         Browser browser = getBrowser(userAgent);
-        String borderVersion;
-        borderVersion = browser.getVersion(userAgent).toString();
+        logger.info("browser is : {} ",browser.toString());
+        String borderVersion = "unknown";
+        if (browser.getVersion(userAgent)!=null) {
+            borderVersion = browser.getVersion(userAgent).toString();
+        }
         return borderVersion;
     }
     /**
@@ -339,18 +348,23 @@ public class UserAgentUtils {
     public static Device getDevice(String userAgent){
         Device device = new Device();
         SnowFlake snowFlake = new SnowFlake(2,3);
-        device.setId(snowFlake.nextId());
-        device.setBorderGroup(getBorderGroup(userAgent));
-        device.setBorderName(getBorderName(userAgent));
-        device.setBorderType(getBorderType(userAgent));
-        device.setBrowserEngine(getBorderRenderingEngine(userAgent));
-        device.setBrowserVersion(getBrowserVersion(userAgent));
-        device.setBrowserManufacturer(getBrowserManufacturer(userAgent));
-        device.setDeviceManufacturer(getDeviceManufacturer(userAgent));
-        device.setDeviceType(getBorderType(userAgent));
-        device.setOs(getOs(userAgent));
-        device.setOsName(getOsName(userAgent));
-        device.setOsVersion(getOsVersion(userAgent));
+        try {
+            device.setId(snowFlake.nextId());
+            device.setBorderGroup(getBorderGroup(userAgent));
+            device.setBorderName(getBorderName(userAgent));
+            device.setBorderType(getBorderType(userAgent));
+            device.setBrowserEngine(getBorderRenderingEngine(userAgent));
+            device.setBrowserVersion(getBrowserVersion(userAgent));
+            device.setBrowserManufacturer(getBrowserManufacturer(userAgent));
+            device.setDeviceManufacturer(getDeviceManufacturer(userAgent));
+            device.setDeviceType(getBorderType(userAgent));
+            device.setOs(getOs(userAgent));
+            device.setOsName(getOsName(userAgent));
+            device.setOsVersion(getOsVersion(userAgent));
+        } catch (Exception e) {
+            e.printStackTrace();
+            device = null;
+        }
         return device;
     }
 

@@ -23,7 +23,7 @@ spring:
 #    host: 106.12.97.86
     host: 127.0.0.1
     port: 6379
-    password: lumiaqian
+    #password: lumiaqian
     pool:
       max-idle: 5000
       max-active: 5000
@@ -36,14 +36,15 @@ spring:
     multipart:
       max-file-size: 10Mb
       max-request-size: 100Mb
-#  rabbitmq:
-#    host: 127.0.0.1
-#    port: 5672
-#    username: lumia
-#    password: lumia
-#    # 消息发送到交换器确认机制,是否确认回调
-#    publisher-confirms: true
-#    publisher-returns: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: lumia
+    password: lumia
+    # 消息发送到交换器确认机制,是否确认回调
+    publisher-confirms: true
+    # publisher-returns: true
+    virtual-host: /
 
 
 mybatis:

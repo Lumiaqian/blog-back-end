@@ -7,6 +7,7 @@ import com.caoyuqian.blog.pojo.City;
 import com.caoyuqian.blog.pojo.Device;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
+import com.caoyuqian.blog.rabbitmq.DeviceSender;
 import com.caoyuqian.blog.service.DeviceService;
 import com.caoyuqian.blog.service.impl.OkHttpService;
 import com.caoyuqian.blog.utils.NetworkUtil;
@@ -41,6 +42,8 @@ public class WeatherController {
     private OkHttpService okHttpService;
     @Autowired
     private DeviceService deviceService;
+    @Autowired
+    private DeviceSender deviceSender;
 
     @GetMapping("weather/{ip}")
     public JsonResult getWeather(@PathVariable String ip,HttpServletRequest r) {
@@ -64,8 +67,8 @@ public class WeatherController {
     public JsonResult getWeatherByIP(HttpServletRequest request) {
         JsonResult jsonResult;
         JSONObject jsonObject = getIP();
-        // String ip = (String) jsonObject.get("cip");
-        String ip = NetworkUtil.getIpAddress(request);
+        String ip = (String) jsonObject.get("cip");
+        // String ip = NetworkUtil.getIpAddress(request);
         jsonResult = getWeatherByIP(ip,request);
         return jsonResult;
     }
@@ -83,7 +86,7 @@ public class WeatherController {
         JSONArray weather;
         JsonResult jsonResult = new JsonResult();
         City city ;
-        Device device = UserAgentUtils.getDevice(request);
+//        Device device = UserAgentUtils.getDevice(request);
         logger.info("ip: " + ip);
         //ipv4的正则规则
         String regEx = "(?=(\\b|\\D))(((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))\\.){3}((\\d{1,2})|(1\\d{1,2})|(2[0-4]\\d)|(25[0-5]))(?=(\\b|\\D))";
@@ -94,9 +97,11 @@ public class WeatherController {
         if (flag) {
             city = okHttpService.getCityByIp(ip);
             if (city != null) {
-                device.setIp(ip);
-                device.setCity(city.getCityName());
-                deviceService.saveDevice(device);
+//                device.setIp(ip);
+//                device.setCity(city.getCityName());
+//                deviceService.saveDevice(device);
+                String userAgent = UserAgentUtils.getUserAgent(request);
+                deviceSender.send(userAgent,ip,city.getCityName());
                 weather = okHttpService.getWeatherByCityId(city.getCityId());
                 if (weather != null) {
                     jsonResult.setMessage("获取天气成功！");

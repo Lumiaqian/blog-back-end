@@ -5,6 +5,7 @@ import com.caoyuqian.blog.pojo.Device;
 import com.caoyuqian.blog.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * @date 2018-12-29 11:08
  **/
 @Service
+@Transactional
 public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
