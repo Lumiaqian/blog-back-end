@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.CommentMapper">
+    <resultMap id="comment" type="com.caoyuqian.blog.pojo.Comment">
+        <result property="id" column="comment_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="commentator" column="commentator"/>
+        <result property="email" column="email"/>
+        <result property="content" column="content"/>
+        <result property="createDate" column="create_date"/>
+        <result property="deleteDate" column="delete_date"/>
+        <result property="status" column="status"/>
+        <result property="isAuthor" column="is_author"/>
+        <result property="fatherId" column="father_id"/>
+        <result property="replyId" column="reply_id"/>
+    </resultMap>
+
+    <insert id="saveComment" parameterType="com.caoyuqian.blog.pojo.Comment">
+        insert into comment(comment_id, post_id, commentator, email, content, create_date, delete_date, status,
+                            is_author, father_id, reply_id)
+        values (#{comment.id}, #{comment.postId}, #{comment.commentator}, #{comment.email}, #{comment.content},
+                #{comment.createDate}, #{comment.deleteDate}, #{comment.status},
+                #{comment.isAuthor}, #{comment.fatherId}, #{comment.replyId})
+    </insert>
+    <select id="getCommentsByPostId" resultMap="comment" parameterType="String">
+        select comment_id,
+               post_id,
+               commentator,
+               email,
+               content,
+               create_date,
+               delete_date,
+               status,
+               is_author,
+               father_id,
+               reply_id
+        from comment
+        where post_id = #{postId} and status = 0
+    </select>
+</mapper>

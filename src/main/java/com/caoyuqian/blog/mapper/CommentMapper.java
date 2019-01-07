@@ -1,0 +1,28 @@
+package com.caoyuqian.blog.mapper;
+
+import com.caoyuqian.blog.pojo.Comment;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * @author lumiaqian
+ */
+@Mapper
+public interface CommentMapper {
+
+    /**
+     * @param comment 评论
+     * @return int 保存的结果
+     */
+    int saveComment(@Param("comment") Comment comment);
+
+    /**
+     * @param postId 文章id
+     * @return List<Comment>
+     * 返回改文章下所有的评论
+     */
+    List<Comment> getCommentsByPostId(@Param("postId")String postId);
+
+}
