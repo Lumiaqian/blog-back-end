@@ -129,6 +129,13 @@ public class JwtTokenUtil {
         return new Date(System.currentTimeMillis());
     }
 
+    /**
+      * @Param: token
+      * @return:
+      * @Author: qian
+      * @Description: token是否过期
+      * @Date: 2018/8/9 下午7:22
+     **/
     public static Boolean isTokenExpired(String token){
         final Date exp;
         try {

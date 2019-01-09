@@ -56,8 +56,26 @@ public class DateUtil {
         ZoneId zoneId = ZoneId.systemDefault();
         return instant.atZone(zoneId).toLocalDateTime();
     }
-
-    public static String DateToString(Date date){
+    /**
+      * @Param: Date N
+      * @return: Date
+      * @Author: qian
+      * @Description: date类型时间减少N小时
+      * @Date: 2019-01-09 15:08
+     **/
+    public static Date dateSubHour(Date date , int n){
+        LocalDateTime localDateTime = DateToLocalDateTime(date);
+        localDateTime=localDateTime.minusHours(n);
+        return localDateTimeToDate(localDateTime);
+    }
+    /**
+      * @Param: Data
+      * @return: String
+      * @Author: qian
+      * @Description: 将Data转化成String类型
+      * @Date: 2018/8/14 下午3:58
+     **/
+    public static String dateToString(Date date){
         LocalDateTime localDateTime= DateUtil.DateToLocalDateTime(date);
         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String str;

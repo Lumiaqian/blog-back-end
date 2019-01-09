@@ -167,7 +167,7 @@ public class UploadController {
             //post_cate关系不存在
             postService.savePostCategories(post);
         }
-        logger.info("解析出的post为：" + post.toString());
+        // logger.info("解析出的post为：" + post.toString());
         //保存到elasticsearch中
         postRepositoryService.save(post);
         //保存到服务器中
@@ -271,11 +271,12 @@ public class UploadController {
         Map elemts;
         try {
             elemts = yaml.load(frontMatter);
+            logger.info("解析的源："+elemts.toString());
         } catch (Exception e) {
-            Date date = new Date(System.currentTimeMillis());
+            Date date = DateUtil.getNow();
             rst.put("title", StringUtils.substringBeforeLast(fileName, "."));
             rst.put("content", context);
-            rst.put("postId", DateUtil.DateToString(date));
+            rst.put("postId", DateUtil.dateToString(date));
             rst.put("publicDate", date);
             rst.put("editDate", date);
             rst.put("saveDate", date);
@@ -298,6 +299,8 @@ public class UploadController {
         //获取时间
 
         Date pubilcDate = (Date) elemts.get("date");
+        pubilcDate = DateUtil.dateSubHour(pubilcDate,8);
+        logger.info("时间："+ pubilcDate);
 
         //获取tags
         List<Tag> tags = new ArrayList<>();
@@ -306,17 +309,19 @@ public class UploadController {
         if (arr == null) {
             tags = null;
         } else if (arr instanceof String) {
+            logger.info("-----进入判断是否只有一个标签------");
             tag.setTagId(tagSnow.nextId());
             tag.setTagName(arr.toString());
             tags.add(tag);
         } else {
             for (String tag1 : (List<String>) arr) {
                 if (StringUtils.isBlank(tag1)) {
-
+                  logger.info("tag为空！");
                 } else {
-                    tag.setTagId(tagSnow.nextId());
-                    tag.setTagName(tag1);
-                    tags.add(tag);
+                    Tag nTag = new Tag();
+                    nTag.setTagId(tagSnow.nextId());
+                    nTag.setTagName(tag1);
+                    tags.add(nTag);
                 }
             }
         }
@@ -329,7 +334,7 @@ public class UploadController {
         if (cate == null) {
             categories = null;
         } else if (cate instanceof String) {
-            logger.info("-----进入判断是否只有一个标签------");
+            logger.info("-----进入判断是否只有一个分类------");
             category.setCategoryName(cate.toString());
             category.setCategoryId(snowFlake.nextId());
             categories.add(category);
@@ -353,7 +358,7 @@ public class UploadController {
         }
 
         rst.put("title", title);
-        rst.put("postId", DateUtil.DateToString(pubilcDate));
+        rst.put("postId", DateUtil.dateToString(pubilcDate));
         rst.put("content", content);
         rst.put("publicDate", pubilcDate);
         rst.put("editDate", pubilcDate);

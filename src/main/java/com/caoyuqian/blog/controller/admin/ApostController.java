@@ -381,9 +381,9 @@ public class ApostController {
             //post.setStatus(0);//没发布
             if (post.getStatus() == 1 && (post.getPostId().equals("000") || post.getPostId() == null)) {//如果文章是将要发布的保存时间设为发布时间
                 post.setSaveDate(post.getPublicDate());
-                post.setPostId(DateUtil.DateToString(post.getPublicDate()));
+                post.setPostId(DateUtil.dateToString(post.getPublicDate()));
             } else if (post.getStatus() == 0 && (post.getPostId().equals("000") || post.getPostId() == null)) {
-                post.setPostId(DateUtil.DateToString(post.getSaveDate()));
+                post.setPostId(DateUtil.dateToString(post.getSaveDate()));
             }
             logger.info("设置完ID:" + post.toString());
             //根据前端的tagId得到相应的tag

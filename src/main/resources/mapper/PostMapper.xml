@@ -251,7 +251,7 @@
           and post.status = 1
     </select>
     <select id="search" parameterType="com.caoyuqian.blog.pojo.Post" resultMap="posts">
-        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,save_date,status,
+        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,post.save_date,post.status,
         category.category_id,category.category_name,category.father_id,
         tag.tag_id,tag.tag_name
         from post,tag,category,post_tag,post_category

@@ -14,7 +14,7 @@ spring:
   datasource:
     name: blog
     #url: jdbc:postgresql://106.12.97.86:5432/blog 39.108.115.109
-    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
     username: root
     password: lumia
     #driver-class-name: org.postgresql.Driver
@@ -23,7 +23,7 @@ spring:
 #    host: 106.12.97.86
     host: 127.0.0.1
     port: 6379
-    #password: lumiaqian
+    password: lumiaqian
     pool:
       max-idle: 5000
       max-active: 5000
@@ -65,7 +65,7 @@ qiniu:
   accessKey: cH8YmWY4vG4JRONomuwhKgUdxVq9u4Aj4DKhP78e
   secretKey: WE1kYmpa8UA2j12NsGh7OnJwUoaACEx3i2KaidXO
   bucket: lumiaqian
-  path: http://pj9aecdab.bkt.clouddn.com/
+  path: http://image.caoyuqian.cn/
 
 user:
   userId: 17679123317
