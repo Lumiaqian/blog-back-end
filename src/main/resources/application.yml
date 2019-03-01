@@ -15,7 +15,7 @@ spring:
   datasource:
     name: blog
     #url: jdbc:postgresql://106.12.97.86:5432/blog 39.108.115.109
-    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
     username: root
     password: lumia
     #driver-class-name: org.postgresql.Driver

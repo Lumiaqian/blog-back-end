@@ -1,6 +1,7 @@
 package com.caoyuqian.blog.rabbitmq;
 
 import com.caoyuqian.blog.pojo.Device;
+import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.service.DeviceService;
 import com.caoyuqian.blog.utils.UserAgentUtils;
 import org.slf4j.Logger;
@@ -44,5 +45,11 @@ public class DeviceReceiver {
             device.setCity(city);
             deviceService.saveDevice(device);
         }
+    }
+    @RabbitHandler
+    public void process(Post post) throws Exception {
+        // logger.info("rabbitMQ receiver: "+city);
+        logger.info("rabbitMQ receiver: " + post.toString());
+
     }
 }

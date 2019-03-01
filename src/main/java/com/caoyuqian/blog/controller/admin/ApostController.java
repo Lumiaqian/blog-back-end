@@ -9,6 +9,7 @@ import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
+import com.caoyuqian.blog.rabbitmq.ESSender;
 import com.caoyuqian.blog.service.CategoryService;
 import com.caoyuqian.blog.service.PostRepositoryService;
 import com.caoyuqian.blog.service.PostService;
@@ -48,6 +49,8 @@ public class ApostController {
     private CategoryService categoryService;
     @Autowired
     private PostRepositoryService postRepositoryService;
+    @Autowired
+    private ESSender esSender;
 
     @PostMapping("save")
     public JsonResult save(@RequestBody Map map) throws Exception {
@@ -121,7 +124,8 @@ public class ApostController {
         postService.updatePostTags(post1,post);
         postService.updatePostCates(post1,post);
         //更新elasticsearch中的post
-        postRepositoryService.save(post);
+        //postRepositoryService.save(post);
+        esSender.send(post);
         return jsonResult;
     }
     @GetMapping("list")
@@ -215,7 +219,8 @@ public class ApostController {
         if (code > 0) {
             jsonResult.setMessage("已经扔进垃圾箱！");
             Post post = postService.getPostById(postId);
-            postRepositoryService.save(post);
+            //postRepositoryService.save(post);
+            esSender.send(post);
         } else {
             jsonResult.setMessage("没有扔进垃圾箱！");
         }
@@ -229,7 +234,8 @@ public class ApostController {
         if (code > 0) {
             jsonResult.setMessage("删除成功！");
             Post post = postService.getPostById(postId);
-            postRepositoryService.save(post);
+            // postRepositoryService.save(post);
+            esSender.send(post);
         } else {
             jsonResult.setMessage("删除失败！");
         }
@@ -254,7 +260,8 @@ public class ApostController {
         if (code > 0) {
             jsonResult.setMessage("更新文章状态为发布成功！");
             post = postService.getPostById(postId);
-            postRepositoryService.save(post);
+            //postRepositoryService.save(post);
+            esSender.send(post);
         }
         else {
             jsonResult.setMessage("更新文章状态为发布失败！");
@@ -274,7 +281,8 @@ public class ApostController {
         if (code > 0) {
             jsonResult.setMessage("更新文章状态为草稿成功！");
             post = postService.getPostById(postId);
-            postRepositoryService.save(post);
+            //postRepositoryService.save(post);
+            esSender.send(post);
         }
         else {
             jsonResult.setMessage("更新文章状态为草稿失败！");
@@ -370,7 +378,8 @@ public class ApostController {
                 jsonResult.setData(post.getPostId());
             }
         }
-        postRepositoryService.save(post);
+        //postRepositoryService.save(post);
+        esSender.send(post);
         return jsonResult;
     }
 

@@ -45,4 +45,9 @@ public class RabbitConfig {
     public Queue device(){
         return new Queue("device");
     }
+
+    @Bean
+    public Queue ES() {
+        return new Queue("es");
+    }
 }
