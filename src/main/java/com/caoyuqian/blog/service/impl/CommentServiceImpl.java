@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author qian
  * @version V1.0
@@ -25,5 +28,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public int saveComment(Comment comment) {
         return commentMapper.saveComment(comment);
+    }
+
+    @Override
+    public List<Comment> getCommentsByPostId(String postId) {
+        return commentMapper.getCommentsByPostId(postId);
     }
 }

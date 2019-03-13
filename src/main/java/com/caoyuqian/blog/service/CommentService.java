@@ -2,6 +2,8 @@ package com.caoyuqian.blog.service;
 
 import com.caoyuqian.blog.pojo.Comment;
 
+import java.util.List;
+
 /**
  * @author qian
  * @version V1.0
@@ -13,4 +15,6 @@ import com.caoyuqian.blog.pojo.Comment;
 public interface CommentService {
 
     int saveComment(Comment comment);
+
+    List<Comment> getCommentsByPostId(String postId);
 }

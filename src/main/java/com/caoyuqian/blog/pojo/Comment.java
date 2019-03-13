@@ -115,12 +115,12 @@ public class Comment {
         this.status = status;
     }
 
-    public boolean isAuthor() {
+    public boolean isIsAuthor() {
         return isAuthor;
     }
 
-    public void setAuthor(boolean author) {
-        isAuthor = author;
+    public void setIsAuthor(boolean isAuthor) {
+        this.isAuthor = isAuthor;
     }
 
     public long getFatherId() {

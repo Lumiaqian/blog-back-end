@@ -21,8 +21,13 @@ public interface CommentMapper {
     /**
      * @param postId 文章id
      * @return List<Comment>
-     * 返回改文章下所有的评论
+     * 返回该文章下所有的评论
      */
     List<Comment> getCommentsByPostId(@Param("postId")String postId);
-
+    /**
+     * @param fatherId
+     * @return List<Comment>
+     * 返回该评论下的所有评论
+     */
+    // List<Comment> getCommentsByFatherId(@Param("fatherId")long fatherId);
 }

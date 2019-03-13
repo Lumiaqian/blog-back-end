@@ -70,7 +70,7 @@ public class PostController {
      * @Date: 2018/8/16 下午8:25
      **/
     @GetMapping("list")
-    public JsonResult getPots(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
+    public JsonResult getPosts(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
         JsonResult jsonResult = new JsonResult();
         logger.info("pageNo: " + pageNo + " pageSize: " + pageSize);
         try {
