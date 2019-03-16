@@ -1,5 +1,8 @@
 package com.caoyuqian.blog.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+
 import java.util.Date;
 
 /**
@@ -12,6 +15,7 @@ import java.util.Date;
  **/
 public class Comment {
     //评论id
+    @JSONField(serializeUsing= ToStringSerializer.class)
     private long id;
     //评论的文章id
     private String postId;
@@ -30,8 +34,10 @@ public class Comment {
     //是否是作者
     private boolean isAuthor;
     //父id
+    @JSONField(serializeUsing= ToStringSerializer.class)
     private long fatherId;
     //回复id
+    @JSONField(serializeUsing= ToStringSerializer.class)
     private long replyId;
 
     @Override

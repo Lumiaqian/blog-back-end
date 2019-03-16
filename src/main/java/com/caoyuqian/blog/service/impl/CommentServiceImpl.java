@@ -34,4 +34,9 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getCommentsByPostId(String postId) {
         return commentMapper.getCommentsByPostId(postId);
     }
+
+    @Override
+    public String getCommentatorById(long id) {
+        return commentMapper.getCommentatorById(id);
+    }
 }

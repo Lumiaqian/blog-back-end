@@ -1,10 +1,13 @@
 package com.caoyuqian.blog.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.caoyuqian.blog.pojo.Comment;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.CommentService;
 import com.caoyuqian.blog.utils.DateUtil;
+import com.caoyuqian.blog.utils.JSONUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -14,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,13 +56,32 @@ public class CommentController {
     public ResponseEntity<JsonResult> getCommentsByPostId(@Param("postId") String postId) {
         JsonResult jsonResult = new JsonResult();
         List<Comment> comments = commentService.getCommentsByPostId(postId);
-        if (comments.isEmpty()) {
+        /*if (comments.isEmpty()) {
             jsonResult = new JsonResult(ResultCode.SYS_ERROR);
             return new ResponseEntity<>(jsonResult, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        }*/
         logger.info("获取的评论为：" + comments.toString());
         jsonResult.setMessage("获取文章评论成功！");
-        jsonResult.setData(comments);
+        jsonResult.setData(formatComment(comments));
         return new ResponseEntity<>(jsonResult, HttpStatus.OK);
+    }
+
+    private List<HashMap<String,Object>> formatComment(List<Comment> comments){
+        List<HashMap<String,Object>> list = new ArrayList<>();
+        comments.forEach(comment -> {
+            HashMap<String,Object> map = new HashMap<>(16);
+            try {
+                String json = JSONUtil.objToJson(comment);
+                map = (HashMap<String, Object>) JSONUtil.jsonToMap(json);
+                if (comment.getFatherId()!=0){
+                    String replyNickName = commentService.getCommentatorById(comment.getReplyId());
+                    map.put("replyNickName",replyNickName);
+                }
+                list.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return list;
     }
 }

@@ -17,4 +17,6 @@ public interface CommentService {
     int saveComment(Comment comment);
 
     List<Comment> getCommentsByPostId(String postId);
+
+    String getCommentatorById(long id);
 }

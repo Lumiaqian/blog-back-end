@@ -30,4 +30,12 @@ public interface CommentMapper {
      * 返回该评论下的所有评论
      */
     // List<Comment> getCommentsByFatherId(@Param("fatherId")long fatherId);
+     /**
+       * @Param: String id
+       * @return: Commentator
+       * @Author: qian
+       * @Description: 根据id获取昵称
+       * @Date: 2019-03-16 21:35
+      **/
+    String getCommentatorById(@Param("id")long id);
 }
