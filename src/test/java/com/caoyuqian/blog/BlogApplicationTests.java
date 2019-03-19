@@ -46,13 +46,13 @@ public class BlogApplicationTests {
         logger.error("I am error log.");
     }
 
-    @Test
+   /* @Test
     public void testToken(){
         String token;
         token= JwtTokenUtil.CreateToken("lumia",1000*60*60*24);
         logger.info("token "+token);
         logger.info("userId "+JwtTokenUtil.getUserIdFromToken(token));
-    }
+    }*/
     @Test
     public void test(){
        /* String password="123";
@@ -90,15 +90,15 @@ public class BlogApplicationTests {
         //city= JSONUtil.jsonToObj(str,City.class);
         logger.info("city: "+city.toString());
     }
-    @Test
+   /* @Test
     public void dateTest(){
         Post post=new Post();
         post=postService.getPostById("123");
         logger.info(post.toString());
         logger.info(DateUtil.DateToLocalDateTime(post.getPublicDate()).toString());
-        logger.info(DateUtil.DateToString(post.getPublicDate()));
+        //logger.info(DateUtil.DateToString(post.getPublicDate()));
 
-    }
+    }*/
     @Test
     public void snowFlake(){
         SnowFlake snowFlake=new SnowFlake(2,3);

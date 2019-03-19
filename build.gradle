@@ -7,6 +7,8 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        //添加gradle-docker 依赖，版本1.2
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
     }
 }
 
@@ -14,11 +16,33 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+//apply plugin: 'application' //可选配置
+apply plugin: 'docker'
 
-group = 'com.caoyuqian'
-version = '0.0.2-SNAPSHOT'
+group = 'caoyuqian'
+version = 'for-docker-1.0.0'
 sourceCompatibility = 1.8
-
+jar {
+    baseName = 'blog-for-docker'
+    version = '1.0.0'
+}
+docker {
+    baseImage 'java:8'
+}
+task dockerBuilder(type: Docker) {
+    applicationName = jar.baseName
+    tagVersion = jar.version
+    volume('/tmp')
+    addFile("${jar.baseName}-${jar.version}.jar","app.jar")
+    entryPoint(["java","-Djava.security.egd=file:/dev/./urandom","-jar",'app.jar'])
+    exposePort(8080)
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
 repositories {
     mavenCentral()
 }
