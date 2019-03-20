@@ -10,4 +10,5 @@
 - 博客的站内搜索使用Elasticsearch
 - 处理网络请求使用OkHttp3
 - 消息队列使用RabbitMQ
+- Docker容器化
 
