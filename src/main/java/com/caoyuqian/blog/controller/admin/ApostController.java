@@ -3,6 +3,7 @@ package com.caoyuqian.blog.controller.admin;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.Atag;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.Post;
@@ -69,6 +70,7 @@ public class ApostController {
     }
 
     @PostMapping("pub")
+    @Log("发布文章")
     public JsonResult pub(@RequestBody Map map) throws Exception {
         JsonResult jsonResult = new JsonResult();
         String message = "发表成功！";
@@ -213,6 +215,7 @@ public class ApostController {
     }
 
     @DeleteMapping("discard/{postId}")
+    @Log("删除文章")
     public JsonResult discardPostById(@PathVariable String postId) {
         JsonResult jsonResult = new JsonResult();
         int code = postService.discardPostById(postId);

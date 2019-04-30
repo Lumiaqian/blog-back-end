@@ -1,21 +1,17 @@
-server:
-  http:
-    port: 8080
-    encoding:
-      charset: utf-8
-      force: true
-      enabled: true
 
 spring:
+  aop:
+    auto: true
   data:
     elasticsearch:
       cluster-name: elasticsearch
-      #cluster-nodes: 39.108.115.109:9300
-      cluster-nodes: 127.0.0.1:9300
+      cluster-nodes: 39.108.115.109:9300
+      #cluster-nodes: 127.0.0.1:9300
   datasource:
     name: blog
     #url: jdbc:postgresql://106.12.97.86:5432/blog 39.108.115.109
     url: jdbc:mysql://mysql:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    #url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
     username: root
     password: lumia
     #driver-class-name: org.postgresql.Driver
@@ -23,6 +19,7 @@ spring:
   redis:
 #    host: 106.12.97.86
     host: my_redis
+    #host: 127.0.0.1
     port: 6379
     password: lumiaqian
     pool:
@@ -38,6 +35,7 @@ spring:
       max-file-size: 10Mb
       max-request-size: 100Mb
   rabbitmq:
+    #host: 127.0.0.1
     host: my_rabbitmq
     port: 5672
     username: lumia

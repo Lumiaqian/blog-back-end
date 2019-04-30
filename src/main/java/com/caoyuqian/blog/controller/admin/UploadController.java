@@ -3,6 +3,7 @@ package com.caoyuqian.blog.controller.admin;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONReader;
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.*;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
@@ -73,6 +74,7 @@ public class UploadController {
     private PostRepositoryService postRepositoryService;
 
     @PostMapping("upload")
+    @Log("上传文章")
     public ResponseEntity<JsonResult> upload(MultipartFile file) throws Exception {
         JsonResult jsonResult;
         // logger.info(constantQiniu.toString());

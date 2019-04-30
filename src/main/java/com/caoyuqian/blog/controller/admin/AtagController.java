@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.controller.admin;
 
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.Atag;
 import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.pojo.result.JsonResult;
@@ -62,6 +63,7 @@ public class AtagController {
     }
 
     @PostMapping("tag")
+    @Log("添加标签")
     public JsonResult add(@RequestBody Map map) throws Exception {
         JsonResult jsonResult;
         Atag tag = JSONUtil.mapToObj(map, Atag.class);
@@ -83,6 +85,7 @@ public class AtagController {
     }
 
     @PutMapping("tag")
+    @Log("更新标签")
     public JsonResult updateTag(@RequestBody Map map) throws Exception {
         JsonResult jsonResult;
         Atag tag = JSONUtil.mapToObj(map,Atag.class);
@@ -100,6 +103,7 @@ public class AtagController {
         return jsonResult;
     }
     @DeleteMapping("tag/{tagId}")
+    @Log("删除标签")
     public JsonResult deleteTag(@PathVariable long tagId){
         JsonResult jsonResult;
         //logger.info("tagId: "+tagId);
@@ -118,6 +122,7 @@ public class AtagController {
         return  jsonResult;
     }
     @PutMapping("tag/{tagId}")
+    @Log("恢复标签")
     public JsonResult recoveryTag(@PathVariable long tagId){
         JsonResult jsonResult;
         Atag atag = new Atag();

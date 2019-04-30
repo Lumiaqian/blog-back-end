@@ -2,6 +2,9 @@ package com.caoyuqian.blog.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -13,6 +16,9 @@ import java.util.Date;
  * @Description: 评论实体类
  * @date 2019-01-04 09:39
  **/
+@Getter
+@Setter
+@Data
 public class Comment {
     //评论id
     @JSONField(serializeUsing= ToStringSerializer.class)
@@ -39,109 +45,4 @@ public class Comment {
     //回复id
     @JSONField(serializeUsing= ToStringSerializer.class)
     private long replyId;
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", postId='" + postId + '\'' +
-                ", commentator='" + commentator + '\'' +
-                ", email='" + email + '\'' +
-                ", content='" + content + '\'' +
-                ", createDate=" + createDate +
-                ", deleteDate=" + deleteDate +
-                ", status=" + status +
-                ", isAuthor=" + isAuthor +
-                ", fatherId=" + fatherId +
-                ", replyId=" + replyId +
-                '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
-    }
-
-    public String getCommentator() {
-        return commentator;
-    }
-
-    public void setCommentator(String commentator) {
-        this.commentator = commentator;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getDeleteDate() {
-        return deleteDate;
-    }
-
-    public void setDeleteDate(Date deleteDate) {
-        this.deleteDate = deleteDate;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public boolean isIsAuthor() {
-        return isAuthor;
-    }
-
-    public void setIsAuthor(boolean isAuthor) {
-        this.isAuthor = isAuthor;
-    }
-
-    public long getFatherId() {
-        return fatherId;
-    }
-
-    public void setFatherId(long fatherId) {
-        this.fatherId = fatherId;
-    }
-
-    public long getReplyId() {
-        return replyId;
-    }
-
-    public void setReplyId(long replyId) {
-        this.replyId = replyId;
-    }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blog.mapper.LogMapper">
+    <resultMap id="log" type="com.caoyuqian.blog.pojo.Log">
+        <result column="log_id" property="logId"/>
+        <result column="user_id" property="userId"/>
+        <result column="operation" property="operation"/>
+        <result column="ip" property="ip"/>
+        <result column="created_date" property="createdDate"/>
+    </resultMap>
+
+    <insert id="save" parameterType="com.caoyuqian.blog.pojo.Log">
+        replace into log(log_id, user_id, operation, created_date, ip)
+        values (#{log.logId}, #{log.userId}, #{log.operation}, #{log.createdDate}, #{log.ip})
+    </insert>
+</mapper>

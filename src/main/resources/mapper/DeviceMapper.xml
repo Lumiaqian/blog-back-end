@@ -18,16 +18,17 @@
         <result property="browserManufacturer" column="browser_manufacturer"/>
         <result property="browserVersion" column="browser_version"/>
         <result property="browserEngine" column="browser_engine"/>
+        <result property="createdTime" column="created_time"/>
     </resultMap>
     <insert id="saveDevice" parameterType="com.caoyuqian.blog.pojo.Device">
         replace into device(id, ip, city, device_manufacturer, device_type, os, os_name, os_version, border_group,
                             border_name,
-                            border_type, browser_manufacturer, browser_version, browser_engine)
+                            border_type, browser_manufacturer, browser_version, browser_engine,created_time)
         values (#{device.id}, #{device.ip}, #{device.city}, #{device.deviceManufacturer}, #{device.deviceType},
                 #{device.os}, #{device.osName},
                 #{device.osVersion}, #{device.borderGroup},
                 #{device.borderName}, #{device.borderType}, #{device.browserManufacturer}, #{device.browserVersion},
-                #{device.browserEngine})
+                #{device.browserEngine},#{device.createdTime})
     </insert>
     <select id="getDevices" resultMap="device">
         select id,
@@ -43,7 +44,8 @@
                border_type,
                browser_manufacturer,
                browser_version,
-               browser_engine
+               browser_engine,
+               created_time
         from device
     </select>
     <select id="isExistDevice" parameterType="com.caoyuqian.blog.pojo.Device" resultType="int">

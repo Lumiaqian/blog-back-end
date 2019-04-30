@@ -1,6 +1,7 @@
 package com.caoyuqian.blog.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.AuthUser;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.utils.JwtTokenUtil;
@@ -26,6 +27,7 @@ import java.io.IOException;
 @Component
 public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     Logger logger= LoggerFactory.getLogger(this.getClass());
+    @Log("用户登录！")
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         JsonResult jsonResult=new JsonResult();

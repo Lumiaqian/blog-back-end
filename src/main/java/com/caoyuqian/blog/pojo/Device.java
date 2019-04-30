@@ -1,5 +1,13 @@
 package com.caoyuqian.blog.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+
 /**
  * @author qian
  * @version V1.0
@@ -8,7 +16,11 @@ package com.caoyuqian.blog.pojo;
  * @Description: TOTO
  * @date 2018-12-29 10:47
  **/
+@Getter
+@Setter
+@Data
 public class Device {
+    @JSONField(serializeUsing= ToStringSerializer.class)
     private long id;
     private String ip;
     private String city;
@@ -23,136 +35,5 @@ public class Device {
     private String browserManufacturer;
     private String browserVersion;
     private String browserEngine;
-
-    @Override
-    public String toString() {
-        return "Device{" +
-                "id=" + id +
-                ", ip='" + ip + '\'' +
-                ", city='" + city + '\'' +
-                ", deviceManufacturer='" + deviceManufacturer + '\'' +
-                ", deviceType='" + deviceType + '\'' +
-                ", os='" + os + '\'' +
-                ", osName='" + osName + '\'' +
-                ", osVersion='" + osVersion + '\'' +
-                ", borderGroup='" + borderGroup + '\'' +
-                ", borderName='" + borderName + '\'' +
-                ", borderType='" + borderType + '\'' +
-                ", browserManufacturer='" + browserManufacturer + '\'' +
-                ", browserVersion='" + browserVersion + '\'' +
-                ", browserEngine='" + browserEngine + '\'' +
-                '}';
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getDeviceManufacturer() {
-        return deviceManufacturer;
-    }
-
-    public void setDeviceManufacturer(String deviceManufacturer) {
-        this.deviceManufacturer = deviceManufacturer;
-    }
-
-    public String getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
-    }
-
-    public String getOsName() {
-        return osName;
-    }
-
-    public void setOsName(String osName) {
-        this.osName = osName;
-    }
-
-    public String getOsVersion() {
-        return osVersion;
-    }
-
-    public void setOsVersion(String osVersion) {
-        this.osVersion = osVersion;
-    }
-
-    public String getBorderGroup() {
-        return borderGroup;
-    }
-
-    public void setBorderGroup(String borderGroup) {
-        this.borderGroup = borderGroup;
-    }
-
-    public String getBorderName() {
-        return borderName;
-    }
-
-    public void setBorderName(String borderName) {
-        this.borderName = borderName;
-    }
-
-    public String getBorderType() {
-        return borderType;
-    }
-
-    public void setBorderType(String borderType) {
-        this.borderType = borderType;
-    }
-
-    public String getBrowserManufacturer() {
-        return browserManufacturer;
-    }
-
-    public void setBrowserManufacturer(String browserManufacturer) {
-        this.browserManufacturer = browserManufacturer;
-    }
-
-    public String getBrowserVersion() {
-        return browserVersion;
-    }
-
-    public void setBrowserVersion(String browserVersion) {
-        this.browserVersion = browserVersion;
-    }
-
-    public String getBrowserEngine() {
-        return browserEngine;
-    }
-
-    public void setBrowserEngine(String browserEngine) {
-        this.browserEngine = browserEngine;
-    }
+    private Date createdTime;
 }

@@ -1,6 +1,9 @@
 package com.caoyuqian.blog.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,132 +17,29 @@ import java.util.List;
  * @Description: User系统用户类
  * @date 2018/8/8 下午9:41
  **/
+@Getter
+@Setter
+@Data
 public class SysUser implements Serializable {
     private String userId;
     private String userName;
     private String password;
     private String email;
-    private Date createDate;//创建时间
-    private Date lastLoginDate;//最后一次登录时间
-    private long settingId;//配置ID
+    //创建时间
+    private Date createDate;
+    //最后一次登录时间
+    private Date lastLoginDate;
+    //配置ID
+    private long settingId;
     private Setting setting;
-    private List<Role> roles;//用户拥有的角色
-    private String weibo;//微博
-    private String QQ;//QQ
-    private String github;//github
+    //用户拥有的角色
+    private List<Role> roles;
+    //微博
+    private String weibo;
+    //QQ
+    private String QQ;
+    //github
+    private String github;
 
-    public String getWeibo() {
-        return weibo;
-    }
 
-    public void setWeibo(String weibo) {
-        this.weibo = weibo;
-    }
-
-    @JSONField(name = "QQ")
-    public String getQQ() {
-        return QQ;
-    }
-
-    public void setQQ(String QQ) {
-        this.QQ = QQ;
-    }
-
-    public String getGithub() {
-        return github;
-    }
-
-    public void setGithub(String github) {
-        this.github = github;
-    }
-
-    @Override
-    public String toString() {
-        return "SysUser{" +
-                "userId='" + userId + '\'' +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", createDate=" + createDate +
-                ", lastLoginDate=" + lastLoginDate +
-                ", settingId=" + settingId +
-                ", setting=" + setting +
-                ", roles=" + roles +
-                ", weibo='" + weibo + '\'' +
-                ", QQ='" + QQ + '\'' +
-                ", github='" + github + '\'' +
-                '}';
-    }
-
-    public long getSettingId() {
-        return settingId;
-    }
-
-    public void setSettingId(long settingId) {
-        this.settingId = settingId;
-    }
-
-    public Setting getSetting() {
-        return setting;
-    }
-
-    public void setSetting(Setting setting) {
-        this.setting = setting;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getLastLoginDate() {
-        return lastLoginDate;
-    }
-
-    public void setLastLoginDate(Date lastLoginDate) {
-        this.lastLoginDate = lastLoginDate;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
 }

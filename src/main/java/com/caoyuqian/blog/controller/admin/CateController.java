@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.controller.admin;
 
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.Acate;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.result.JsonResult;
@@ -82,6 +83,7 @@ public class CateController {
         return jsonResult;
     }
     @PostMapping("cate")
+    @Log("添加分类")
     public JsonResult addCate(@RequestBody Acate acate){
         JsonResult jsonResult;
         int flag = categoryService.getCountByName(acate.getCateName());
@@ -103,6 +105,7 @@ public class CateController {
         return jsonResult;
     }
     @PutMapping("cate")
+    @Log("更新分类")
     public JsonResult updateCate(@RequestBody Acate acate){
         JsonResult jsonResult;
         logger.info(acate.toString());
@@ -118,6 +121,7 @@ public class CateController {
         return jsonResult;
     }
     @DeleteMapping("cate/{cateId}")
+    @Log("删除分类")
     public JsonResult deleteCate(@PathVariable long cateId){
         JsonResult jsonResult;
         Acate acate = new Acate();
@@ -135,6 +139,7 @@ public class CateController {
         return jsonResult;
     }
     @PutMapping("cate/{cateId}")
+    @Log("恢复分类")
     public JsonResult recoveryCate(@PathVariable long cateId){
         JsonResult jsonResult;
         Acate acate = new Acate();
