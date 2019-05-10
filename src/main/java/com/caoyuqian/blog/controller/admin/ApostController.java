@@ -293,6 +293,31 @@ public class ApostController {
         return jsonResult;
     }
 
+     /**
+       * @Param: map -> idList、isOpenComment
+       * @return:
+       * @Author: qian
+       * @Description: 是否打开文章评论->批量更新
+       * @Date: 2019-05-09 11:01
+      **/
+    @PostMapping("openComment")
+    public JsonResult openComment(@RequestBody HashMap<String,Object> map){
+        JsonResult jsonResult = new JsonResult();
+        if (map == null || map.isEmpty()){
+            jsonResult.setCode(ResultCode.PARAMS_ERROR);
+            jsonResult.setMessage("参数为空！");
+            return jsonResult;
+        }
+        int flag = postService.updatePostCommentStatus(map);
+        if (flag>0){
+            jsonResult.setMessage("更新文章评论状态成功！");
+        }else {
+            jsonResult.setCode(ResultCode.UNKONW_ERROR);
+            jsonResult.setMessage("更新文章评论状态失败！");
+        }
+        return jsonResult;
+    }
+
     private JsonResult saveAndPub(Map map, String message) throws Exception {
         JsonResult jsonResult = new JsonResult();
         Post post = JSONUtil.mapToObj(map, Post.class);

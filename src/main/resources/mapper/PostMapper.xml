@@ -12,6 +12,7 @@
         <result property="editDate" column="edit_date"/>
         <result property="saveDate" column="save_date"/>
         <result property="status" column="status"/>
+        <result property="openComment" column="is_open_comment"/>
         <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag">
             <result property="tagId" column="tag_id"/>
             <result property="tagName" column="tag_name"/>
@@ -31,6 +32,7 @@
         <result property="editDate" column="edit_date"/>
         <result property="saveDate" column="save_date"/>
         <result property="status" column="status"/>
+        <result property="openComment" column="is_open_comment"/>
         <collection property="tags" ofType="com.caoyuqian.blog.pojo.Tag"
                     select="getTagById" column="post_id">
 
@@ -69,7 +71,7 @@
           and post.post_id = #{post_id}
     </select>
     <insert id="savePost" parameterType="com.caoyuqian.blog.pojo.Post">
-        insert into post (post_id, title, content, path, public_date, edit_date, save_date, status)
+        insert into post (post_id, title, content, path, public_date, edit_date, save_date, status, is_open_comment)
         values (#{post.postId},
                 #{post.title},
                 #{post.content},
@@ -77,7 +79,8 @@
                 #{post.publicDate},
                 #{post.editDate},
                 #{post.saveDate},
-                #{post.status})
+                #{post.status},
+                #{post.openComment})
     </insert>
     <insert id="savePostTags" parameterType="com.caoyuqian.blog.pojo.Post" useGeneratedKeys="true" keyProperty="id">
         insert into post_tag (post_id,tag_id) values
@@ -100,7 +103,8 @@
                post.public_date,
                post.edit_date,
                post.save_date,
-               post.status
+               post.status,
+               post.is_open_comment
         from post
         where post.post_id != '20180315185058'
           and post.status = 1
@@ -114,7 +118,8 @@
                post.public_date,
                post.edit_date,
                post.save_date,
-               post.status
+               post.status,
+               post.is_open_comment
         from post
         where post.post_id != '20180315185058'
         order by post.save_date desc
@@ -127,7 +132,8 @@
                post.public_date,
                post.edit_date,
                post.save_date,
-               post.status
+               post.status,
+               post.is_open_comment
         from post
         where post.post_id != '20180315185058'
           and post.status = 0
@@ -141,7 +147,8 @@
                post.public_date,
                post.edit_date,
                post.save_date,
-               post.status
+               post.status,
+               post.is_open_comment
         from post
         where post.post_id != '20180315185058'
           and post.status = -1
@@ -156,6 +163,7 @@
                post.edit_date,
                post.save_date,
                post.status,
+               post.is_open_comment,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -182,6 +190,7 @@
                post.edit_date,
                post.save_date,
                post.status,
+               post.is_open_comment,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -207,6 +216,7 @@
                post.edit_date,
                post.save_date,
                post.status,
+               post.is_open_comment,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -233,6 +243,7 @@
                post.edit_date,
                post.save_date,
                post.status,
+               post.is_open_comment,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -251,7 +262,9 @@
           and post.status = 1
     </select>
     <select id="search" parameterType="com.caoyuqian.blog.pojo.Post" resultMap="posts">
-        select post.post_id,post.title,post.content,post.path,post.public_date,post.edit_date,post.save_date,post.status,
+        select
+        post.post_id,post.title,post.content,post.path,post.public_date,
+        post.edit_date,post.save_date,post.status,post.is_open_comment,
         category.category_id,category.category_name,category.father_id,
         tag.tag_id,tag.tag_name
         from post,tag,category,post_tag,post_category
@@ -285,7 +298,8 @@
                public_date,
                edit_date,
                save_date,
-               status
+               status,
+               post.is_open_comment
         from post
         where post_id = #{post_id}
     </select>
@@ -298,6 +312,7 @@
                post.edit_date,
                post.save_date,
                post.status,
+               post.is_open_comment,
                category.category_id,
                category.category_name,
                category.father_id,
@@ -360,7 +375,8 @@
             <if test="post.publicDate != null">public_date=#{post.publicDate},</if>
             <if test="post.editDate != null">edit_date=#{post.editDate},</if>
             <if test="post.saveDate != null">save_date=#{post.saveDate},</if>
-            <if test="post.status != null">status=#{post.status}</if>
+            <if test="post.status != null">status=#{post.status},</if>
+            <if test="post.openComment != null">is_open_comment=#{post.openComment}</if>
         </set>
         where post_id=#{post.postId}
     </update>
@@ -370,20 +386,20 @@
             set tag_id = #{item.newId}
             where post_id=#{item.postId} and tag_id=#{item.oldId}
         </foreach>
-       <!-- update post_tag
-        <trim prefix="set" suffixOverrides=",">
-            <trim prefix="tag_id = case" suffix="end,">
-                <foreach collection="maps" item="item">
-                    when post_id=#{item.postId} and tag_id=#{item.oldId}
-                    then #{item.newId}
-                </foreach>
-            </trim>
-        </trim>
-        <where>
-            <foreach collection="maps" item="item" open="( " separator=") or (" close=" )">
-                post_id=#{item.postId} and tag_id=#{item.oldId}
-            </foreach>
-        </where>-->
+        <!-- update post_tag
+         <trim prefix="set" suffixOverrides=",">
+             <trim prefix="tag_id = case" suffix="end,">
+                 <foreach collection="maps" item="item">
+                     when post_id=#{item.postId} and tag_id=#{item.oldId}
+                     then #{item.newId}
+                 </foreach>
+             </trim>
+         </trim>
+         <where>
+             <foreach collection="maps" item="item" open="( " separator=") or (" close=" )">
+                 post_id=#{item.postId} and tag_id=#{item.oldId}
+             </foreach>
+         </where>-->
 
     </update>
 
@@ -399,16 +415,24 @@
         set status = -1
         where post_id = #{postId}
     </update>
+    <update id="updatePostCommentStatus" parameterType="hashmap">
+        update post
+        set is_open_comment = #{map.openComment}
+        where post_id in
+        <foreach collection="map.idList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
 
     <delete id="deletePostTags" parameterType="com.caoyuqian.blog.pojo.Post">
         delete from post_tag where post_id=#{post.postId} and tag_id in
         <foreach collection="post.tags" item="item" separator="," open="(" close=")" index="index">
-          #{item.tagId}
+            #{item.tagId}
         </foreach>
     </delete>
 
     <delete id="deletePostCates" parameterType="com.caoyuqian.blog.pojo.Post">
-        delete from post_category  where post_id=#{post.postId} and category_id in
+        delete from post_category where post_id=#{post.postId} and category_id in
         <foreach collection="post.categories" index="index" open="(" close=")" separator="," item="item">
             #{item.categoryId}
         </foreach>

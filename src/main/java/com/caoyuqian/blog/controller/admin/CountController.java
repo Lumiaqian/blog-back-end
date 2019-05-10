@@ -2,6 +2,7 @@ package com.caoyuqian.blog.controller.admin;
 
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.service.CategoryService;
+import com.caoyuqian.blog.service.CommentService;
 import com.caoyuqian.blog.service.PostService;
 import com.caoyuqian.blog.service.TagService;
 import org.slf4j.Logger;
@@ -34,6 +35,8 @@ public class CountController {
     private TagService tagService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CommentService commentService;
 
 
     @GetMapping("count")
@@ -43,11 +46,13 @@ public class CountController {
         int postAllCount=postService.getAllCount();
         int tagCount=tagService.getCount();
         int cateCount=categoryService.getCount();
-        Map<String,Integer> map=new HashMap<>();
+        int commentCount=commentService.getCount();
+        Map<String,Integer> map=new HashMap<>(16);
         map.put("postCount",postCount);
         map.put("tagCount",tagCount);
         map.put("cateCount",cateCount);
         map.put("postAllCount",postAllCount);
+        map.put("commentCount",commentCount);
         jsonResult.setData(map);
         return jsonResult;
     }

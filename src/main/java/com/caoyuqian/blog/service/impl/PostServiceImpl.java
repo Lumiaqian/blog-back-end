@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,7 +36,6 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Cacheable(value = "post",key = "#postId")
-    @CacheExpire(60*30)
     public Post getPubPostById(String postId) {
         return postMapper.getPubPostById(postId);
     }
@@ -47,7 +47,6 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Cacheable(value = "post",key = "#postId")
-    @CacheExpire(60*30)
     public Post about(String postId) {
         return postMapper.about(postId);
     }
@@ -228,5 +227,10 @@ public class PostServiceImpl implements PostService{
     @Override
     public int discardPostById(String postId) {
         return postMapper.discardPostById(postId);
+    }
+
+    @Override
+    public int updatePostCommentStatus(HashMap<String, Object> map) {
+        return postMapper.updatePostCommentStatus(map);
     }
 }

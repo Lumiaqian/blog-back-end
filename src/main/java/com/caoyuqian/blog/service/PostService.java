@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public interface PostService {
@@ -72,4 +73,6 @@ public interface PostService {
     int deletePostById(String postId);
 
     int discardPostById(String postId);
+
+    int updatePostCommentStatus(HashMap<String,Object> map);
 }

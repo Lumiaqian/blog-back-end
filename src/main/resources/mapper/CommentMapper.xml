@@ -42,4 +42,10 @@
     <select id="getCommentatorById" parameterType="long" resultType="String">
         select commentator from comment where comment_id = #{id}
     </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(1) from comment
+    </select>
+    <select id="getCountByPost" resultType="java.lang.Integer" parameterType="string">
+        select count(1) from comment where post_id = #{postId}
+    </select>
 </mapper>

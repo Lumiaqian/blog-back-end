@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -68,4 +69,6 @@ public interface PostMapper {
     int deletePostById(@Param("postId") String postId);
 
     int discardPostById(@Param("postId") String postId);//将文章扔进垃圾箱
+
+    int updatePostCommentStatus(@Param("map")HashMap<String,Object> map);//更新文章评论状态
 }

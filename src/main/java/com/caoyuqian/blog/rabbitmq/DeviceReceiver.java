@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -39,7 +40,7 @@ public class DeviceReceiver {
         String userAgent = (String) map.get("userAgent");
         String ip = (String) map.get("ip");
         String city = (String) map.get("city");
-        Date createdTime = (Date) map.get("createdTime");
+        Date createdTime = new Date((Long) map.get("createdTime"));
         Device device = new Device();
         device = UserAgentUtils.getDevice(userAgent);
         if (device!=null){

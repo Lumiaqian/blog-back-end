@@ -8,8 +8,10 @@ import com.caoyuqian.blog.pojo.*;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.*;
+import com.caoyuqian.blog.service.impl.OkHttpService;
 import com.caoyuqian.blog.utils.DateUtil;
 import com.caoyuqian.blog.utils.JSONUtil;
+import com.caoyuqian.blog.utils.OkHttpUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
 import com.github.pagehelper.PageInfo;
 import com.qiniu.common.QiniuException;
@@ -68,10 +70,14 @@ public class UploadController {
     private UserService userService;
     @Value("${qiniu.path}")
     private String path;
+    @Value("${prop.url}")
+    private String url;
     @Autowired
     private QiniuImageService qiniuImageService;
     @Autowired
     private PostRepositoryService postRepositoryService;
+    @Autowired
+    private OkHttpService okHttpService;
 
     @PostMapping("upload")
     @Log("上传文章")
@@ -257,6 +263,24 @@ public class UploadController {
         PageInfo<QiniuImage> pageInfo = qiniuImageService.getQinius(pageNo,pageSize);
         jsonResult.setData(pageInfo);
         return new ResponseEntity<>(jsonResult, HttpStatus.OK);
+    }
+    @PostMapping("upload/image")
+    public ResponseEntity<JsonResult> uploadImage(MultipartFile file) throws IOException {
+        JsonResult jsonResult = new JsonResult();
+        SnowFlake snow = new SnowFlake(2, 3);
+        QiniuImage qiniuImage = new QiniuImage();
+        qiniuImage.setId(snow.nextId());
+        qiniuImage.setName(file.getOriginalFilename());
+        //保存到图片服务器中
+        qiniuImage.setUrl(okHttpService.getImageUrl(url,file));
+        if (qiniuImage.getUrl().equals("")){
+            jsonResult.setMessage("上传失败！");
+            return new ResponseEntity<>(jsonResult,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        qiniuImageService.save(qiniuImage);
+        jsonResult.setData(qiniuImage);
+        jsonResult.setMessage("上传成功！");
+        return new ResponseEntity<>(jsonResult,HttpStatus.OK);
     }
 
     private JSONObject parseArticle(String fileName, String context) throws ParseException {

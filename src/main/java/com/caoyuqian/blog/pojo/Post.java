@@ -49,6 +49,16 @@ public class Post implements Serializable {
     private int watchCount;
     //1表示已发布状态、0表示未发布状态、-1表示已经删除在垃圾箱中的状态 默认为0
     private int status;
+    //0表示关闭评论，1表示开启评论
+    private boolean openComment;
+
+    public boolean isOpenComment() {
+        return openComment;
+    }
+
+    public void setOpenComment(boolean openComment) {
+        this.openComment = openComment;
+    }
 
     public Date getSaveDate() {
         return saveDate;
@@ -146,12 +156,13 @@ public class Post implements Serializable {
                 ", content='" + content + '\'' +
                 ", publicDate=" + publicDate +
                 ", editDate=" + editDate +
-                ", SaveDate=" + saveDate +
+                ", saveDate=" + saveDate +
                 ", path='" + path + '\'' +
                 ", tags=" + tags +
                 ", categories=" + categories +
                 ", watchCount=" + watchCount +
                 ", status=" + status +
+                ", openComment=" + openComment +
                 '}';
     }
 }

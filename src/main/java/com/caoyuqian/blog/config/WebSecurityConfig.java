@@ -91,6 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/lumia/*/*/*").permitAll()
                 //.antMatchers("/posts/qian/*").hasAnyRole("ADMIN")
                 //.antMatchers("/").permitAll()
+                //.antMatchers("/upload/image").permitAll()
                 .antMatchers("/test").permitAll()
                 //.antMatchers("/login").permitAll()
                 //.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

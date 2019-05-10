@@ -38,4 +38,22 @@ public interface CommentMapper {
        * @Date: 2019-03-16 21:35
       **/
     String getCommentatorById(@Param("id")long id);
+
+     /**
+       * @Param:
+       * @return:
+       * @Author: qian
+       * @Description: 统计评论数
+       * @Date: 2019-05-09 17:34
+      **/
+    int getCount();
+
+     /**
+       * @Param: postId
+       * @return:
+       * @Author: qian
+       * @Description: 统计某篇文章下的评论数
+       * @Date: 2019-05-09 17:36
+      **/
+    int getCountByPost(@Param("postId")String postId);
 }

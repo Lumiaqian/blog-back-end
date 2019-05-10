@@ -19,4 +19,8 @@ public interface CommentService {
     List<Comment> getCommentsByPostId(String postId);
 
     String getCommentatorById(long id);
+
+    int getCount();
+
+    int getCountByPost(String postId);
 }

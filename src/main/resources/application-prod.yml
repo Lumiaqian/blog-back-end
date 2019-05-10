@@ -1,0 +1,55 @@
+spring:
+  aop:
+    auto: true
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 39.108.115.109:9300
+      #cluster-nodes: 127.0.0.1:9300
+  datasource:
+    name: blog
+    #url: jdbc:postgresql://106.12.97.86:5432/blog 39.108.115.109
+    url: jdbc:mysql://mysql:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    #url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: lumia
+    #driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: SCHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  redis:
+    #    host: 106.12.97.86
+    host: my_redis
+    #host: 127.0.0.1
+    port: 6379
+    password: lumiaqian
+    pool:
+      max-idle: 5000
+      max-active: 5000
+      min-idle: 50
+      testOnBorrow: true
+      max-wait: 200
+    timeout: 5000
+    database: 0
+  servlet:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 100Mb
+  rabbitmq:
+    #host: 127.0.0.1
+    host: my_rabbitmq
+    port: 5672
+    username: lumia
+    password: lumia
+    # 消息发送到交换器确认机制,是否确认回调
+    publisher-confirms: true
+    # publisher-returns: true
+    virtual-host: /

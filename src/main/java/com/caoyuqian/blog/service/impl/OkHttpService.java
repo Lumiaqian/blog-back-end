@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ import java.util.Map;
 @Service
 public class OkHttpService {
 
-    private final Logger logger= LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger= LoggerFactory.getLogger(OkHttpService.class);
 
     @Value("${appKey.ak}")
     private String ak;
@@ -51,7 +53,7 @@ public class OkHttpService {
         String url="http://api.map.baidu.com/location/ip";
         String cityName="";
         String responseIp="";
-        Map<String,String> map=new HashMap();
+        Map<String,String> map=new HashMap(16);
         map.put("coor",coor);
         map.put("ak",ak);
         map.put("ip",ip);
@@ -90,7 +92,7 @@ public class OkHttpService {
         String response="";
         JSONArray weather;
         String url="http://aider.meizu.com/app/weather/listWeather";
-        Map<String,String> map=new HashMap<>();
+        Map<String,String> map=new HashMap<>(16);
         map.put("cityIds",cityId);
         response=OkHttpUtil.get(url,map);
         logger.info("response: "+response);
@@ -103,5 +105,18 @@ public class OkHttpService {
             weather=null;
         }
         return weather;
+    }
+
+    public String getImageUrl(String url, MultipartFile file) throws IOException {
+        String reUrl = "";
+        String response = OkHttpUtil.put(url,file);
+        logger.info("response: "+response);
+        //获得查询成功的状态
+        String code=(String) JSONObject.parseObject(response).get("code");
+        if (code.equals("200")){
+            JSONObject jsonObject = JSONObject.parseObject(response);
+            reUrl = jsonObject.getString("data");
+        }
+        return  reUrl;
     }
 }

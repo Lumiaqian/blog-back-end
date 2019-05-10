@@ -3,7 +3,10 @@ package com.caoyuqian.blog.utils;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -101,7 +104,35 @@ public class OkHttpUtil {
         }
         return responseBody;
     }
-
+    public static String put(String url, MultipartFile file) throws IOException {
+        String responseBody = "";
+        // form 表单形式上传,MultipartBody的内容类型是表单格式，multipart/form-data
+        MultipartBody.Builder builder= new MultipartBody.Builder().setType(MultipartBody.FORM);
+        //添加参数
+        builder.addFormDataPart("file",file.getOriginalFilename(),
+                RequestBody.create(MediaType.parse("multipart/form-data"), file.getBytes())
+        );
+        Request request = new Request.Builder()
+                .url(url)
+                .put(builder.build())
+                .build();
+        Response response = null;
+        try {
+            OkHttpClient okHttpClient = new OkHttpClient();
+            response = okHttpClient.newCall(request).execute();
+            int status = response.code();
+            if (response.isSuccessful()) {
+                return response.body().string();
+            }
+        } catch (Exception e) {
+            logger.error("okhttp3 post error >> ex = {}", e.getStackTrace().toString());
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+        return responseBody;
+    }
      /**
        * @Param: url queries
        * @return: 
