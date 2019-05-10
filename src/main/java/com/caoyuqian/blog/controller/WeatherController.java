@@ -67,8 +67,8 @@ public class WeatherController {
     public JsonResult getWeatherByIP(HttpServletRequest request) {
         JsonResult jsonResult;
         JSONObject jsonObject = getIP();
-        String ip = (String) jsonObject.get("cip");
-        //String ip = NetworkUtil.getIpAddress(request);
+        //String ip = (String) jsonObject.get("cip");
+        String ip = NetworkUtil.getIpAddress(request);
         jsonResult = getWeatherByIP(ip,request);
         return jsonResult;
     }

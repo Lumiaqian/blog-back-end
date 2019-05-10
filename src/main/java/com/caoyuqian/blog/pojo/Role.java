@@ -9,9 +9,8 @@ package com.caoyuqian.blog.pojo;
  * @date 2018/8/8 下午9:38
  **/
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 @Getter
 @Setter
 @Data

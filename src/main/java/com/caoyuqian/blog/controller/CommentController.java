@@ -3,9 +3,11 @@ package com.caoyuqian.blog.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.caoyuqian.blog.pojo.Comment;
+import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.result.JsonResult;
 import com.caoyuqian.blog.pojo.result.ResultCode;
 import com.caoyuqian.blog.service.CommentService;
+import com.caoyuqian.blog.service.PostService;
 import com.caoyuqian.blog.utils.DateUtil;
 import com.caoyuqian.blog.utils.JSONUtil;
 import com.caoyuqian.blog.utils.SnowFlake;
@@ -35,12 +37,20 @@ public class CommentController {
     private final Logger logger = LoggerFactory.getLogger(CommentController.class);
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private PostService postService;
 
     @PostMapping("comment")
     public ResponseEntity<JsonResult> saveComment(@RequestBody Comment comment) {
         JsonResult jsonResult = new JsonResult();
         if (comment == null) {
-            jsonResult = new JsonResult(ResultCode.SYS_ERROR);
+            jsonResult = new JsonResult(ResultCode.PARAMS_ERROR);
+            return new ResponseEntity<>(jsonResult, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        Post post = postService.getPostById(comment.getPostId());
+        if (post.isOpenComment()==false){
+            jsonResult = new JsonResult(ResultCode.UNKONW_ERROR);
+            jsonResult.setMessage("文章评论已关闭！");
             return new ResponseEntity<>(jsonResult, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         SnowFlake snowFlake = new SnowFlake(2, 3);
