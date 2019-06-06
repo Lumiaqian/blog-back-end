@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -44,6 +45,7 @@ public class BlogApplicationTests {
         logger.debug("I am debug log.");
         logger.warn("I am warn log.");
         logger.error("I am error log.");
+        // RestTemplate
     }
 
    /* @Test

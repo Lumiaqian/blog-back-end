@@ -15,4 +15,7 @@
         replace into log(log_id, user_id, operation, created_date, ip)
         values (#{log.logId}, #{log.userId}, #{log.operation}, #{log.createdDate}, #{log.ip})
     </insert>
+    <select id="getAllLog" resultMap="log">
+        select log_id,user_id,operation,ip,created_date from log order by created_date desc
+    </select>
 </mapper>
