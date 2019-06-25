@@ -1,6 +1,7 @@
 package com.caoyuqian.blog.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.Tag;
@@ -70,6 +71,7 @@ public class PostController {
      * @Date: 2018/8/16 下午8:25
      **/
     @GetMapping("list")
+    @Log("访问网站")
     public JsonResult getPosts(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
         JsonResult jsonResult = new JsonResult();
         logger.info("pageNo: " + pageNo + " pageSize: " + pageSize);
@@ -92,6 +94,7 @@ public class PostController {
      * @Date: 2018/8/16 下午8:43
      **/
     @GetMapping("{postId}")
+    @Log("访问详细文章")
     public JsonResult getPost(@PathVariable String postId) {
         JsonResult jsonResult = new JsonResult();
         Post post = postService.getPubPostById(postId);
@@ -118,6 +121,7 @@ public class PostController {
      * @Date: 2018/9/7 下午8:56
      **/
     @GetMapping("about")
+    @Log("访问关于我页面")
     public JsonResult about() {
         JsonResult jsonResult = new JsonResult();
         String postId = "20180315185058";
@@ -146,6 +150,7 @@ public class PostController {
     }
 
     @PostMapping("search")
+    @Log("搜索文章")
     public JsonResult search(@RequestBody Map map) {
         JsonResult jsonResult = new JsonResult();
         Integer pageNum = (Integer) map.get("pageNum");

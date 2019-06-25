@@ -77,4 +77,10 @@
           and
             browser_engine = #{device.browserEngine}
     </select>
+    <select id="getCityCount" resultType="java.util.HashMap">
+        select city, count(1) as num from device GROUP BY city;
+    </select>
+    <select id="getOSCount" resultType="java.util.HashMap">
+        select os_name as os, count(1) as num from device GROUP BY os_name;
+    </select>
 </mapper>

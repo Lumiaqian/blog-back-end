@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,4 +22,6 @@ public interface DeviceMapper {
     int saveDevice(@Param("device")Device device);
     List<Device> getDevices();
     int isExistDevice(@Param("device")Device device);
+    List<HashMap<String, Object>> getCityCount();
+    List<HashMap<String, Object>> getOSCount();
 }

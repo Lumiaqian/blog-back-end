@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.controller;
 
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.Tag;
 import com.caoyuqian.blog.pojo.result.JsonResult;
@@ -38,6 +39,7 @@ public class TagController {
     private PostServiceImpl postService;
 
     @GetMapping("list")
+    @Log("访问网站标签页面")
     public JsonResult list() {
         JsonResult jsonResult = new JsonResult();
         List<Tag> tags;
@@ -48,6 +50,7 @@ public class TagController {
     }
 
     @GetMapping("posts/{tagId}")
+    @Log("访问网站详细标签")
     public JsonResult getPostsByTag(@PathVariable long tagId, @Param("pageNo") int pageNo, @Param("pageSize") int pageSize) {
         JsonResult jsonResult = new JsonResult();
        /* List<Post> posts;

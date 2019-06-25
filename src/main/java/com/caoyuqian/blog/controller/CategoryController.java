@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.controller;
 
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.pojo.Category;
 import com.caoyuqian.blog.pojo.Post;
 import com.caoyuqian.blog.pojo.result.JsonResult;
@@ -39,6 +40,7 @@ public class CategoryController {
     private PostServiceImpl postService;
 
     @GetMapping("list")
+    @Log("访问网站分类页面")
     public JsonResult list(@Param("pageNo") int pageNo, @Param("pageSize") int pageSize){
         JsonResult jsonResult=new JsonResult();
         // List<Category> categories=categoryService.getCategories();
@@ -48,6 +50,7 @@ public class CategoryController {
         return jsonResult;
     }
     @GetMapping("posts/{categoryId}")
+    @Log("访问网站详细分类页面")
     public JsonResult getPostsByTag(@PathVariable long categoryId,
                                     @Param("pageNo") int pageNo,
                                     @Param("pageSize") int pageSize){

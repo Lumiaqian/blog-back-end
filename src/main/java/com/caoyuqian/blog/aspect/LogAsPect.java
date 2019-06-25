@@ -78,6 +78,9 @@ public class LogAsPect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .getRequest();
         String ip = NetworkUtil.getIpAddress(request);
+        if (userId.equals("anonymousUser")){
+            userId = "游客";
+        }
         log.setUserId(userId);
         log.setCreatedDate(DateUtil.getNow());
         log.setLogId(snowFlake.nextId());

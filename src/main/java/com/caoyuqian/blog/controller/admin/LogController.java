@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description: TOTO
  * @date 2019-05-28 10:55
  **/
-@RestController("admin/log")
+@RestController()
+@RequestMapping("admin/log")
 public class LogController {
 
     @Autowired

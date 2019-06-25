@@ -69,6 +69,7 @@ dependencies {
     // compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.0.4.RELEASE'
     compile('org.springframework.boot:spring-boot-starter-amqp')
     //runtime('org.springframework.boot:spring-boot-devtools')
+    compile('org.springframework.boot:spring-boot-starter-quartz')
     runtime('org.postgresql:postgresql')
     runtime('mysql:mysql-connector-java')
     testCompile('org.springframework.boot:spring-boot-starter-test')

@@ -382,7 +382,7 @@ public class UploadController {
                 categories.add(category);
             }
         }
-
+        logger.debug("---分类:{}----",categories);
         rst.put("title", title);
         rst.put("postId", DateUtil.dateToString(pubilcDate));
         rst.put("content", content);

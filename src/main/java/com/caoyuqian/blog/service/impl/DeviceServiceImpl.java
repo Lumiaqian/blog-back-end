@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,5 +36,15 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<Device> getDevices() {
         return deviceMapper.getDevices();
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getCityCount() {
+        return deviceMapper.getCityCount();
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getOSCount() {
+        return deviceMapper.getOSCount();
     }
 }

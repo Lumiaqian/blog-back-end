@@ -1,5 +1,6 @@
 package com.caoyuqian.blog.filter;
 
+import com.caoyuqian.blog.aspect.Log;
 import com.caoyuqian.blog.config.AuthUserDetailsService;
 import com.caoyuqian.blog.pojo.AuthUser;
 import com.caoyuqian.blog.pojo.SysUser;
@@ -35,6 +36,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private AuthUserDetailsService userDetailsService;
 
     @Override
+    //@Log("访问网站")
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token =request.getHeader("Authorization");
         //logger.info("token："+token);
