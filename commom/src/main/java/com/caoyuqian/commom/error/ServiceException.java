@@ -1,0 +1,56 @@
+package com.caoyuqian.commom.error;
+
+import com.caoyuqian.commom.api.Status;
+import lombok.Getter;
+
+/**
+ * @author qian
+ * @version V1.0
+ * @Title: ServiceException
+ * @Package: com.caoyuqian.commom.error
+ * @Description: TOTO
+ * @date 2019/12/2 2:39 下午
+ **/
+public class ServiceException extends RuntimeException {
+    @Getter
+    private Status status;
+
+    public ServiceException(String message){
+        super(message);
+        this.status = Status.FAILURE;
+    }
+
+    public ServiceException(Status status){
+        super(status.getMsg());
+        this.status = status;
+    }
+
+    public ServiceException(Status status, String msg) {
+        super(msg);
+        this.status = status;
+    }
+
+    public ServiceException(Status status, Throwable cause) {
+        super(cause);
+        this.status = status;
+    }
+
+    public ServiceException(String msg, Throwable cause) {
+        super(msg, cause);
+        this.status = Status.FAILURE;
+    }
+
+    /**
+     * for better performance
+     *
+     * @return Throwable
+     */
+    @Override
+    public Throwable fillInStackTrace() {
+        return this;
+    }
+
+    public Throwable doFillInStackTrace() {
+        return super.fillInStackTrace();
+    }
+}
