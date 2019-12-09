@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-svc
+          uri: lb://user-svc
+          predicates:
+            - Path=/user/**
+          filters:
+            - PrefixPath=/v1 #添加前缀

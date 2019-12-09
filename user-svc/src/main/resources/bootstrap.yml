@@ -1,0 +1,10 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: user-svc
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848

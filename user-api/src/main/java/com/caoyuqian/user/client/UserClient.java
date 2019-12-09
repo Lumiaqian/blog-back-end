@@ -1,15 +1,15 @@
 package com.caoyuqian.user.client;
 
 import com.caoyuqian.commom.api.Result;
+import com.caoyuqian.commom.entity.Role;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
+import com.caoyuqian.user.vo.UserVo;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * @author qian
@@ -19,21 +19,29 @@ import javax.validation.constraints.NotBlank;
  * @Description: UserClient
  * @date 2019/12/5 2:59 下午
  **/
-@FeignClient(name = "user-sev",path = "/v1/user")
+@FeignClient(name = "user-svc")
 public interface UserClient {
     /**
      * 通过手机号获取用户信息接口
      * @param mobile
      * @return
      */
-    @GetMapping
-    Result getByMobile(@RequestParam("mobile") @NotBlank String mobile);
+    @GetMapping("/v1/user")
+    Result<UserVo> getByMobile(@RequestParam("mobile") @NotBlank String mobile);
 
     /**
      * 校验密码
      * @param request
      * @return
      */
-    @PostMapping("verify")
+    @PostMapping("/v1/user/verify")
     Result verifyPassword(@Valid @RequestBody VerifyPasswordRequest request);
+
+    /**
+     * 查询用户所拥有的角色
+     * @param userId
+     * @return
+     */
+    @GetMapping("/v1/role/user/{userId}")
+    Result<List<Role>> getByUserId(@PathVariable(value = "userId") String userId);
 }

@@ -11,11 +11,11 @@
     <description>Demo project for Spring Cloud</description>
 
     <modules>
-        <module>demo-one-sev</module>
-        <module>auth-sev</module>
-        <module>user-sev</module>
+        <module>auth-svc</module>
+        <module>user-svc</module>
         <module>user-api</module>
         <module>commom</module>
+        <module>gateway-svc</module>
     </modules>
 
     <dependencyManagement>
@@ -85,12 +85,6 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
-        </dependency>
-       <!--  mybatis-plus -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.2.0</version>
         </dependency>
     </dependencies>
 
