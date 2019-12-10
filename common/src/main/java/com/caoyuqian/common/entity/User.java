@@ -1,4 +1,4 @@
-package com.caoyuqian.commom.entity;
+package com.caoyuqian.common.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

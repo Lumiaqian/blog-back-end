@@ -1,6 +1,6 @@
-package com.caoyuqian.commom.error;
+package com.caoyuqian.common.error;
 
-import com.caoyuqian.commom.api.Status;
+import com.caoyuqian.common.api.Status;
 import lombok.Getter;
 
 /**

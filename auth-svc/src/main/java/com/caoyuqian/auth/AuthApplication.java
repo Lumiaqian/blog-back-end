@@ -14,7 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @MapperScan("com.caoyuqian.auth.mapper")
 @EnableFeignClients(basePackages = {"com.caoyuqian.user"})
-@ComponentScan(basePackages = {"com.caoyuqian.commom","com.caoyuqian.auth"})
+@ComponentScan(basePackages = {"com.caoyuqian.common","com.caoyuqian.auth"})
 public class AuthApplication {
 
     public static void main(String[] args) {

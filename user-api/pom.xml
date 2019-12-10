@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.caoyuqian</groupId>
-			<artifactId>commom</artifactId>
+			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

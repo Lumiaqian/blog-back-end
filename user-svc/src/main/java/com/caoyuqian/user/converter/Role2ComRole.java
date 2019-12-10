@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
  * @date 2019/12/6 3:28 下午
  **/
 @Component
-public class Role2ComRole implements Converter<Role, com.caoyuqian.commom.entity.Role> {
+public class Role2ComRole implements Converter<Role, com.caoyuqian.common.entity.Role> {
     @Override
-    public com.caoyuqian.commom.entity.Role convert(Role role) {
-        com.caoyuqian.commom.entity.Role comRole = new com.caoyuqian.commom.entity.Role();
+    public com.caoyuqian.common.entity.Role convert(Role role) {
+        com.caoyuqian.common.entity.Role comRole = new com.caoyuqian.common.entity.Role();
         BeanUtils.copyProperties(role,comRole);
         return comRole;
     }

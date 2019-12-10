@@ -1,4 +1,4 @@
-package com.caoyuqian.commom.annotation;
+package com.caoyuqian.common.annotation;
 
 import java.lang.annotation.*;
 

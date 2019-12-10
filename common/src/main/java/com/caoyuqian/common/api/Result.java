@@ -1,4 +1,4 @@
-package com.caoyuqian.commom.api;
+package com.caoyuqian.common.api;
 
 import lombok.Builder;
 import lombok.Getter;

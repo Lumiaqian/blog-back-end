@@ -1,4 +1,4 @@
-package com.caoyuqian.commom.utils;
+package com.caoyuqian.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;

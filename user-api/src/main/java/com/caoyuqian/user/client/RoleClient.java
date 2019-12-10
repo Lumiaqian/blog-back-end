@@ -1,6 +1,6 @@
 package com.caoyuqian.user.client;
 
-import com.caoyuqian.commom.api.Result;
+import com.caoyuqian.common.api.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

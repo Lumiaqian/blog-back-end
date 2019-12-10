@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 @MapperScan("com.caoyuqian.user.mapper")
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"com.caoyuqian.commom","com.caoyuqian.user"})
+@ComponentScan(basePackages = {"com.caoyuqian.common","com.caoyuqian.user"})
 public class UserSvcApplication {
 
     public static void main(String[] args) {

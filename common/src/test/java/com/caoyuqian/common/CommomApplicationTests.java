@@ -1,4 +1,4 @@
-package com.caoyuqian.commom;
+package com.caoyuqian.common;
 
 
 import org.junit.Test;

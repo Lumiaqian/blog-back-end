@@ -8,3 +8,7 @@ spring:
             - Path=/user/**
           filters:
             - PrefixPath=/v1 #添加前缀
+        - id: auth-svc
+          uri: lb://auth-svc
+          predicates:
+            - Path=/oauth/**

@@ -1,4 +1,4 @@
-package com.caoyuqian.commom.api;
+package com.caoyuqian.common.api;
 
 import lombok.AllArgsConstructor;
 
@@ -14,8 +14,8 @@ public enum Status {
     //处理失败
     FAILURE(500, "FAILURE"),
 
-    //未登录
-    NOT_LOGIN(401, "Not Login"),
+    //未认证
+    UNAUTHORIZED(401, "UNAUTHORIZED"),
 
     //未激活
     NOT_ACTIVE(402, "Account Not Active"),

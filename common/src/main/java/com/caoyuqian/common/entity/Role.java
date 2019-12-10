@@ -1,4 +1,4 @@
-package com.caoyuqian.commom.entity;
+package com.caoyuqian.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

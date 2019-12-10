@@ -8,9 +8,9 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>com.caoyuqian</groupId>
-    <artifactId>commom</artifactId>
+    <artifactId>common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>commom</name>
+    <name>common</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

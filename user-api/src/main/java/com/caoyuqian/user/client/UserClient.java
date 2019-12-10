@@ -1,7 +1,7 @@
 package com.caoyuqian.user.client;
 
-import com.caoyuqian.commom.api.Result;
-import com.caoyuqian.commom.entity.Role;
+import com.caoyuqian.common.api.Result;
+import com.caoyuqian.common.entity.Role;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.vo.UserVo;
 import org.springframework.cloud.openfeign.FeignClient;

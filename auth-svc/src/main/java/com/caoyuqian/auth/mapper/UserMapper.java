@@ -1,7 +1,7 @@
 package com.caoyuqian.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.caoyuqian.commom.entity.User;
+import com.caoyuqian.common.entity.User;
 
 /**
  * @author qian

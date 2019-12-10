@@ -1,8 +1,8 @@
 package com.caoyuqian.user.rest;
 
-import com.caoyuqian.commom.api.Result;
-import com.caoyuqian.commom.api.Status;
-import com.caoyuqian.commom.error.ServiceException;
+import com.caoyuqian.common.api.Result;
+import com.caoyuqian.common.api.Status;
+import com.caoyuqian.common.error.ServiceException;
 import com.caoyuqian.user.dto.CreateUserRequest;
 import com.caoyuqian.user.dto.UserQuery;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;

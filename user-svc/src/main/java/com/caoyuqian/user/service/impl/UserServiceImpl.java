@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.caoyuqian.commom.utils.SpringUtil;
+import com.caoyuqian.common.utils.SpringUtil;
 import com.caoyuqian.user.converter.User2UserVoConvert;
 import com.caoyuqian.user.converter.CreateUserRequest2UserConvert;
 import com.caoyuqian.user.dto.CreateUserRequest;

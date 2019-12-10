@@ -1,6 +1,6 @@
 package com.caoyuqian.user.rest;
 
-import com.caoyuqian.commom.api.Result;
+import com.caoyuqian.common.api.Result;
 import com.caoyuqian.user.converter.CreateRoleRequest2RoleConverter;
 import com.caoyuqian.user.converter.Role2ComRole;
 import com.caoyuqian.user.dto.CreateRoleRequest;

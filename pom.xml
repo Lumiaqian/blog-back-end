@@ -14,7 +14,7 @@
         <module>auth-svc</module>
         <module>user-svc</module>
         <module>user-api</module>
-        <module>commom</module>
+        <module>common</module>
         <module>gateway-svc</module>
     </modules>
 

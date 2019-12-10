@@ -1,6 +1,6 @@
-package com.caoyuqian.commom.error;
+package com.caoyuqian.common.error;
 
-import com.caoyuqian.commom.api.Result;
+import com.caoyuqian.common.api.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

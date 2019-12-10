@@ -1,6 +1,6 @@
 package com.caoyuqian.auth.controller;
 
-import com.caoyuqian.commom.api.Result;
+import com.caoyuqian.common.api.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
