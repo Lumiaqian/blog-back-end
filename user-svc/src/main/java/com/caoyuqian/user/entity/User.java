@@ -11,7 +11,7 @@ import java.util.Set;
  * @author qian
  * @version V1.0
  * @Title: User
- * @Package: com.caoyuqian.usersev.model
+ * @Package: com.caoyuqian.usersev.entity
  * @Description: 用户表
  * @date 2019/11/28 3:32 下午
  **/

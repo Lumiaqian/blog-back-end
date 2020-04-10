@@ -12,7 +12,7 @@ import java.util.Date;
  * @author qian
  * @version V1.0
  * @Title: UserRole
- * @Package: com.caoyuqian.usersev.model
+ * @Package: com.caoyuqian.usersev.entity
  * @Description: 用户角色表
  * @date 2019/11/28 5:54 下午
  **/
