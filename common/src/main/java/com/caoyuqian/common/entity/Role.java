@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Role implements Serializable {
-    private String id;
+    private Long id;
     private String name;
     private String description;
 }

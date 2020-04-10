@@ -17,7 +17,7 @@ import javax.validation.Valid;
  * @version V1.0
  * @Title: RoleController
  * @Package: com.caoyuqian.usersev.rest
- * @Description: TOTO
+ * @Description: role API
  * @date 2019/12/4 2:27 下午
  **/
 @RestController
@@ -37,7 +37,7 @@ public class RoleController {
         return Result.success(roleService.add(role));
     }
     @GetMapping("user/{userId}")
-    public Result getByUserId(@PathVariable String userId){
+    public Result getByUserId(@PathVariable Long userId){
 
         return Result.success(roleService.getByUserId(userId).stream().map(role -> role2ComRole.convert(role)));
     }

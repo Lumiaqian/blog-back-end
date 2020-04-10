@@ -43,5 +43,5 @@ public interface UserClient {
      * @return
      */
     @GetMapping("/v1/role/user/{userId}")
-    Result<List<Role>> getByUserId(@PathVariable(value = "userId") String userId);
+    Result<List<Role>> getByUserId(@PathVariable(value = "userId") Long userId);
 }

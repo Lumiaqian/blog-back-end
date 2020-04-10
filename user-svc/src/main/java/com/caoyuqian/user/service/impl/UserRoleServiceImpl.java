@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper,UserRole> implements UserRoleService {
     @Override
-    public boolean saveBatch(String userId, Set<String> roleIds) {
+    public boolean saveBatch(Long userId, Set<Long> roleIds) {
         if (CollectionUtils.isEmpty(roleIds)){
             return false;
         }
@@ -33,14 +33,14 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper,UserRole> im
     }
 
     @Override
-    public boolean removeByUserId(String userId) {
+    public boolean removeByUserId(Long userId) {
         QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(UserRole::getUserId,userId);
         return remove(queryWrapper);
     }
 
     @Override
-    public Set<String> queryByUserId(String userId) {
+    public Set<Long> queryByUserId(Long userId) {
         QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userId);
         List<UserRole> userRoles = list(queryWrapper);

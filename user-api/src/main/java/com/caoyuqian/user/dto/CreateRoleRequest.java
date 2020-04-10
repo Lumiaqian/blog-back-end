@@ -24,7 +24,7 @@ public class CreateRoleRequest {
      * 名称
      */
     @NotBlank(message = "角色名不能为空")
-    private String name;
+    private String roleName;
     /**
      * 描述
      */

@@ -27,7 +27,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper,Role> implements Rol
     private UserRoleService userRoleService;
 
     @Override
-    public Role get(String id) {
+    public Role get(Long id) {
         return this.getById(id);
     }
 
@@ -54,13 +54,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper,Role> implements Rol
     }
 
     @Override
-    public boolean delete(String id) {
+    public boolean delete(Long id) {
         return this.delete(id);
     }
 
     @Override
-    public List<Role> getByUserId(String userId) {
-        Set<String> roleIds = userRoleService.queryByUserId(userId);
+    public List<Role> getByUserId(Long userId) {
+        Set<Long> roleIds = userRoleService.queryByUserId(userId);
 
         return (List<Role>) this.listByIds(roleIds);
     }

@@ -52,5 +52,5 @@ public class CreateUserRequest {
     /**
      * 所拥有的角色
      */
-    private Set<String> roleIds;
+    private Set<Long> roleIds;
 }

@@ -8,6 +8,9 @@ import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.entity.User;
 import com.caoyuqian.user.vo.UserVo;
 
+/**
+ * @author lumiaqian
+ */
 public interface UserService {
 
     /**
@@ -16,7 +19,7 @@ public interface UserService {
      * @param userId 用户id
      * @return UserVo
      */
-    UserVo get(String userId);
+    UserVo get(Long userId);
 
     /**
      * 新增用户

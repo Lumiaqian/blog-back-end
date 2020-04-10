@@ -11,7 +11,7 @@ import java.util.Set;
  * @author qian
  * @version V1.0
  * @Title: User
- * @Package: com.caoyuqian.usersev.entity
+ * @Package: com.caoyuqian.user.entity
  * @Description: 用户表
  * @date 2019/11/28 3:32 下午
  **/
@@ -20,12 +20,12 @@ import java.util.Set;
 @TableName("user")
 public class User {
 
-    @TableId(value = "id",type = IdType.ID_WORKER_STR)
-    private String id;
-    private String name;
+    @TableId(value = "user_id",type = IdType.ASSIGN_ID)
+    private Long userId;
     private String mobile;
     private String username;
     private String password;
+    private String email;
     /**
      * 用户状态，true为可用
      */
@@ -47,7 +47,27 @@ public class User {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updatedTime;
     @TableField(exist = false)
-    private Set<String> roleIds;
+    private Set<Long> roleIds;
     @TableLogic
-    private String deleted = "N";
+    private Integer deleted;
+    /**
+     * 最后一次登录时间
+     */
+    private Date lastLoginDate;
+    /**
+     * 配置ID
+     */
+    private long settingId;
+    /**
+     * 微博
+     */
+    private String weibo;
+    /**
+     * QQ
+     */
+    private String QQ;
+    /**
+     * github
+     */
+    private String github;
 }

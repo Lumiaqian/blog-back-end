@@ -9,5 +9,5 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      logic-delete-value: "Y" # 逻辑已删除值(默认为 Y)
-      logic-not-delete-value: "N" # 逻辑未删除值(默认为 N)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 Y)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 N)

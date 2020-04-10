@@ -13,7 +13,7 @@ public interface RoleService {
      * @param id
      * @return role
      */
-    Role get(String id);
+    Role get(Long id);
 
     /**
      * 获取角色信息通过角色名称
@@ -45,12 +45,12 @@ public interface RoleService {
      *
      * @param id
      */
-    boolean delete(String id);
+    boolean delete(Long id);
 
     /**
      * 获取用户所拥有的角色
      * @param userId
      * @return
      */
-    List<Role> getByUserId(String userId);
+    List<Role> getByUserId(Long userId);
 }

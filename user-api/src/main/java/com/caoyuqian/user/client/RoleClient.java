@@ -1,9 +1,12 @@
 package com.caoyuqian.user.client;
 
 import com.caoyuqian.common.api.Result;
+import com.caoyuqian.common.entity.Role;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 /**
  * @author lumiaqian
@@ -17,5 +20,5 @@ public interface RoleClient {
      * @return
      */
     @GetMapping("user/{userId}")
-    Result getByUserId(@PathVariable(value = "userId") String userId);
+    Result<List<Role>> getByUserId(@PathVariable(value = "userId") Long userId);
 }

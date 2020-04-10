@@ -21,8 +21,7 @@ public class JsonUtil {
             return null;
         }
         try {
-            final String str = JSON.toJSONString(object);
-            return str;
+            return JSON.toJSONString(object);
         }catch (JSONException e){
             log.error(e.getMessage(),e);
         }

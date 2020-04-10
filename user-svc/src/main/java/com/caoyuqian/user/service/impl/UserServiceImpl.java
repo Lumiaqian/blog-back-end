@@ -50,7 +50,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public PasswordEncoder passwordEncoder;
 
     @Override
-    public UserVo get(String userId) {
+    public UserVo get(Long userId) {
         User user = this.getById(userId);
         return user2UserVoConvert.convert(user);
     }
@@ -61,7 +61,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = createUserRequest2UserConvert.convert(request);
         boolean inserts = this.save(user);
-        userRoleService.saveBatch(user.getId(), user.getRoleIds());
+        userRoleService.saveBatch(user.getUserId(), user.getRoleIds());
         //throw new SQLTimeoutException();
         return inserts;
     }
@@ -91,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("mobile",mobile);
         User user = this.getOne(queryWrapper);
         if (user !=null){
-            user.setRoleIds(userRoleService.queryByUserId(user.getId()));
+            user.setRoleIds(userRoleService.queryByUserId(user.getUserId()));
             return user2UserVoConvert.convert(user);
         }
         return null;

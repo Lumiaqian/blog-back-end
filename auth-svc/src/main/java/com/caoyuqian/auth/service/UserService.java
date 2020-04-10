@@ -8,6 +8,7 @@ import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.entity.Role;
 import com.caoyuqian.common.entity.User;
 import com.caoyuqian.common.error.ServiceException;
+import com.caoyuqian.user.client.RoleClient;
 import com.caoyuqian.user.client.UserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,7 +35,10 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
 
 
     @Autowired
-    private UserClient roleClient;
+    private UserClient userClient;
+
+    @Autowired
+    private RoleClient roleClient;
 
 
     @Override
@@ -53,10 +57,9 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
         result.getData().forEach(role -> {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName().toUpperCase()));
         });
-        org.springframework.security.core.userdetails.User securityUser = new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),
                 user.getEnabled(),user.getAccountNonExpired(),user.getCredentialsNonExpired(),user.getAccountNonLocked(),
                 grantedAuthorities);
-        return securityUser;
 
     }
 }

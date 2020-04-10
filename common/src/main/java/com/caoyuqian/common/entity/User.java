@@ -20,8 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User {
 
-    private String id;
-    private String name;
+    private Long id;
     private String mobile;
     private String username;
     private String password;
