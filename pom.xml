@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.caoyuqian</groupId>
-    <artifactId>mono</artifactId>
+    <artifactId>blog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mono</name>
+    <name>blog</name>
     <packaging>pom</packaging>
-    <description>Demo project for Spring Cloud</description>
+    <description>Blog project for Spring Cloud</description>
 
     <modules>
         <module>auth-svc</module>
