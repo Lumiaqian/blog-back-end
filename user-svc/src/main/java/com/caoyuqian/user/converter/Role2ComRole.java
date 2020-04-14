@@ -1,6 +1,8 @@
 package com.caoyuqian.user.converter;
 
 import com.caoyuqian.user.entity.Role;
+import com.caoyuqian.user.vo.RoleVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -14,11 +16,14 @@ import org.springframework.stereotype.Component;
  * @date 2019/12/6 3:28 下午
  **/
 @Component
-public class Role2ComRole implements Converter<Role, com.caoyuqian.common.entity.Role> {
+@Slf4j
+public class Role2ComRole implements Converter<Role, RoleVo> {
     @Override
-    public com.caoyuqian.common.entity.Role convert(Role role) {
-        com.caoyuqian.common.entity.Role comRole = new com.caoyuqian.common.entity.Role();
-        BeanUtils.copyProperties(role,comRole);
-        return comRole;
+    public RoleVo convert(Role role) {
+        log.info("Role2ComRole--->role:{}",role.toString());
+        RoleVo roleVo = new RoleVo();
+        BeanUtils.copyProperties(role,roleVo);
+        log.info("Role2ComRole--->roleVo:{}",roleVo.toString());
+        return roleVo;
     }
 }

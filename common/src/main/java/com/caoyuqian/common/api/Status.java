@@ -21,7 +21,13 @@ public enum Status {
     NOT_ACTIVE(402, "Account Not Active"),
 
     //访问拒绝
-    ACCESS_DENIED(403, "Access Denied"),
+    FORBIDDEN(403, "FORBIDDEN"),
+
+    /**
+     * Method Not Allowed
+     * 方法不允许
+     */
+    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
 
     //数据库错误
     DB_ERROR(503, "Error Querying Database"),

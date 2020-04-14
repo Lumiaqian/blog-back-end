@@ -1,7 +1,8 @@
 package com.caoyuqian.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.caoyuqian.common.entity.User;
+import com.caoyuqian.auth.entity.User;
+
 
 /**
  * @author qian
@@ -12,4 +13,5 @@ import com.caoyuqian.common.entity.User;
  * @date 2019/12/6 1:32 下午
  **/
 public interface UserMapper extends BaseMapper<User> {
+
 }

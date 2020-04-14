@@ -5,14 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
  * @author qian
  * @version V1.0
  * @Title: User
- * @Package: com.caoyuqian.usersev.model
- * @Description: 用户表
- * @date 2019/11/28 3:32 下午
+ * @Package: com.caoyuqian.common.entity
+ * @Description: TOTO
+ * @date 2020/4/14 3:39 下午
  **/
 @Data
 @NoArgsConstructor
@@ -20,10 +19,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User {
 
-    private Long id;
+    private Long userId;
     private String mobile;
     private String username;
     private String password;
+    private String email;
     /**
      * 用户状态，true为可用
      */

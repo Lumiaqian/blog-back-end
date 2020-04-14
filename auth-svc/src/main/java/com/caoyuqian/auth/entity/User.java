@@ -1,4 +1,4 @@
-package com.caoyuqian.user.entity;
+package com.caoyuqian.auth.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
@@ -11,16 +11,16 @@ import java.util.Set;
  * @author qian
  * @version V1.0
  * @Title: User
- * @Package: com.caoyuqian.user.entity
- * @Description: 用户表
- * @date 2019/11/28 3:32 下午
+ * @Package: com.caoyuqian.auth.entity
+ * @Description: User
+ * @date 2020/4/14 4:29 下午
  **/
 @Data
 @NoArgsConstructor
 @TableName("user")
 public class User {
 
-    @TableId(value = "id",type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long userId;
     private String mobile;
     private String username;
@@ -53,7 +53,7 @@ public class User {
     /**
      * 最后一次登录时间
      */
-    private Date lastLoginDate;
+    private Date lastLoginTime;
     /**
      * 配置ID
      */

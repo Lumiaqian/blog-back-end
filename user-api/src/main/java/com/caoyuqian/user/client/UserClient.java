@@ -3,6 +3,7 @@ package com.caoyuqian.user.client;
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.entity.Role;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
+import com.caoyuqian.user.vo.RoleVo;
 import com.caoyuqian.user.vo.UserVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,5 @@ public interface UserClient {
      * @return
      */
     @GetMapping("/v1/role/user/{userId}")
-    Result<List<Role>> getByUserId(@PathVariable(value = "userId") Long userId);
+    Result<List<RoleVo>> getByUserId(@PathVariable(value = "userId") Long userId);
 }

@@ -2,14 +2,15 @@ package com.caoyuqian.auth.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.caoyuqian.auth.entity.User;
 import com.caoyuqian.auth.mapper.UserMapper;
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.api.Status;
-import com.caoyuqian.common.entity.Role;
-import com.caoyuqian.common.entity.User;
 import com.caoyuqian.common.error.ServiceException;
-import com.caoyuqian.user.client.RoleClient;
 import com.caoyuqian.user.client.UserClient;
+import com.caoyuqian.user.vo.RoleVo;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,14 +32,13 @@ import java.util.Set;
  * @date 2019/11/26 2:57 下午
  **/
 @Service
+@Slf4j
 public class UserService extends ServiceImpl<UserMapper, User> implements UserDetailsService {
 
 
     @Autowired
     private UserClient userClient;
 
-    @Autowired
-    private RoleClient roleClient;
 
 
     @Override
@@ -46,17 +46,21 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username",username);
         User user = this.getOne(queryWrapper);
+        log.info("user:{}",user);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        if (user==null){
-            throw new UsernameNotFoundException("用户名或密码错误");
+        if (ObjectUtils.isEmpty(user)){
+            throw new UsernameNotFoundException("用户:" + username + "'不存在");
         }
-        Result<List<Role>> result = roleClient.getByUserId(user.getId());
+        //获取角色信息
+        Result<List<RoleVo>> result = userClient.getByUserId(user.getUserId());
+        log.info("---------{}",result.toString());
         if (!result.getCode().equals(Status.SUCCESS.getCode())){
             throw new ServiceException(result.getMsg());
         }
         result.getData().forEach(role -> {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName().toUpperCase()));
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName().toUpperCase()));
         });
+
         return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),
                 user.getEnabled(),user.getAccountNonExpired(),user.getCredentialsNonExpired(),user.getAccountNonLocked(),
                 grantedAuthorities);

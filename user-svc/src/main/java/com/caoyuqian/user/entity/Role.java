@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName("role")
 public class Role {
-    @TableId(value = "role_id",type = IdType.ID_WORKER_STR)
+    @TableId(value = "id",type = IdType.ASSIGN_ID)
     private Long roleId;
     private String roleName;
     private String description;

@@ -21,12 +21,12 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class UserVo {
-    private String id;
+    private Long id;
     private String name;
     private String mobile;
     private String username;
     private String deleted;
-    private Set<String> roleIds;
+    private Set<Long> roleIds;
     private Date createdTime;
     private Date updatedTime;
 }
