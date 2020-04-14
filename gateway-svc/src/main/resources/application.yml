@@ -1,4 +1,6 @@
 spring:
+  redis:
+    host: 127.0.0.1
   cloud:
     gateway:
       routes:

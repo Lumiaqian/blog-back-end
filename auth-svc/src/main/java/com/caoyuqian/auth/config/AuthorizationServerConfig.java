@@ -1,13 +1,14 @@
 package com.caoyuqian.auth.config;
 
-import com.caoyuqian.auth.enhancer.JwtTokenEnhancer;
+
 import com.caoyuqian.auth.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,15 +18,14 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author qian
@@ -56,14 +56,24 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new JdbcClientDetailsService(dataSource);
     }
 
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
     @Autowired
-    @Qualifier("jwtTokenStore")
-    private TokenStore tokenStore;
-    @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
-    @Autowired
-    private JwtTokenEnhancer jwtTokenEnhancer;
+
+
+    @Bean
+    public TokenStore tokenStore() {
+        /**
+         * redis 存储有状态方式
+         */
+        return new RedisTokenStore(redisConnectionFactory);
+        /**
+         * jwt 无状态方式
+         */
+        //return new JwtTokenStore(jwtAccessTokenConverter());
+    }
 
 
     @Override
@@ -82,23 +92,29 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
        /* endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userService)
                 .tokenStore(tokenStore);*/
-       log.info("AuthorizationServerConfig------start");
-        TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
-        List<TokenEnhancer> delegates = new ArrayList<>();
-        //配置JWT的内容增强器
-        delegates.add(jwtTokenEnhancer);
-        delegates.add(jwtAccessTokenConverter);
-        enhancerChain.setTokenEnhancers(delegates);
+        // 配置tokenServices参数
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(tokenStore());
+        /**
+         * jwt 无状态方式
+         */
+        //tokenServices.setTokenEnhancer(jwtAccessTokenConverter());
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setClientDetailsService(clientDetails());
+        // 设置access_token有效时长12小时，默认12小时
+        tokenServices.setAccessTokenValiditySeconds(60 * 60 * 12);
+        // 设置refresh_token有效时长7天，默认30天
+        tokenServices.setRefreshTokenValiditySeconds(60 * 60 * 24 * 7);
+
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(userService)
                 //配置令牌存储策略
-                .tokenStore(tokenStore)
-                .accessTokenConverter(jwtAccessTokenConverter)
-                .tokenEnhancer(enhancerChain);
+                .tokenServices(tokenServices);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        // 通过jdbc去查询数据库oauth_client_details表验证clientId信息
         clients.withClientDetails(clientDetails());
        /* clients.inMemory()
                 //配置client_id

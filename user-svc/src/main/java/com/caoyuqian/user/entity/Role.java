@@ -19,7 +19,7 @@ import java.util.Date;
 @TableName("role")
 public class Role {
     @TableId(value = "role_id",type = IdType.ID_WORKER_STR)
-    private String roleId;
+    private Long roleId;
     private String roleName;
     private String description;
     @TableField(fill = FieldFill.INSERT)

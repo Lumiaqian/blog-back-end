@@ -68,7 +68,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean register(CreateUserRequest request) {
-        Set<String> roleIds = new HashSet<>();
+        Set<Long> roleIds = new HashSet<>();
         roleIds.add(roleService.getByName("Root").getRoleId());
         request.setRoleIds(roleIds);
         return getService().add(request);

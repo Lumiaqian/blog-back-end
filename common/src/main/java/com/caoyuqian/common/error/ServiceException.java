@@ -8,12 +8,12 @@ import lombok.Getter;
  * @version V1.0
  * @Title: ServiceException
  * @Package: com.caoyuqian.commom.error
- * @Description: TOTO
+ * @Description: ServiceException
  * @date 2019/12/2 2:39 下午
  **/
 public class ServiceException extends RuntimeException {
     @Getter
-    private Status status;
+    private final Status status;
 
     public ServiceException(String message){
         super(message);
