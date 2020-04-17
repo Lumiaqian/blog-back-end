@@ -53,7 +53,7 @@ public class User {
     /**
      * 最后一次登录时间
      */
-    private Date lastLoginDate;
+    private Date lastLoginTime;
     /**
      * 配置ID
      */

@@ -2,6 +2,8 @@ package com.caoyuqian.common.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+import com.caoyuqian.common.api.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,18 @@ public class JsonUtil {
         }
         try {
             return JSON.toJSONString(object);
+        }catch (JSONException e){
+            log.error(e.getMessage(),e);
+        }
+        return null;
+    }
+
+    public static String jsonObj2Str(JSONObject jsonObject) {
+        if (null == jsonObject){
+            return null;
+        }
+        try {
+            return JSON.toJSONString(jsonObject);
         }catch (JSONException e){
             log.error(e.getMessage(),e);
         }

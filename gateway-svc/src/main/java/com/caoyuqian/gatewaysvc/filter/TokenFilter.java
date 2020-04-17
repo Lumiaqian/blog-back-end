@@ -25,12 +25,13 @@ import java.nio.charset.StandardCharsets;
  *
  * @author lumia
  */
-@Component
 @Slf4j
 public class TokenFilter implements GlobalFilter, Ordered {
 
     private static final String OAUTH_URL = "/oauth/";
-    private static final String ACCESS_TOKEN = "access_token";
+    private static final String ACCESS_TOKEN = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String ACCESS_PREFIX = "access:";
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -47,15 +48,23 @@ public class TokenFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
 
         // 从请求头信息获取 access_token 进行检查
-        String accessToken = exchange.getRequest().getQueryParams().getFirst(ACCESS_TOKEN);
+        String accessToken = exchange.getRequest().getHeaders().getFirst(ACCESS_TOKEN);
         if (StringUtils.isEmpty(accessToken)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             String jsonString = JsonUtil.obj2Str(Result.fail(Status.UNAUTHORIZED, "Token 不能为空"));
             return getVoidMono(response, jsonString);
         }
+        // 判断token是否已Bearer开头
+        if(!accessToken.startsWith(BEARER_PREFIX)){
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            String jsonString = JsonUtil.obj2Str(Result.fail(Status.UNAUTHORIZED,"Access Token 格式不正确"));
+            return getVoidMono(response,jsonString);
+        }
 
         // 检查 access_token 的有效性
-        final String formatKey = String.format("access:%s", accessToken);
+        // 格式化token 前缀 Bearer  -> access:
+        final String formatKey = accessToken.replace(BEARER_PREFIX,ACCESS_PREFIX);
+
         final Boolean hasKey = stringRedisTemplate.hasKey(formatKey);
         if (!hasKey) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -77,8 +86,8 @@ public class TokenFilter implements GlobalFilter, Ordered {
 
     private Mono<Void> getVoidMono(ServerHttpResponse response, String jsonString) {
         response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-        byte[] datas = jsonString.getBytes(StandardCharsets.UTF_8);
-        DataBuffer buffer = response.bufferFactory().wrap(datas);
+        byte[] data = jsonString.getBytes(StandardCharsets.UTF_8);
+        DataBuffer buffer = response.bufferFactory().wrap(data);
         return response.writeWith(Mono.just(buffer));
     }
 

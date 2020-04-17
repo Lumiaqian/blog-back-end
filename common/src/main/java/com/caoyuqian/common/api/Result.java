@@ -69,7 +69,7 @@ public class Result<T> implements Serializable {
      *
      * @return Result
      */
-    public static Result fail(Status status,Object data){
-        return new Result<>(status,data);
+    public static Result fail(Status status,String msg){
+        return new Result<>(status,msg);
     }
 }
