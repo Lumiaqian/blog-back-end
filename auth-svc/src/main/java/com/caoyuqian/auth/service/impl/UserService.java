@@ -1,9 +1,12 @@
-package com.caoyuqian.auth.service;
+package com.caoyuqian.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.caoyuqian.auth.converter.Role2RoleVo;
 import com.caoyuqian.auth.entity.User;
 import com.caoyuqian.auth.mapper.UserMapper;
+import com.caoyuqian.auth.service.RoleService;
+import com.caoyuqian.auth.service.UserRoleService;
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.error.ServiceException;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author qian
@@ -37,32 +41,31 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
 
 
     @Autowired
-    private UserClient userClient;
-
+    private RoleService roleService;
+    @Autowired
+    private Role2RoleVo role2RoleVo;
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username",username);
+        queryWrapper.eq("username", username);
         User user = this.getOne(queryWrapper);
-        log.info("user:{}",user);
+        log.info("user:{}", user);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        if (ObjectUtils.isEmpty(user)){
+        if (ObjectUtils.isEmpty(user)) {
             throw new UsernameNotFoundException("用户:" + username + "'不存在");
         }
         //获取角色信息
-        Result<List<RoleVo>> result = userClient.getByUserId(user.getUserId());
-        log.info("---------{}",result.toString());
-        if (!result.getCode().equals(Status.SUCCESS.getCode())){
-            throw new ServiceException(result.getMsg());
-        }
-        result.getData().forEach(role -> {
+        List<RoleVo> roles = roleService.getByUserId(user.getUserId()).stream().map(role -> role2RoleVo.convert(role)).collect(Collectors.toList());
+        log.info("---------{}", roles);
+
+        roles.forEach(role -> {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName().toUpperCase()));
         });
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),
-                user.getEnabled(),user.getAccountNonExpired(),user.getCredentialsNonExpired(),user.getAccountNonLocked(),
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                user.getEnabled(), user.getAccountNonExpired(), user.getCredentialsNonExpired(), user.getAccountNonLocked(),
                 grantedAuthorities);
 
     }

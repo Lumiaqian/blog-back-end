@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 @Slf4j
-public class Role2ComRole implements Converter<Role, RoleVo> {
+public class Role2RoleVo implements Converter<Role, RoleVo> {
     @Override
     public RoleVo convert(Role role) {
-        log.info("Role2ComRole--->role:{}",role.toString());
+
         RoleVo roleVo = new RoleVo();
         BeanUtils.copyProperties(role,roleVo);
-        log.info("Role2ComRole--->roleVo:{}",roleVo.toString());
+
         return roleVo;
     }
 }

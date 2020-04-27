@@ -1,4 +1,4 @@
-package com.caoyuqian.common.entity;
+package com.caoyuqian.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,16 +8,16 @@ import lombok.NoArgsConstructor;
 /**
  * @author qian
  * @version V1.0
- * @Title: Role
- * @Package: com.caoyuqian.common.entity
- * @Description: TOTO
- * @date 2020/4/14 3:41 下午
+ * @Title: RoleVo
+ * @Package: com.caoyuqian.user.vo
+ * @Description: RoleVo
+ * @date 2020/4/14 4:17 下午
  **/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class RoleVo {
     private Long roleId;
     private String roleName;
     private String description;

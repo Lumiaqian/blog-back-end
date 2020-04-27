@@ -1,6 +1,6 @@
 package com.caoyuqian.auth.config;
 
-import com.caoyuqian.auth.service.UserService;
+import com.caoyuqian.auth.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

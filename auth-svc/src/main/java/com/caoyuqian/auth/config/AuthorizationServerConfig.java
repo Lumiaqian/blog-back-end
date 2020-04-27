@@ -2,7 +2,7 @@ package com.caoyuqian.auth.config;
 
 
 import com.caoyuqian.auth.exception.CustomWebResponseExceptionTranslator;
-import com.caoyuqian.auth.service.UserService;
+import com.caoyuqian.auth.service.impl.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;

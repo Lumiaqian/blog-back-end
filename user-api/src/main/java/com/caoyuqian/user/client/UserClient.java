@@ -1,7 +1,6 @@
 package com.caoyuqian.user.client;
 
 import com.caoyuqian.common.api.Result;
-import com.caoyuqian.common.entity.Role;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.vo.RoleVo;
 import com.caoyuqian.user.vo.UserVo;
@@ -43,6 +42,6 @@ public interface UserClient {
      * @param userId
      * @return
      */
-    @GetMapping("/v1/role/user/{userId}")
+    @GetMapping("/v1/user/role/{userId}")
     Result<List<RoleVo>> getByUserId(@PathVariable(value = "userId") Long userId);
 }
