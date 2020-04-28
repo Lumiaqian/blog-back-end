@@ -16,6 +16,7 @@
         <module>user-api</module>
         <module>common</module>
         <module>gateway-svc</module>
+        <module>blog-svc</module>
     </modules>
 
     <dependencyManagement>
@@ -94,7 +95,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.1.4.RELEASE</version>
+                <version>2.2.6.RELEASE</version>
             </plugin>
         </plugins>
     </build>

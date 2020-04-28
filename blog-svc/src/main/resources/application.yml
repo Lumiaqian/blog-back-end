@@ -1,0 +1,15 @@
+spring:
+  redis:
+    host: 127.0.0.1
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    username: root
+    password: lumia
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-value: 1 # 逻辑已删除值(默认为 Y)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 N)
