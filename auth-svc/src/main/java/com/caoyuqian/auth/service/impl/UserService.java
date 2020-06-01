@@ -44,6 +44,8 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
     private RoleService roleService;
     @Autowired
     private Role2RoleVo role2RoleVo;
+    @Autowired
+    private UserClient userClient;
 
 
     @Override
