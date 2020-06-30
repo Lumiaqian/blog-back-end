@@ -1,33 +1,31 @@
-package com.caoyuqian.blogsvc.entity;
+package com.caoyuqian.blogapi.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
  * @author qian
  * @version V1.0
- * @Title: Post
- * @Package: com.caoyuqian.blogsvc.entity
- * @Description: 文章实体类
- * @date 2020/4/30 10:31 上午
+ * @Title: PostVo
+ * @Package: com.caoyuqian.blogapi.vo
+ * @Description: PostVo
+ * @date 2020/6/29 3:26 下午
  **/
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@TableName("post")
-public class Post {
+@NoArgsConstructor
+@Builder
+public class PostVo {
 
     /**
-     * 主键
+     * 文章id
      */
-    @TableId(value = "post_id",type = IdType.ASSIGN_ID)
-    private Long postId;
+    private Integer postId;
 
     /**
      * 文章标题
@@ -47,7 +45,7 @@ public class Post {
     /**
      * 是否开启评论
      */
-    private  boolean isOpenComment;
+    private boolean isOpenComment;
 
     /**
      * 发布时间

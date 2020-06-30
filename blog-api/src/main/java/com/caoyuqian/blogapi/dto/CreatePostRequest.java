@@ -1,37 +1,30 @@
-package com.caoyuqian.blogsvc.entity;
+package com.caoyuqian.blogapi.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
  * @author qian
  * @version V1.0
- * @Title: Post
- * @Package: com.caoyuqian.blogsvc.entity
- * @Description: 文章实体类
- * @date 2020/4/30 10:31 上午
+ * @Title: CreatePostRequest
+ * @Package: com.caoyuqian.blogapi.dto
+ * @Description: CreatePostRequest
+ * @date 2020/6/29 2:57 下午
  **/
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@TableName("post")
-public class Post {
-
-    /**
-     * 主键
-     */
-    @TableId(value = "post_id",type = IdType.ASSIGN_ID)
-    private Long postId;
-
+@NoArgsConstructor
+public class CreatePostRequest {
     /**
      * 文章标题
      */
+    @NotBlank(message = "文章标题不能为空")
     private String title;
 
     /**
@@ -47,7 +40,7 @@ public class Post {
     /**
      * 是否开启评论
      */
-    private  boolean isOpenComment;
+    private boolean isOpenComment;
 
     /**
      * 发布时间

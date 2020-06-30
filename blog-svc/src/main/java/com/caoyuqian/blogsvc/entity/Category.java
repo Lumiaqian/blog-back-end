@@ -12,48 +12,35 @@ import java.util.Date;
 /**
  * @author qian
  * @version V1.0
- * @Title: Post
+ * @Title: Category
  * @Package: com.caoyuqian.blogsvc.entity
- * @Description: 文章实体类
- * @date 2020/4/30 10:31 上午
+ * @Description: 分类
+ * @date 2020/6/30 3:44 下午
  **/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("post")
-public class Post {
+@TableName("category")
+public class Category {
 
     /**
      * 主键
      */
-    @TableId(value = "post_id",type = IdType.ASSIGN_ID)
-    private Long postId;
+    @TableId(value = "category_id",type = IdType.ASSIGN_ID)
+    private Long categoryId;
 
     /**
-     * 文章标题
+     * 上级分类id
      */
-    private String title;
-
+    private Long parentId;
     /**
-     * 文章内容
+     * 分类名称
      */
-    private String content;
-
+    private String categoryName;
     /**
-     * 文章的状态1-->已经发布；0-->草稿；-1-->删除
+     * 分类的状态1-->正常；0-->删除
      */
     private Integer status;
-
-    /**
-     * 是否开启评论
-     */
-    private  boolean isOpenComment;
-
-    /**
-     * 发布时间
-     */
-    private Date publicDate;
-
     /**
      * 修改时间
      */
