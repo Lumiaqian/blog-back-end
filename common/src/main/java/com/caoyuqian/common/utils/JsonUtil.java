@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author qian
@@ -78,11 +79,33 @@ public class JsonUtil {
             return null;
         }
         try {
-            final T obj = JSON.parseObject(jsonStr, objType);
-            return obj;
+            return JSON.parseObject(jsonStr, objType);
         } catch (JSONException e) {
             log.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    /**
+     * @param map
+     * @param clazz
+     * @return T
+     * @Description: map to obj
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/7/1 7:42 下午
+     * @since 0.1.0
+     */
+    public static <T> T map2Obj(Map<?, ?> map, Class<T> clazz) throws Exception {
+        if (map == null || map.isEmpty()){
+            return null;
+        }
+        try {
+            return JSON.parseObject(JSON.toJSONString(map), clazz);
+        }catch (JSONException e) {
+            log.error(e.getMessage(), e);
+        }
+        return null;
+
     }
 }

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: gateway-svc
+    name: blog-svc
   cloud:
     nacos:
       discovery:

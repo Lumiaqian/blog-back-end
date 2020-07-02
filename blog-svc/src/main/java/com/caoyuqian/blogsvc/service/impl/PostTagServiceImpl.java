@@ -1,5 +1,6 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreatePostTagRequest;
 import com.caoyuqian.blogsvc.entity.PostTag;
 import com.caoyuqian.blogsvc.mapper.PostTagMapper;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author qian
  * @version V1.0
@@ -22,19 +26,24 @@ import org.springframework.transaction.annotation.Transactional;
  **/
 @Slf4j
 @Service
-public class PostTagServiceImpl implements PostTagService {
+public class PostTagServiceImpl extends ServiceImpl<PostTagMapper, PostTag> implements PostTagService {
 
     @Autowired
     private PostTagMapper postTagMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer add(CreatePostTagRequest request) {
-        if (request == null) {
+    public boolean saveList(List<CreatePostTagRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
-        PostTag postTag = new PostTag();
-        BeanUtils.copyProperties(request, postTag);
-        return postTagMapper.insert(postTag);
+
+        List<PostTag> postTags =
+                requests.stream().map(request -> {
+                    PostTag postTag = new PostTag();
+                    BeanUtils.copyProperties(request, postTag);
+                    return postTag;
+                }).collect(Collectors.toList());
+        return this.saveOrUpdateBatch(postTags);
     }
 }

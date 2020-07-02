@@ -1,58 +1,42 @@
 package com.caoyuqian.blogapi.vo;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author qian
  * @version V1.0
- * @Title: PostVo
+ * @Title: TagVo
  * @Package: com.caoyuqian.blogapi.vo
- * @Description: PostVo
- * @date 2020/6/29 3:26 下午
+ * @Description: TagVo
+ * @date 2020/7/1 11:47 下午
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostVo {
+public class TagVo {
 
     /**
-     * 文章id
+     * 主键
      */
-    private Long postId;
-
+    private Long tagId;
     /**
-     * 文章标题
+     * 标签名称
      */
-    private String title;
-
+    private String tagName;
     /**
-     * 文章内容
-     */
-    private String content;
-
-    /**
-     * 文章的状态1-->已经发布；0-->草稿；-1-->删除
+     * 标签的状态1-->正常；0-->删除
      */
     private Integer status;
-
-    /**
-     * 是否开启评论
-     */
-    private boolean isOpenComment;
-
-    /**
-     * 发布时间
-     */
-    private LocalDateTime publicTime;
-
     /**
      * 修改时间
      */

@@ -1,11 +1,9 @@
 package com.caoyuqian.blogsvc.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.caoyuqian.blogapi.dto.CreatePostRequest;
 import com.caoyuqian.blogapi.dto.PostQuery;
 import com.caoyuqian.blogapi.vo.PostVo;
-import com.caoyuqian.blogsvc.entity.Post;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,14 +15,14 @@ public interface PostService {
 
     /**
      * @param request
-     * @return java.lang.Integer
+     * @return java.lang.boolean
      * @Description: 保存博客
      * @version 0.1.0
      * @author qian
      * @date 2020/6/29 2:26 下午
      * @since 0.1.0
      */
-    Integer add(CreatePostRequest request);
+    PostVo add(CreatePostRequest request);
 
     /**
      * @param postQuery

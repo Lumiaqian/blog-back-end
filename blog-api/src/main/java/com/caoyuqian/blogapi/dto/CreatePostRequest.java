@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -45,15 +46,15 @@ public class CreatePostRequest {
     /**
      * 发布时间
      */
-    private Date publicDate;
+    private LocalDateTime publicTime;
 
     /**
      * 修改时间
      */
-    private Date editDate;
+    private LocalDateTime updateTime;
 
     /**
      * 保存时间
      */
-    private Date saveDate;
+    private LocalDateTime createTime;
 }

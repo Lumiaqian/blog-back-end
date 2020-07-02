@@ -1,5 +1,6 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreatePostCateRequest;
 import com.caoyuqian.blogsvc.entity.PostCategory;
 import com.caoyuqian.blogsvc.mapper.PostCategoryMapper;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author qian
  * @version V1.0
@@ -22,19 +26,24 @@ import org.springframework.transaction.annotation.Transactional;
  **/
 @Slf4j
 @Service
-public class PostCategoryServiceImpl implements PostCategoryService {
+public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper,PostCategory> implements PostCategoryService {
 
     @Autowired
     private PostCategoryMapper postCategoryMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer add(CreatePostCateRequest request) {
-        if (request == null) {
+    public boolean saveList(List<CreatePostCateRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
-        PostCategory postCategory = new PostCategory();
-        BeanUtils.copyProperties(request, postCategory);
-        return postCategoryMapper.insert(postCategory);
+       List<PostCategory> postCategories =
+               requests.stream().map(request -> {
+                   PostCategory postCategory = new PostCategory();
+                   BeanUtils.copyProperties(request,postCategory);
+                   return postCategory;
+               }).collect(Collectors.toList());
+        return this.saveOrUpdateBatch(postCategories);
     }
+
 }

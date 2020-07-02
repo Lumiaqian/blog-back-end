@@ -1,12 +1,12 @@
 package com.caoyuqian.blogsvc.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -20,6 +20,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @TableName("post")
 public class Post {
 
@@ -52,15 +53,17 @@ public class Post {
     /**
      * 发布时间
      */
-    private Date publicDate;
+    private LocalDateTime publicTime;
 
     /**
      * 修改时间
      */
-    private Date editDate;
+    @TableField(fill = FieldFill.UPDATE)
+    private LocalDateTime updateTime;
 
     /**
      * 保存时间
      */
-    private Date saveDate;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
 }

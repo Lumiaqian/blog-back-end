@@ -17,6 +17,7 @@
         <module>common</module>
         <module>gateway-svc</module>
         <module>blog-svc</module>
+        <module>blog-api</module>
     </modules>
 
     <dependencyManagement>
@@ -88,11 +89,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.10</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-amqp</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

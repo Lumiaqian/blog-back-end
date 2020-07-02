@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -31,10 +32,10 @@ public class CreateTagRequest {
     /**
      * 修改时间
      */
-    private Date editDate;
+    private LocalDateTime updateTime;
 
     /**
      * 保存时间
      */
-    private Date saveDate;
+    private LocalDateTime createTime;
 }
