@@ -1,5 +1,7 @@
 package com.caoyuqian.blogapi.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +23,12 @@ public class CreatePostCateRequest {
     /**
      * 文章id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long postId;
 
     /**
      * 分类id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long categoryId;
 }

@@ -8,36 +8,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author qian
  * @version V1.0
- * @Title: CreateTagRequest
+ * @Title: UpdateCateRequest
  * @Package: com.caoyuqian.blogapi.dto
- * @Description: CreateTagRequest
- * @date 2020/6/30 4:04 下午
+ * @Description: UpdateCateRequest
+ * @date 2020/7/3 2:53 下午
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateTagRequest {
-
+public class UpdateCateRequest {
     /**
      * 主键
      */
+    @NotNull(message = "分类id不能为空")
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long tagId;
+    private Long categoryId;
     /**
-     * 标签名称
+     * 上级分类id
      */
-    @NotBlank(message = "标签名称不能为空")
-    private String tagName;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long parentId;
     /**
-     * 标签的状态1-->正常；0-->删除
+     * 分类名称
+     */
+    @NotBlank(message = "分类名称不能为空")
+    private String categoryName;
+    /**
+     * 分类的状态1-->正常；0-->删除
      */
     private Integer status;
-
 }

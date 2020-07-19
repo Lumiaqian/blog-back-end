@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreateTagRequest;
+import com.caoyuqian.blogapi.dto.UpdateTagRequest;
+import com.caoyuqian.blogapi.vo.PostTagVo;
 import com.caoyuqian.blogapi.vo.TagVo;
-import com.caoyuqian.blogsvc.entity.Category;
 import com.caoyuqian.blogsvc.entity.Tag;
 import com.caoyuqian.blogsvc.mapper.TagMapper;
+import com.caoyuqian.blogsvc.service.PostTagService;
 import com.caoyuqian.blogsvc.service.TagService;
 import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.error.ServiceException;
@@ -35,10 +37,12 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private PostTagService postTagService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public TagVo add(CreateTagRequest request) {
+    public TagVo saveOrUpdate(CreateTagRequest request) {
         if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
@@ -60,16 +64,16 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<TagVo> saveList(List<CreateTagRequest> requests) {
+    public List<TagVo> saveOrUpdateList(List<CreateTagRequest> requests) {
 
-        return requests.stream().map(this::add).collect(Collectors.toList());
+        return requests.stream().map(this::saveOrUpdate).collect(Collectors.toList());
 
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public TagVo getByName(String name) {
-        if(StringUtils.isBlank(name)){
+        if (StringUtils.isBlank(name)) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         QueryWrapper<Tag> queryWrapper = new QueryWrapper<>();
@@ -77,8 +81,42 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         queryWrapper.ne("status", com.caoyuqian.common.constant.Status.DELETE);
         Tag tag = tagMapper.selectOne(queryWrapper);
         TagVo tagVo = new TagVo();
-        BeanUtils.copyProperties(tag,tagVo);
+        BeanUtils.copyProperties(tag, tagVo);
         return tagVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateList(List<UpdateTagRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        List<Tag> tags = requests.stream().map(updateTagRequest -> {
+            Tag tag = new Tag();
+            BeanUtils.copyProperties(updateTagRequest, tag);
+            return tag;
+        }).collect(Collectors.toList());
+        return this.updateBatchById(tags);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<TagVo> getByPostId(Long postId) {
+        if (postId == null || postId == 0) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        List<PostTagVo> postTagVoList = postTagService.getByPostId(postId);
+        if (postTagVoList == null || postTagVoList.isEmpty()){
+            return null;
+        }
+        List<Tag> tags = postTagVoList.stream()
+                .map(postTagVo -> tagMapper.selectById(postTagVo.getTagId()))
+                .collect(Collectors.toList());
+        return tags.stream().map(tag -> {
+            TagVo tagVo = new TagVo();
+            BeanUtils.copyProperties(tag,tagVo);
+            return tagVo;
+        }).collect(Collectors.toList());
     }
 
     /**

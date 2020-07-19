@@ -1,7 +1,9 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreatePostTagRequest;
+import com.caoyuqian.blogapi.vo.PostTagVo;
 import com.caoyuqian.blogsvc.entity.PostTag;
 import com.caoyuqian.blogsvc.mapper.PostTagMapper;
 import com.caoyuqian.blogsvc.service.PostTagService;
@@ -33,10 +35,11 @@ public class PostTagServiceImpl extends ServiceImpl<PostTagMapper, PostTag> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveList(List<CreatePostTagRequest> requests) {
+    public void saveList(List<CreatePostTagRequest> requests) {
         if (requests == null || requests.isEmpty()) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
+        Long postId = requests.get(0).getPostId();
 
         List<PostTag> postTags =
                 requests.stream().map(request -> {
@@ -44,6 +47,27 @@ public class PostTagServiceImpl extends ServiceImpl<PostTagMapper, PostTag> impl
                     BeanUtils.copyProperties(request, postTag);
                     return postTag;
                 }).collect(Collectors.toList());
-        return this.saveOrUpdateBatch(postTags);
+        // 先删除，再插入
+        QueryWrapper<PostTag> deleteWrapper = new QueryWrapper<>();
+        deleteWrapper.eq("post_id", postId);
+        postTagMapper.delete(deleteWrapper);
+
+        this.saveBatch(postTags);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PostTagVo> getByPostId(Long postId) {
+        if (postId == null || postId == 0){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        QueryWrapper<PostTag> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_id",postId);
+        List<PostTag> postTags = postTagMapper.selectList(queryWrapper);
+        return postTags.stream().map(postTag -> {
+          PostTagVo postTagVo = new PostTagVo();
+          BeanUtils.copyProperties(postTag,postTagVo);
+          return postTagVo;
+        }).collect(Collectors.toList());
     }
 }

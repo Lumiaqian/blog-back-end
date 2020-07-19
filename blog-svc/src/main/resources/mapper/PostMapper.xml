@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.blogsvc.mapper.PostMapper">
+    <sql id="page">
+        post.post_id,post.title,post.status,post.is_open_comment,post.content,
+        post.create_time,post.update_time,post.public_time
+    </sql>
+    <update id="updateStatus">
+        update post set status = #{status}
+        where post_id = #{postId}
+    </update>
+    <select id="getPostList" resultType="com.caoyuqian.blogsvc.entity.Post" parameterType="com.caoyuqian.blogapi.dto.PostQuery">
+        select
+        <include refid="page"/>
+        from post,tag,category,post_category,post_tag
+        <where>
+            post.post_id=post_tag.post_id and post.post_id=post_category.post_id and
+            tag.tag_id=post_tag.tag_id and category.category_id=post_category.category_id
+            <if test="postQuery.title != null and postQuery.title !='' ">
+                and post.title = #{postQuery.title}
+            </if>
+            <if test="postQuery.status != null">
+                and post.status = #{postQuery.status}
+            </if>
+            <if test="postQuery.tagNames != null and postQuery.tagNames.size() > 0">
+                and tag.tag_name in
+                <foreach collection="postQuery.tagNames" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="postQuery.categories != null and postQuery.categories.size() > 0">
+                and category.category_id in
+                <foreach collection="postQuery.categories" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by post.create_time desc
+    </select>
+
+
+</mapper>

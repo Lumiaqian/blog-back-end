@@ -8,36 +8,49 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author qian
  * @version V1.0
- * @Title: CreateTagRequest
+ * @Title: UpdatePostRequest
  * @Package: com.caoyuqian.blogapi.dto
- * @Description: CreateTagRequest
- * @date 2020/6/30 4:04 下午
+ * @Description: UpdatePostRequest
+ * @date 2020/7/3 2:48 下午
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateTagRequest {
+public class UpdatePostRequest {
+
 
     /**
-     * 主键
+     * 文章id
      */
+    @NotNull(message = "文章id不能为空")
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long tagId;
+    private Long postId;
     /**
-     * 标签名称
+     * 文章标题
      */
-    @NotBlank(message = "标签名称不能为空")
-    private String tagName;
+    @NotBlank(message = "文章标题不能为空")
+    private String title;
+
     /**
-     * 标签的状态1-->正常；0-->删除
+     * 文章内容
+     */
+    private String content;
+
+    /**
+     * 文章的状态1-->已经发布；0-->草稿；-1-->删除
      */
     private Integer status;
+
+    /**
+     * 是否开启评论
+     */
+    private boolean isOpenComment;
 
 }

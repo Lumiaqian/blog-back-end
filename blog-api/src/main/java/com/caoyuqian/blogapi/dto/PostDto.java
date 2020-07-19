@@ -1,26 +1,27 @@
-package com.caoyuqian.blogapi.vo;
+package com.caoyuqian.blogapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 
 /**
  * @author qian
  * @version V1.0
  * @Title: PostVo
  * @Package: com.caoyuqian.blogapi.vo
- * @Description: PostVo
- * @date 2020/7/8 2:39 下午
+ * @Description: PostDto
+ * @date 2020/6/29 3:26 下午
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostVo {
+public class PostDto {
 
     /**
      * 文章id
@@ -61,12 +62,4 @@ public class PostVo {
      * 保存时间
      */
     private LocalDateTime createTime;
-    /**
-     * 标签
-     */
-    private List<String> tags;
-    /**
-     * 分类
-     */
-    private List<String> categories;
 }

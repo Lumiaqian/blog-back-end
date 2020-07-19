@@ -4,11 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreateCateRequest;
+import com.caoyuqian.blogapi.dto.UpdateCateRequest;
 import com.caoyuqian.blogapi.vo.CategoryVo;
+import com.caoyuqian.blogapi.vo.PostCateVo;
+import com.caoyuqian.blogapi.vo.PostTagVo;
+import com.caoyuqian.blogapi.vo.TagVo;
 import com.caoyuqian.blogsvc.entity.Category;
-import com.caoyuqian.blogsvc.entity.Post;
+import com.caoyuqian.blogsvc.entity.Tag;
 import com.caoyuqian.blogsvc.mapper.CategoryMapper;
 import com.caoyuqian.blogsvc.service.CategoryService;
+import com.caoyuqian.blogsvc.service.PostCategoryService;
 import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.error.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +40,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private PostCategoryService postCategoryService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CategoryVo add(CreateCateRequest request) {
+    public CategoryVo saveOrUpdate(CreateCateRequest request) {
         if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
@@ -61,8 +68,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<CategoryVo> saveList(List<CreateCateRequest> requests) {
-        return requests.stream().map(this::add).collect(Collectors.toList());
+    public List<CategoryVo> saveOrUpdateList(List<CreateCateRequest> requests) {
+        return requests.stream().map(this::saveOrUpdate).collect(Collectors.toList());
     }
 
     @Override
@@ -78,6 +85,40 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         CategoryVo categoryVo = new CategoryVo();
         BeanUtils.copyProperties(category,categoryVo);
         return categoryVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateList(List<UpdateCateRequest> requests) {
+        if (requests == null || requests.isEmpty()){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        List<Category> categories = requests.stream().map(updateCateRequest -> {
+            Category category = new Category();
+            BeanUtils.copyProperties(updateCateRequest,category);
+            return category;
+        }).collect(Collectors.toList());
+       return this.updateBatchById(categories);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<CategoryVo> getByPostId(Long postId) {
+        if (postId == null || postId == 0) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        List<PostCateVo> postCateVoList = postCategoryService.getByPostId(postId);
+        if (postCateVoList == null || postCateVoList.isEmpty()){
+            return null;
+        }
+        List<Category> categories = postCateVoList.stream()
+                .map(postCateVo -> categoryMapper.selectById(postCateVo.getCategoryId()))
+                .collect(Collectors.toList());
+        return categories.stream().map(category -> {
+            CategoryVo categoryVo = new CategoryVo();
+            BeanUtils.copyProperties(category,categoryVo);
+            return categoryVo;
+        }).collect(Collectors.toList());
     }
 
     /**

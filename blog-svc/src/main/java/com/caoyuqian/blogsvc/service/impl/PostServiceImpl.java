@@ -1,27 +1,27 @@
 package com.caoyuqian.blogsvc.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.*;
-import com.caoyuqian.blogapi.vo.CategoryVo;
-import com.caoyuqian.blogapi.vo.PostVo;
-import com.caoyuqian.blogapi.vo.TagVo;
+import com.caoyuqian.blogapi.vo.*;
+import com.caoyuqian.blogapi.dto.PostDto;
 import com.caoyuqian.blogsvc.converter.CreatePostRequest2PostConverter;
-import com.caoyuqian.blogsvc.converter.Post2PostVoConverter;
-import com.caoyuqian.blogsvc.entity.Category;
+import com.caoyuqian.blogsvc.converter.Post2PostDtoConverter;
 import com.caoyuqian.blogsvc.entity.Post;
 import com.caoyuqian.blogsvc.mapper.PostMapper;
 import com.caoyuqian.blogsvc.service.*;
 import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.error.ServiceException;
+import com.caoyuqian.common.utils.SpringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +51,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     private CreatePostRequest2PostConverter createPostRequest2PostConverter;
 
     @Autowired
-    private Post2PostVoConverter post2PostVoConverter;
+    private Post2PostDtoConverter post2PostDtoConverter;
 
     @Autowired
     private PostMapper postMapper;
@@ -66,28 +66,54 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public PostVo add(CreatePostRequest request) {
+    public PostDto saveOrUpdate(CreatePostRequest request) {
         if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         Post post = createPostRequest2PostConverter.convert(request);
+        PostDto postDto = new PostDto();
         //判断文章标题是否存在；存在更新，不存在插入
-        if (checkByName(request.getTitle())){
+        if (checkByName(request.getTitle())) {
             UpdateWrapper<Post> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("title", request.getTitle());
-            postMapper.update(post,updateWrapper);
-        }else {
+            postMapper.update(post, updateWrapper);
+            postDto = getByName(request.getTitle());
+        } else {
             postMapper.insert(post);
+            postDto = post2PostDtoConverter.convert(post);
         }
-        return post2PostVoConverter.convert(post);
+        return postDto;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public IPage<PostVo> getAllPub(PostQuery postQuery) {
-        QueryWrapper<Post> queryWrapper = new QueryWrapper<>();
-        IPage<Post> iPage = postMapper.selectPage(postQuery.getPage(), queryWrapper);
-        return iPage.convert(post -> post2PostVoConverter.convert(post));
+        IPage<Post> iPage = postMapper.selectPage(postQuery.getPage(), null);
+        return iPage.convert(post -> {
+            //获取tags
+            List<TagVo> tagVoList = tagService.getByPostId(post.getPostId());
+            //获取categories
+            List<CategoryVo> categoryVoList = categoryService.getByPostId(post.getPostId());
+            List<String> tags = new ArrayList<>();
+            List<String> categories = new ArrayList<>();
+            if (categoryVoList != null && !categoryVoList.isEmpty()
+                    && tagVoList != null && !tagVoList.isEmpty()) {
+                tags = tagVoList.stream().map(TagVo::getTagName).collect(Collectors.toList());
+                categories = categoryVoList.stream().map(CategoryVo::getCategoryName).collect(Collectors.toList());
+            }
+            return PostVo.builder()
+                    .postId(post.getPostId())
+                    .content(post.getContent())
+                    .title(post.getTitle())
+                    .status(post.getStatus())
+                    .isOpenComment(post.isOpenComment())
+                    .createTime(post.getCreateTime())
+                    .publicTime(post.getPublicTime())
+                    .updateTime(post.getUpdateTime())
+                    .categories(categories)
+                    .tags(tags)
+                    .build();
+        });
     }
 
     @Override
@@ -116,37 +142,25 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
                 .publicTime(postYamlDTO.getDate())
                 .title(postYamlDTO.getTitle())
                 .build();
-        //存入数据库
-        PostVo postVo = this.add(post);
 
+        //生成tag
+        Set<CreateTagRequest> tags = new LinkedHashSet<>();
         if (postYamlDTO.getTags() != null && !postYamlDTO.getTags().isEmpty()) {
-            //生成tag
-            Set<CreateTagRequest> tags = postYamlDTO.getTags().stream()
+
+            tags = postYamlDTO.getTags().stream()
                     .map(s -> CreateTagRequest.builder()
                             .tagName(s).build())
                     .collect(Collectors.toSet());
-            //存入数据库
-            List<TagVo> tagVos = tagService.saveList(new ArrayList<>(tags));
-            //存入post与tag的关联
-            List<CreatePostTagRequest> createPostTagRequests = new ArrayList<>();
-            if (tagVos != null && !tagVos.isEmpty()) {
-                createPostTagRequests = tagVos.stream().map(tagVo -> CreatePostTagRequest.builder()
-                        .postId(postVo.getPostId())
-                        .tagId(tagVo.getTagId())
-                        .build()).collect(Collectors.toList());
-                postTagService.saveList(createPostTagRequests);
-            }
         }
-
+        Set<CreateCateRequest> categories = new LinkedHashSet<>();
         //生成Category
         if (postYamlDTO.getCategories() != null && !postYamlDTO.getCategories().isEmpty()) {
 
-            Set<CreateCateRequest> categories = new LinkedHashSet<>();
 
             CreateCateRequest categoryFirst = CreateCateRequest.builder()
                     .categoryName(postYamlDTO.getCategories().get(0))
                     .build();
-            CategoryVo categoryVoFirst = categoryService.add(categoryFirst);
+            CategoryVo categoryVoFirst = categoryService.saveOrUpdate(categoryFirst);
             for (int i = 0; i < postYamlDTO.getCategories().size(); i++) {
                 CreateCateRequest category = CreateCateRequest.builder()
                         .categoryName(postYamlDTO.getCategories().get(i))
@@ -156,20 +170,218 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
                 }
                 categories.add(category);
             }
-            //存入数据库
-            List<CategoryVo> categoryVos = categoryService.saveList(new ArrayList<>(categories));
-            //存入post与category的关联
-            List<CreatePostCateRequest> createPostCateRequests = new ArrayList<>();
-            if (categoryVos != null && !categoryVos.isEmpty()) {
-                createPostCateRequests = categoryVos.stream().map(categoryVo -> CreatePostCateRequest.builder()
-                        .categoryId(categoryVo.getCategoryId())
-                        .postId(postVo.getPostId())
-                        .build()).collect(Collectors.toList());
-                postCategoryService.saveList(createPostCateRequests);
-            }
+
+        }
+        // 存入数据库
+        SavePostRequest savePostRequest = SavePostRequest.builder()
+                .post(post)
+                .categories(new ArrayList<>(categories))
+                .tags(new ArrayList<>(tags))
+                .build();
+        getService().savePost(savePostRequest);
+
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void savePost(SavePostRequest request) {
+        if (request == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        CreatePostRequest post = request.getPost();
+        //保存文章
+        PostDto postDto = getService().saveOrUpdate(post);
+        //保存标签
+        List<TagVo> tagVos = tagService.saveOrUpdateList(request.getTags());
+        //保存标签与文章的关系
+        List<CreatePostTagRequest> createPostTagRequests = new ArrayList<>();
+        log.info("PostId:{}", postDto.getPostId());
+        if (tagVos != null && !tagVos.isEmpty()) {
+            createPostTagRequests = tagVos.stream().map(tagVo -> CreatePostTagRequest.builder()
+                    .postId(postDto.getPostId())
+                    .tagId(tagVo.getTagId())
+                    .build()).collect(Collectors.toList());
+            postTagService.saveList(createPostTagRequests);
+        }
+        //保存分类
+        List<CategoryVo> categoryVos = categoryService.saveOrUpdateList(request.getCategories());
+        //保存post与category的关联
+        List<CreatePostCateRequest> createPostCateRequests = new ArrayList<>();
+        if (categoryVos != null && !categoryVos.isEmpty()) {
+            createPostCateRequests = categoryVos.stream().map(categoryVo -> CreatePostCateRequest.builder()
+                    .categoryId(categoryVo.getCategoryId())
+                    .postId(postDto.getPostId())
+                    .build()).collect(Collectors.toList());
+            postCategoryService.saveList(createPostCateRequests);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void editPost(EditPostRequest request) {
+        if (request == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
         }
 
+        UpdatePostRequest post = request.getPost();
+        List<CreateCateRequest> categories = new ArrayList<>();
+        List<CreateTagRequest> tags = new ArrayList<>();
+        BeanUtils.copyProperties(request.getCategories(), categories);
+        BeanUtils.copyProperties(request.getTags(), tags);
+        // 更新post
+        PostDto postDto = getService().update(post);
+        //保存标签
+        List<TagVo> tagVos = tagService.saveOrUpdateList(tags);
+        //保存标签与文章的关系
+        List<CreatePostTagRequest> createPostTagRequests = new ArrayList<>();
+        log.info("PostId:{}", postDto.getPostId());
+        if (tagVos != null && !tagVos.isEmpty()) {
+            createPostTagRequests = tagVos.stream().map(tagVo -> CreatePostTagRequest.builder()
+                    .postId(postDto.getPostId())
+                    .tagId(tagVo.getTagId())
+                    .build()).collect(Collectors.toList());
+            postTagService.saveList(createPostTagRequests);
+        }
+        //保存分类
+        List<CategoryVo> categoryVos = categoryService.saveOrUpdateList(categories);
+        //保存post与category的关联
+        List<CreatePostCateRequest> createPostCateRequests = new ArrayList<>();
+        if (categoryVos != null && !categoryVos.isEmpty()) {
+            createPostCateRequests = categoryVos.stream().map(categoryVo -> CreatePostCateRequest.builder()
+                    .categoryId(categoryVo.getCategoryId())
+                    .postId(postDto.getPostId())
+                    .build()).collect(Collectors.toList());
+            postCategoryService.saveList(createPostCateRequests);
+        }
+    }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public PostDto update(UpdatePostRequest request) {
+        if (request == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        Post post = new Post();
+        BeanUtils.copyProperties(entityClass, post);
+
+        postMapper.updateById(post);
+
+        return post2PostDtoConverter.convert(post);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public IPage<ManagementPostVo> getPostList(PostQuery postQuery) {
+        if (postQuery == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        IPage<Post> iPage = postQuery.getPage();
+        //获取分页内容
+        List<Post> posts = postMapper.getPostList(iPage, postQuery);
+        //设置分页内容
+        iPage.setRecords(posts);
+        return iPage.convert(post -> {
+            //获取tags
+            List<TagVo> tagVoList = tagService.getByPostId(post.getPostId());
+            //获取categories
+            List<CategoryVo> categoryVoList = categoryService.getByPostId(post.getPostId());
+            List<TagMenuVo> tags = new ArrayList<>();
+            List<CategoryMenuVo> categories = new ArrayList<>();
+            if (categoryVoList != null && !categoryVoList.isEmpty()
+                    && tagVoList != null && !tagVoList.isEmpty()) {
+                tags = tagVoList.stream().map(tagVo -> TagMenuVo.builder()
+                        .tagId(tagVo.getTagId())
+                        .tagName(tagVo.getTagName())
+                        .build()).collect(Collectors.toList());
+                categories = categoryVoList.stream().map(categoryVo -> CategoryMenuVo.builder()
+                        .categoryId(categoryVo.getCategoryId())
+                        .parentId(categoryVo.getParentId())
+                        .categoryName(categoryVo.getCategoryName())
+                        .build()).collect(Collectors.toList());
+            }
+            return ManagementPostVo.builder()
+                    .postId(post.getPostId())
+                    .title(post.getTitle())
+                    .status(post.getStatus())
+                    .isOpenComment(post.isOpenComment())
+                    .createTime(post.getCreateTime())
+                    .publicTime(post.getPublicTime())
+                    .updateTime(post.getUpdateTime())
+                    .categories(categories)
+                    .tags(tags)
+                    .build();
+        });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public PostVo getPubPostById(Long postId) {
+        if (postId == null || postId == 0) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        QueryWrapper<Post> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_id", postId)
+                .eq("status", com.caoyuqian.common.constant.Status.PUBLIC);
+        Post post = postMapper.selectOne(queryWrapper);
+        PostVo postVo = new PostVo();
+        BeanUtils.copyProperties(post, postVo);
+        //获取tags
+        List<TagVo> tagVoList = tagService.getByPostId(post.getPostId());
+        //获取categories
+        List<CategoryVo> categoryVoList = categoryService.getByPostId(post.getPostId());
+        List<String> tags = new ArrayList<>();
+        List<String> categories = new ArrayList<>();
+        if (categoryVoList != null && !categoryVoList.isEmpty()
+                && tagVoList != null && !tagVoList.isEmpty()) {
+            tags = tagVoList.stream().map(TagVo::getTagName).collect(Collectors.toList());
+            categories = categoryVoList.stream().map(CategoryVo::getCategoryName).collect(Collectors.toList());
+        }
+        postVo.setCategories(categories);
+        postVo.setTags(tags);
+        return postVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ManagementPostVo getManagementPostById(Long postId, Integer status) {
+        if (postId == null || postId == 0 || status == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        QueryWrapper<Post> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("post_id",postId).eq("status",status);
+        Post post = postMapper.selectOne(queryWrapper);
+        ManagementPostVo managementPostVo = new ManagementPostVo();
+        BeanUtils.copyProperties(post,managementPostVo);
+        //获取tags
+        List<TagVo> tagVoList = tagService.getByPostId(post.getPostId());
+        //获取categories
+        List<CategoryVo> categoryVoList = categoryService.getByPostId(post.getPostId());
+        List<TagMenuVo> tags = new ArrayList<>();
+        List<CategoryMenuVo> categories = new ArrayList<>();
+        if (categoryVoList != null && !categoryVoList.isEmpty()
+                && tagVoList != null && !tagVoList.isEmpty()) {
+            tags = tagVoList.stream().map(tagVo -> TagMenuVo.builder()
+                    .tagId(tagVo.getTagId())
+                    .tagName(tagVo.getTagName())
+                    .build()).collect(Collectors.toList());
+            categories = categoryVoList.stream().map(categoryVo -> CategoryMenuVo.builder()
+                    .categoryId(categoryVo.getCategoryId())
+                    .parentId(categoryVo.getParentId())
+                    .categoryName(categoryVo.getCategoryName())
+                    .build()).collect(Collectors.toList());
+        }
+        managementPostVo.setCategories(categories);
+        managementPostVo.setTags(tags);
+        return managementPostVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateStatus(Long postId, Integer status) {
+        if (postId == null || postId == 0 || status == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        postMapper.updateStatus(postId,status);
     }
 
     private PostYamlDTO parseArticle(String originalFilename, String context) {
@@ -210,7 +422,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
      * @since 0.1.0
      */
     private boolean checkByName(String postName) {
-        if (StringUtils.isBlank(postName)){
+        if (StringUtils.isBlank(postName)) {
             return false;
         }
         QueryWrapper<Post> queryWrapper = new QueryWrapper<>();
@@ -218,5 +430,27 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         queryWrapper.ne("status", com.caoyuqian.common.constant.Status.DELETE);
         Post post = postMapper.selectOne(queryWrapper);
         return post != null;
+    }
+
+    /**
+     * 解决事务失效
+     *
+     * @return PostServiceImpl
+     */
+    private PostServiceImpl getService() {
+        return SpringUtil.getBean(this.getClass());
+    }
+
+    private PostDto getByName(String name) {
+        if (StringUtils.isBlank(name)) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        QueryWrapper<Post> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("title", name);
+        queryWrapper.ne("status", com.caoyuqian.common.constant.Status.DELETE);
+        Post post = postMapper.selectOne(queryWrapper);
+        PostDto postDto = new PostDto();
+        BeanUtils.copyProperties(post, postDto);
+        return postDto;
     }
 }

@@ -1,4 +1,4 @@
-package com.caoyuqian.blogapi.dto;
+package com.caoyuqian.blogapi.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 /**
  * @author qian
  * @version V1.0
- * @Title: CreatePostTagRequest
- * @Package: com.caoyuqian.blogapi.dto
- * @Description: CreatePostTagRequest
- * @date 2020/6/30 4:05 下午
+ * @Title: PostTagVo
+ * @Package: com.caoyuqian.blogapi.vo
+ * @Description: PostTagVo
+ * @date 2020/7/8 2:52 下午
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreatePostTagRequest {
+public class PostTagVo {
     /**
      * 文章id
      */

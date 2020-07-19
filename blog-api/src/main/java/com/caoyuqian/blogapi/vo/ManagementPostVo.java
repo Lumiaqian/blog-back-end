@@ -11,17 +11,16 @@ import java.util.List;
 /**
  * @author qian
  * @version V1.0
- * @Title: PostVo
+ * @Title: ManagementPostVo
  * @Package: com.caoyuqian.blogapi.vo
- * @Description: PostVo
- * @date 2020/7/8 2:39 下午
+ * @Description: 后台管理Post
+ * @date 2020/7/19 1:59 下午
  **/
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PostVo {
-
+public class ManagementPostVo {
     /**
      * 文章id
      */
@@ -31,11 +30,6 @@ public class PostVo {
      * 文章标题
      */
     private String title;
-
-    /**
-     * 文章内容
-     */
-    private String content;
 
     /**
      * 文章的状态1-->已经发布；0-->草稿；-1-->删除
@@ -64,9 +58,9 @@ public class PostVo {
     /**
      * 标签
      */
-    private List<String> tags;
+    private List<TagMenuVo> tags;
     /**
      * 分类
      */
-    private List<String> categories;
+    private List<CategoryMenuVo> categories;
 }
