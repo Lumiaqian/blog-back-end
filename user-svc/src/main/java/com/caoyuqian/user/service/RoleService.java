@@ -1,5 +1,7 @@
 package com.caoyuqian.user.service;
 
+import com.caoyuqian.user.dto.CreateRoleRequest;
+import com.caoyuqian.user.dto.UpdateRoleRequest;
 import com.caoyuqian.user.entity.Role;
 
 import java.util.List;
@@ -29,16 +31,16 @@ public interface RoleService {
     List<Role> getAll();
     /**
      * 新增角色
-     * @param role
+     * @param request
      * @return boolean
      */
-    boolean add(Role role);
+    boolean add(CreateRoleRequest request);
     /**
      * 更新角色信息
      *
-     * @param role
+     * @param request
      */
-    boolean update(Role role);
+    boolean update(UpdateRoleRequest request);
 
     /**
      * 根据id删除角色

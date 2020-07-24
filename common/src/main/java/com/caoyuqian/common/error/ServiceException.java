@@ -12,6 +12,7 @@ import lombok.Getter;
  * @date 2019/12/2 2:39 下午
  **/
 public class ServiceException extends RuntimeException {
+    private static final long serialVersionUID = -1866714411123430858L;
     @Getter
     private final Status status;
 

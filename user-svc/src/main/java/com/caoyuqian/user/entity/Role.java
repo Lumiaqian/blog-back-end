@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -17,13 +19,20 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @TableName("role")
-public class Role {
-    @TableId(value = "id",type = IdType.ASSIGN_ID)
+public class Role implements Serializable {
+    private static final long serialVersionUID = 3878104361488547091L;
+    @TableId(value = "role_id", type = IdType.ASSIGN_ID)
     private Long roleId;
+
+    @TableField("role_name")
     private String roleName;
+
+    @TableField("description")
     private String description;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createdTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updatedTime;
+
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 }

@@ -1,5 +1,7 @@
 package com.caoyuqian.blogapi.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +23,7 @@ public class TagMenuVo {
     /**
      * 主键
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long tagId;
     /**
      * 标签名称

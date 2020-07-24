@@ -3,9 +3,10 @@ spring:
     host: 127.0.0.1
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/blog?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: lumia
+
 
 feign:
   client:
@@ -13,3 +14,7 @@ feign:
       default:
         connectTimeout: 2000
         readTimeout: 2000
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

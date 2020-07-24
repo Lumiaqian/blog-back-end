@@ -1,10 +1,13 @@
 package com.caoyuqian.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.auth.converter.Role2RoleVo;
+import com.caoyuqian.auth.entity.Menu;
 import com.caoyuqian.auth.entity.User;
 import com.caoyuqian.auth.mapper.UserMapper;
+import com.caoyuqian.auth.service.MenuService;
 import com.caoyuqian.auth.service.RoleService;
 import com.caoyuqian.auth.service.UserRoleService;
 import com.caoyuqian.common.api.Result;
@@ -14,8 +17,10 @@ import com.caoyuqian.user.client.UserClient;
 import com.caoyuqian.user.vo.RoleVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,29 +51,38 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
     private Role2RoleVo role2RoleVo;
     @Autowired
     private UserClient userClient;
+    @Autowired
+    private MenuService menuService;
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
-        User user = this.getOne(queryWrapper);
+
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, username);
+        User user = baseMapper.selectOne(queryWrapper);
         log.info("user:{}", user);
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.NO_AUTHORITIES;
         if (ObjectUtils.isEmpty(user)) {
             throw new UsernameNotFoundException("用户:" + username + "'不存在");
         }
-        //获取角色信息
-        List<RoleVo> roles = roleService.getByUserId(user.getUserId()).stream().map(role -> role2RoleVo.convert(role)).collect(Collectors.toList());
-        log.info("---------{}", roles);
+        //获取权限信息
+        String userPermissions = this.findUserPermissions(username);
+        if (StringUtils.isNotBlank(userPermissions)){
+            grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(userPermissions);
 
-        roles.forEach(role -> {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName().toUpperCase()));
-        });
+            log.info("grantedAuthorities:{}",grantedAuthorities);
+        }
+
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 user.getEnabled(), user.getAccountNonExpired(), user.getCredentialsNonExpired(), user.getAccountNonLocked(),
                 grantedAuthorities);
 
+    }
+
+    private String findUserPermissions(String username){
+        List<Menu> userPermissions = menuService.findUserPermissionsString(username);
+        return userPermissions.stream().map(Menu::getPerms).collect(Collectors.joining(","));
     }
 }

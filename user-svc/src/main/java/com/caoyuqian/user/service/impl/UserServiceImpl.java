@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.caoyuqian.common.api.Status;
+import com.caoyuqian.common.error.ServiceException;
 import com.caoyuqian.common.utils.SpringUtil;
 import com.caoyuqian.user.converter.User2UserVoConvert;
 import com.caoyuqian.user.converter.CreateUserRequest2UserConvert;
@@ -58,23 +60,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean add(CreateUserRequest request) {
+        if (request == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = createUserRequest2UserConvert.convert(request);
         boolean inserts = this.save(user);
-        userRoleService.saveBatch(user.getUserId(), user.getRoleIds());
+        //添加用户拥有的角色
+        if (user != null && user.getRoleIds() != null && !user.getRoleIds().isEmpty()) {
+            userRoleService.saveBatch(user.getUserId(), user.getRoleIds());
+        }
         //throw new SQLTimeoutException();
         return inserts;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean register(CreateUserRequest request) {
-        Set<Long> roleIds = new HashSet<>();
-        roleIds.add(roleService.getByName("Root").getRoleId());
-        request.setRoleIds(roleIds);
+        if (request == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+
         return getService().add(request);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean verifyPassword(VerifyPasswordRequest request) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("mobile", request.getMobile());
@@ -86,11 +97,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UserVo getByMobile(String mobile) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("mobile",mobile);
+        queryWrapper.eq("mobile", mobile);
         User user = this.getOne(queryWrapper);
-        if (user !=null){
+        if (user != null) {
             user.setRoleIds(userRoleService.queryByUserId(user.getUserId()));
             return user2UserVoConvert.convert(user);
         }
@@ -98,6 +110,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IPage<UserVo> getAll(Page page, UserQuery userQuery) {
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();

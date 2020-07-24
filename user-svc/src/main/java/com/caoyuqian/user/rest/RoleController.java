@@ -26,19 +26,25 @@ import javax.validation.Valid;
 public class RoleController {
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private CreateRoleRequest2RoleConverter createRoleRequest2RoleConverter;
+
     @Autowired
     private Role2RoleVo role2ComRole;
 
     @PostMapping("role")
     public Result add(@Valid @RequestBody CreateRoleRequest request){
-        Role role = createRoleRequest2RoleConverter.convert(request);
-        return Result.success(roleService.add(role));
+
+        return Result.success(roleService.add(request));
     }
     @GetMapping("role/{userId}")
     public Result getByUserId(@PathVariable Long userId){
 
         return Result.success(roleService.getByUserId(userId).stream().map(role -> role2ComRole.convert(role)));
     }
+
+    @DeleteMapping("role/{roleId}")
+    public Result deleteById(@PathVariable Long roleId){
+        return Result.success(roleService.delete(roleId));
+    }
+
+
 }

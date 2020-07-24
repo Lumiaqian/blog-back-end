@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -20,14 +21,17 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_role_relation")
-public class UserRole {
+@TableName("user_role")
+public class UserRole implements Serializable {
+    private static final long serialVersionUID = -717910672384899262L;
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
+
+    @TableField("user_id")
     private Long userId;
+
+    @TableField("role_id")
     private Long roleId;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createdTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updatedTime;
+
+
 }

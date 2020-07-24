@@ -1,5 +1,7 @@
 package com.caoyuqian.blogapi.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,11 +23,13 @@ public class CategoryMenuVo {
     /**
      * 主键
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long categoryId;
 
     /**
      * 上级分类id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
     /**
      * 分类名称

@@ -29,16 +29,8 @@ public class UserController {
 
     @PostMapping
     public Result add(@Valid @RequestBody CreateUserRequest request){
-        boolean flag = false;
-        try {
-            flag = userService.register(request);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (!flag){
-            return Result.fail(Status.FAILURE);
-        }
-        return Result.success();
+
+        return Result.success(userService.add(request));
     }
     @PostMapping("condition")
     public Result getAll(@RequestBody UserQuery userQuery){
