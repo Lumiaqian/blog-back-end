@@ -1,6 +1,8 @@
 package com.caoyuqian.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,6 +12,7 @@ import com.caoyuqian.common.utils.SpringUtil;
 import com.caoyuqian.user.converter.User2UserVoConvert;
 import com.caoyuqian.user.converter.CreateUserRequest2UserConvert;
 import com.caoyuqian.user.dto.CreateUserRequest;
+import com.caoyuqian.user.dto.UpdateUserRequest;
 import com.caoyuqian.user.dto.UserQuery;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.mapper.UserMapper;
@@ -20,6 +23,7 @@ import com.caoyuqian.user.service.UserService;
 import com.caoyuqian.user.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -107,6 +111,40 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return user2UserVoConvert.convert(user);
         }
         return null;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if (id == null || id == 0){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        baseMapper.deleteById(id);
+    }
+
+    @Override
+    public void deleteByMobile(String mobile) {
+        if (StringUtils.isBlank(mobile)){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.lambda().set(User::getDeleted, com.caoyuqian.common.constant.Status.IS_DELETE)
+                .set(User::getEnabled,false)
+                .eq(User::getMobile,mobile);
+        baseMapper.update(null,updateWrapper);
+
+    }
+
+    @Override
+    public void updateByUserId(UpdateUserRequest request) {
+        if (request == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        User user = new User();
+        BeanUtils.copyProperties(request,user);
+        baseMapper.update(user);
+
+        //更新用户角色信息
+        userRoleService.saveBatch(request.getUserId(),request.getRoleIds());
     }
 
     @Override

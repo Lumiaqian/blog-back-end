@@ -1,16 +1,18 @@
 package com.caoyuqian.user.rest;
 
 import com.caoyuqian.common.api.Result;
-import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.error.ServiceException;
 import com.caoyuqian.user.dto.CreateUserRequest;
+import com.caoyuqian.user.dto.UpdateUserRequest;
 import com.caoyuqian.user.dto.UserQuery;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -28,24 +30,39 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public Result add(@Valid @RequestBody CreateUserRequest request){
+    public Result add(@Validated @RequestBody CreateUserRequest request) {
 
         return Result.success(userService.add(request));
     }
-    @PostMapping("condition")
-    public Result getAll(@RequestBody UserQuery userQuery){
 
-        return Result.success(userService.getAll(userQuery.getPage(),userQuery));
+    @PostMapping("condition")
+    public Result getAll(@RequestBody UserQuery userQuery) {
+
+        return Result.success(userService.getAll(userQuery.getPage(), userQuery));
     }
+
     @PostMapping("verify")
-    public Result verifyPassword(@Valid @RequestBody VerifyPasswordRequest request){
-        if (!userService.verifyPassword(request)){
+    public Result verifyPassword(@Validated @RequestBody VerifyPasswordRequest request) {
+        if (!userService.verifyPassword(request)) {
             throw new ServiceException("账号或密码错误");
         }
         return Result.success();
     }
+
     @GetMapping()
-    public Result getByMobile(@RequestParam("mobile") @NotBlank String mobile){
+    public Result getByMobile(@RequestParam("mobile") @NotBlank String mobile) {
         return Result.success(userService.getByMobile(mobile));
+    }
+
+    @DeleteMapping
+    public Result deleteByMobile(@RequestParam("mobile") @NotBlank String mobile) {
+        userService.deleteByMobile(mobile);
+        return Result.success();
+    }
+
+    @PutMapping
+    public Result update(@Validated @RequestBody UpdateUserRequest request){
+        userService.updateByUserId(request);
+        return Result.success();
     }
 }

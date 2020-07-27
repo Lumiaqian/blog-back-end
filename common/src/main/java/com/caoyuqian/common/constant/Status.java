@@ -18,5 +18,15 @@ public interface Status {
      */
     Integer DELETE = -1;
 
+    /**
+     * 逻辑删除
+     */
+    Integer IS_DELETE = 1;
+
+    /**
+     * 逻辑未删除
+     */
+    Integer IS_NOT_DELETE = 0;
+
 
 }

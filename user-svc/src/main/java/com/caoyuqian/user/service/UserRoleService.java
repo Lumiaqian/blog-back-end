@@ -8,7 +8,7 @@ import java.util.Set;
 public interface UserRoleService {
 
     /**
-     * 给用户添加角色
+     * 给用户添加角色(先删除旧角色，再添加新角色)
      *
      * @param userId
      * @param roleIds

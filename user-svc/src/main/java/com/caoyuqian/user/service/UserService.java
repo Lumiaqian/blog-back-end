@@ -3,6 +3,7 @@ package com.caoyuqian.user.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.caoyuqian.user.dto.CreateUserRequest;
+import com.caoyuqian.user.dto.UpdateUserRequest;
 import com.caoyuqian.user.dto.UserQuery;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.entity.User;
@@ -28,6 +29,7 @@ public interface UserService {
      * @return Boolean
      */
     boolean add(CreateUserRequest request);
+
     /**
      * 新增X用户
      *
@@ -38,6 +40,7 @@ public interface UserService {
 
     /**
      * 分页查询所有用户信息
+     *
      * @param page
      * @param userQuery
      * @return page
@@ -46,6 +49,7 @@ public interface UserService {
 
     /**
      * 验证账号和密码
+     *
      * @param request
      * @return
      */
@@ -53,8 +57,42 @@ public interface UserService {
 
     /**
      * 通过手机号获取用户信息
+     *
      * @param mobile
      * @return userVo
      */
     UserVo getByMobile(String mobile);
+
+    /**
+     * @param id
+     * @return void
+     * @Description: 根据id删除用户(注销)
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/7/27 8:52 下午
+     * @since 0.1.0
+     */
+    void deleteById(Long id);
+
+    /**
+     * @param mobile
+     * @return void
+     * @Description: 根据手机号删除用户
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/7/27 8:55 下午
+     * @since 0.1.0
+     */
+    void deleteByMobile(String mobile);
+
+    /**
+     * @param request
+     * @return void
+     * @Description: 更新用户信息
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/7/27 9:49 下午
+     * @since 0.1.0
+     */
+    void updateByUserId(UpdateUserRequest request);
 }

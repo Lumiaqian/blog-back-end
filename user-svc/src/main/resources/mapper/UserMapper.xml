@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.caoyuqian.user.mapper.UserMapper">
+    <sql id="base_sql">
+        user_id,user_name,password,email,setting_id
+        ,weibo,github,QQ,mobile
+        ,deleted,enabled,account_non_expired,credentials_non_expired,account_non_locked
+        ,update_time,last_login_time,create_time
+    </sql>
+    <update id="update" parameterType="com.caoyuqian.user.entity.User">
+        update user
+        <set>
+            <if test="mobile != null and mobile!=''">
+                mobile = #{mobile},
+            </if>
+            <if test="username != null and username != ''">
+                user_name = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                user.password = #{password},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled},
+            </if>
+            <if test="accountNonExpired != null">
+                account_non_expired = #{accountNonExpired},
+            </if>
+            <if test="credentialsNonExpired != null">
+                credentials_non_expired = #{credentialsNonExpired},
+            </if>
+            <if test="accountNonLocked != null">
+                account_non_locked = #{accountNonLocked},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time = #{lastLoginTime},
+            </if>
+            <if test="settingId != null">
+                setting_id = #{settingId},
+            </if>
+            <if test="weibo != null">
+                weibo = #{weibo},
+            </if>
+            <if test="QQ != null">
+                QQ = #{QQ},
+            </if>
+            <if test="github != null">
+                github = #{github},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+</mapper>
