@@ -56,7 +56,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .requestMatchers()
                 //配置需要保护的资源路径
-                .antMatchers("/v1/auth/**");
+                .antMatchers("/v1/auth/**","/v1/user/**");
 
     }
 }

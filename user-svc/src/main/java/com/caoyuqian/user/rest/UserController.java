@@ -9,6 +9,7 @@ import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +31,14 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('user:add')")
     public Result add(@Validated @RequestBody CreateUserRequest request) {
 
         return Result.success(userService.add(request));
     }
 
     @PostMapping("condition")
+    @PreAuthorize("hasAuthority('user:view')")
     public Result getAll(@RequestBody UserQuery userQuery) {
 
         return Result.success(userService.getAll(userQuery.getPage(), userQuery));
@@ -50,17 +53,20 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('user:view')")
     public Result getByMobile(@RequestParam("mobile") @NotBlank String mobile) {
         return Result.success(userService.getByMobile(mobile));
     }
 
     @DeleteMapping("/{mobile}")
+    @PreAuthorize("hasAuthority('user:delete')")
     public Result deleteByMobile(@PathVariable String mobile) {
         userService.deleteByMobile(mobile);
         return Result.success();
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('user:update')")
     public Result update(@Validated @RequestBody UpdateUserRequest request){
         userService.updateByUserId(request);
         return Result.success();
