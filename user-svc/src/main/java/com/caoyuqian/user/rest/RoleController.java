@@ -4,10 +4,12 @@ import com.caoyuqian.common.api.Result;
 import com.caoyuqian.user.converter.CreateRoleRequest2RoleConverter;
 import com.caoyuqian.user.converter.Role2RoleVo;
 import com.caoyuqian.user.dto.CreateRoleRequest;
+import com.caoyuqian.user.dto.UpdateRoleRequest;
 import com.caoyuqian.user.entity.Role;
 import com.caoyuqian.user.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,5 +48,10 @@ public class RoleController {
         return Result.success(roleService.delete(roleId));
     }
 
+    @PutMapping("role")
+    public Result update(@Validated @RequestBody UpdateRoleRequest request){
+        roleService.update(request);
+        return Result.success();
+    }
 
 }

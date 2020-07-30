@@ -9,7 +9,7 @@
         ,deleted,enabled,account_non_expired,credentials_non_expired,account_non_locked
         ,update_time,last_login_time,create_time
     </sql>
-    <update id="update" parameterType="com.caoyuqian.user.entity.User">
+    <update id="updated" parameterType="com.caoyuqian.user.entity.User">
         update user
         <set>
             <if test="mobile != null and mobile!=''">

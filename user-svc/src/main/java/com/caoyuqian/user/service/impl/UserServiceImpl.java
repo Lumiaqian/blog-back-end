@@ -2,7 +2,7 @@ package com.caoyuqian.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,8 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 /**
  * @author qian
@@ -66,6 +64,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean add(CreateUserRequest request) {
         if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        if (!checkMobile(request.getMobile())) {
+            throw new ServiceException("手机号已存在");
         }
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = createUserRequest2UserConvert.convert(request);
@@ -106,16 +107,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("mobile", mobile);
         User user = this.getOne(queryWrapper);
-        if (user != null) {
-            user.setRoleIds(userRoleService.queryByUserId(user.getUserId()));
-            return user2UserVoConvert.convert(user);
+        if (user == null) {
+            throw new ServiceException("用户不存在");
         }
-        return null;
+
+        user.setRoleIds(userRoleService.queryByUserId(user.getUserId()));
+        return user2UserVoConvert.convert(user);
+
+
     }
 
     @Override
     public void deleteById(Long id) {
-        if (id == null || id == 0){
+        if (id == null || id == 0) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         baseMapper.deleteById(id);
@@ -123,28 +127,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void deleteByMobile(String mobile) {
-        if (StringUtils.isBlank(mobile)){
+        if (StringUtils.isBlank(mobile)) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.lambda().set(User::getDeleted, com.caoyuqian.common.constant.Status.IS_DELETE)
-                .set(User::getEnabled,false)
-                .eq(User::getMobile,mobile);
-        baseMapper.update(null,updateWrapper);
+
+        log.info("mobile:{}", mobile);
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(User::getDeleted, com.caoyuqian.common.constant.Status.IS_DELETE)
+                .set(User::getEnabled, false)
+                .eq(User::getMobile, mobile);
+        baseMapper.update(null, updateWrapper);
 
     }
 
     @Override
     public void updateByUserId(UpdateUserRequest request) {
-        if (request == null){
+        if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
+
+        //判断是否是新手机号，新手机号需要验证唯一
+        if (checkPhoneIsNew(request.getUserId(), request.getMobile())) {
+            //判断手机号是否唯一
+            if (!checkMobile(request.getMobile())) {
+                throw new ServiceException("手机号已存在");
+            }
+        }
         User user = new User();
-        BeanUtils.copyProperties(request,user);
-        baseMapper.update(user);
+        BeanUtils.copyProperties(request, user);
+
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(User::getUserId, request.getUserId());
+
+        //更新用户信息
+        baseMapper.update(user, updateWrapper);
 
         //更新用户角色信息
-        userRoleService.saveBatch(request.getUserId(),request.getRoleIds());
+        userRoleService.saveBatch(request.getUserId(), request.getRoleIds());
     }
 
     @Override
@@ -166,5 +185,50 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     private UserServiceImpl getService() {
         return SpringUtil.getBean(this.getClass());
+    }
+
+    /**
+     * @param mobile
+     * @return boolean
+     * @Description: 判断手机号是否唯一，true代表唯一
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/7/29 9:52 下午
+     * @since 0.1.0
+     */
+    private boolean checkMobile(String mobile) {
+        if (StringUtils.isEmpty(mobile)) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getMobile, mobile)
+                .eq(User::getDeleted, com.caoyuqian.common.constant.Status.IS_NOT_DELETE);
+        User user = baseMapper.selectOne(queryWrapper);
+        return null == user;
+    }
+
+    /**
+     * @param userId
+     * @param mobile
+     * @return boolean
+     * @Description: 校验手机号是否是新的 ，true-->新的，反之false
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/7/30 9:05 下午
+     * @since 0.1.0
+     */
+    private boolean checkPhoneIsNew(Long userId, String mobile) {
+        if (userId == null || userId == 0L || StringUtils.isBlank(mobile)) {
+            return false;
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUserId, userId)
+                .eq(User::getDeleted, com.caoyuqian.common.constant.Status.IS_NOT_DELETE);
+        User user = baseMapper.selectOne(queryWrapper);
+        if (mobile.equals(user.getMobile())) {
+            return false;
+        }
+        return true;
+
     }
 }

@@ -22,5 +22,5 @@ public interface UserMapper extends BaseMapper<User> {
      * @date 2020/7/27 9:30 下午
      * @since 0.1.0
      */
-    Integer update(User user);
+    Integer updated(User user);
 }

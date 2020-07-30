@@ -100,8 +100,8 @@ public class User implements Serializable {
     /**
      * QQ
      */
-    @TableField(value = "QQ")
-    private String QQ;
+    @TableField(value = "qq")
+    private String qq;
 
     /**
      * github

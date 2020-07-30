@@ -2,7 +2,9 @@ package com.caoyuqian.common.error;
 
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.api.Status;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @date 2019/11/29 3:10 下午
  **/
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionTranslator {
 
     /**
@@ -45,10 +48,11 @@ public class GlobalExceptionTranslator {
      * @date 2020/7/2 9:29 下午
      * @since 0.1.0
      */
-    @ExceptionHandler(BindException.class)
-    public Result handleBindException(BindException e) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result handleBindException(MethodArgumentNotValidException e) {
+        log.error("出现BindException异常");
         StringBuilder errorMsg = new StringBuilder();
-        e.getAllErrors().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(","));
+        e.getBindingResult().getFieldErrors().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(","));
         return Result
                 .builder()
                 .code(Status.PARAM_ERROR.getCode())

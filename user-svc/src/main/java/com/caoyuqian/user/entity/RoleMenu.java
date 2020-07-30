@@ -27,7 +27,7 @@ import java.io.Serializable;
 public class RoleMenu implements Serializable {
 
     private static final long serialVersionUID = -1705300740915772935L;
-    @TableId(type = IdType.ASSIGN_ID)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @TableField("role_id")

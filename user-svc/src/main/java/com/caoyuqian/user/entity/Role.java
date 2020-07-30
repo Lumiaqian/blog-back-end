@@ -33,6 +33,6 @@ public class Role implements Serializable {
     @TableField(value = "create_time",fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "update_time",fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 }

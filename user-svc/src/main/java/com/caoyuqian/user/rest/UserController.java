@@ -19,7 +19,7 @@ import javax.validation.constraints.NotBlank;
  * @author qian
  * @version V1.0
  * @Title: UserController
- * @Package: com.caoyuqian.usersev.rest
+ * @Package: com.caoyuqian.user.rest
  * @Description: userController
  * @date 2019/12/3 11:06 上午
  **/
@@ -49,13 +49,13 @@ public class UserController {
         return Result.success();
     }
 
-    @GetMapping()
+    @GetMapping
     public Result getByMobile(@RequestParam("mobile") @NotBlank String mobile) {
         return Result.success(userService.getByMobile(mobile));
     }
 
-    @DeleteMapping
-    public Result deleteByMobile(@RequestParam("mobile") @NotBlank String mobile) {
+    @DeleteMapping("/{mobile}")
+    public Result deleteByMobile(@PathVariable String mobile) {
         userService.deleteByMobile(mobile);
         return Result.success();
     }

@@ -1,5 +1,6 @@
 package com.caoyuqian.user.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,16 +31,18 @@ public class UpdateUserRequest {
      */
     @NotNull(message = "用户id不能为空")
     private Long userId;
+
     @Pattern(regexp = "[1](([3][0-9])|([4][5,7,9])|([5][0-9])|([6][6])|([7][3,5,6,7,8])|([8][0-9])|([9][8,9]))[0-9]{8}$",
             message = "手机格式错误")
     @NotBlank(message = "手机号不能为空")
     private String mobile;
+
     @NotBlank(message = "用户名不能为空")
     @Length(min = 3, max = 20, message = "用户名长度在3到20个字符")
     private String username;
-    @NotBlank(message = "用户密码不能为空")
-    @Length(min = 8, max = 20, message = "密码长度在8到20个字符")
-    private String password;
+
+
+    private String email;
     /**
      * 用户状态，true为可用
      */
@@ -60,4 +63,23 @@ public class UpdateUserRequest {
      * 所拥有的角色
      */
     private Set<Long> roleIds;
+    /**
+     * 配置ID
+     */
+    private long settingId;
+
+    /**
+     * 微博
+     */
+    private String weibo;
+
+    /**
+     * QQ
+     */
+    private String qq;
+
+    /**
+     * github
+     */
+    private String github;
 }
