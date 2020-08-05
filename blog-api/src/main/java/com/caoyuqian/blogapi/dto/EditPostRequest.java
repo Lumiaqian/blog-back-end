@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class EditPostRequest {
     /**
      * 文章
      */
+    @Valid
     private UpdatePostRequest post;
 
     /**

@@ -28,7 +28,6 @@ public class CreateTagRequest {
     /**
      * 主键
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long tagId;
     /**
      * 标签名称

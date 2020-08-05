@@ -8,7 +8,6 @@ import com.caoyuqian.blogapi.vo.PostVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @author lumiaqian
@@ -116,7 +115,6 @@ public interface PostService {
     ManagementPostVo getManagementPostById(Long postId,Integer status);
 
     /**
-     * @param postId
      * @param status
      * @return void
      * @Description: 更新文章状态
@@ -125,5 +123,5 @@ public interface PostService {
      * @date 2020/7/19 9:59 下午
      * @since 0.1.0
      */
-    void updateStatus(Long postId, Integer status);
+    void updateStatus(UpdatePostStatusRequest status);
 }

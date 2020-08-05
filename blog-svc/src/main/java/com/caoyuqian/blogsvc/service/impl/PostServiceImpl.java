@@ -1,9 +1,9 @@
 package com.caoyuqian.blogsvc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.*;
 import com.caoyuqian.blogapi.vo.*;
@@ -377,11 +377,15 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateStatus(Long postId, Integer status) {
-        if (postId == null || postId == 0 || status == null){
+    public void updateStatus(UpdatePostStatusRequest status) {
+        if (status == null){
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
-        postMapper.updateStatus(postId,status);
+        LambdaUpdateWrapper<Post> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(Post::getStatus,status.getStatus())
+                .eq(Post::getPostId,status.getPostId());
+        baseMapper.update(null,updateWrapper);
+
     }
 
     private PostYamlDTO parseArticle(String originalFilename, String context) {

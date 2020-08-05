@@ -1,8 +1,12 @@
 package com.caoyuqian.blogsvc.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.caoyuqian.blogapi.dto.CreateTagRequest;
+import com.caoyuqian.blogapi.dto.TagQuery;
 import com.caoyuqian.blogapi.dto.UpdateTagRequest;
+import com.caoyuqian.blogapi.dto.UpdateTagStatusRequest;
 import com.caoyuqian.blogapi.vo.TagVo;
+import com.caoyuqian.blogsvc.entity.Tag;
 
 
 import java.util.List;
@@ -67,4 +71,26 @@ public interface TagService {
      * @since 0.1.0
      */
     List<TagVo> getByPostId(Long postId);
+
+    /**
+     * @param query
+     * @return com.baomidou.mybatisplus.core.metadata.IPage<com.caoyuqian.blogapi.vo.TagVo>
+     * @Description: 分页查询
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/4 9:45 下午
+     * @since 0.1.0
+     */
+    IPage<TagVo> getListByPage(TagQuery query);
+
+    /**
+     * @param request
+     * @return void
+     * @Description: 根据id逻辑删除tag
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/5 8:32 下午
+     * @since 0.1.0
+     */
+    void updateTagStatus(UpdateTagStatusRequest request);
 }

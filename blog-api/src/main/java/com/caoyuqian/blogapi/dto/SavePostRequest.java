@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class SavePostRequest {
     /**
      * 文章
      */
+    @Valid
     private CreatePostRequest post;
 
     /**

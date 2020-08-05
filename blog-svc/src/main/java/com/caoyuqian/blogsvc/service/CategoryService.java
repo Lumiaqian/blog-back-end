@@ -1,7 +1,10 @@
 package com.caoyuqian.blogsvc.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.caoyuqian.blogapi.dto.CategoryQuery;
 import com.caoyuqian.blogapi.dto.CreateCateRequest;
 import com.caoyuqian.blogapi.dto.UpdateCateRequest;
+import com.caoyuqian.blogapi.dto.UpdateCategoryStatusRequest;
 import com.caoyuqian.blogapi.vo.CategoryVo;
 
 import java.util.List;
@@ -65,4 +68,26 @@ public interface CategoryService {
      * @since 0.1.0
      */
     List<CategoryVo> getByPostId(Long postId);
+
+    /**
+     * @param query
+     * @return com.baomidou.mybatisplus.core.metadata.IPage<com.caoyuqian.blogapi.vo.CategoryVo>
+     * @Description: 分页查询tag
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/5 8:52 下午
+     * @since 0.1.0
+     */
+    IPage<CategoryVo> getListByPage(CategoryQuery query);
+
+    /**
+     * @param request
+     * @return void
+     * @Description: 根据id逻辑删除
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/5 9:12 下午
+     * @since 0.1.0
+     */
+    void updateCategoryStatus(UpdateCategoryStatusRequest request);
 }

@@ -1,10 +1,15 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreateTagRequest;
+import com.caoyuqian.blogapi.dto.TagQuery;
 import com.caoyuqian.blogapi.dto.UpdateTagRequest;
+import com.caoyuqian.blogapi.dto.UpdateTagStatusRequest;
 import com.caoyuqian.blogapi.vo.PostTagVo;
 import com.caoyuqian.blogapi.vo.TagVo;
 import com.caoyuqian.blogsvc.entity.Tag;
@@ -20,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,7 +112,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         List<PostTagVo> postTagVoList = postTagService.getByPostId(postId);
-        if (postTagVoList == null || postTagVoList.isEmpty()){
+        if (postTagVoList == null || postTagVoList.isEmpty()) {
             return null;
         }
         List<Tag> tags = postTagVoList.stream()
@@ -114,9 +120,43 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
                 .collect(Collectors.toList());
         return tags.stream().map(tag -> {
             TagVo tagVo = new TagVo();
-            BeanUtils.copyProperties(tag,tagVo);
+            BeanUtils.copyProperties(tag, tagVo);
             return tagVo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public IPage<TagVo> getListByPage(TagQuery query) {
+        if (query == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        IPage<Tag> page = query.getPage();
+        //获取分页内容
+        List<Tag> tags = new ArrayList<>();
+        //构造查询条件
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(query.getTagId()!=null,Tag::getTagId,query.getTagId())
+                .eq(StringUtils.isNoneBlank(query.getTagName()),Tag::getTagName,query.getTagName())
+                .eq(query.getStatus()!=null,Tag::getStatus,query.getStatus());
+        tags = baseMapper.selectList(queryWrapper);
+        //设置分页内容
+        page.setRecords(tags);
+        return page.convert(tag -> {
+            TagVo tagVo = new TagVo();
+            BeanUtils.copyProperties(tag,tagVo);
+            return tagVo;
+        });
+    }
+
+    @Override
+    public void updateTagStatus(UpdateTagStatusRequest request) {
+        if (request == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        LambdaUpdateWrapper<Tag> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(Tag::getStatus,request.getStatus())
+                .eq(Tag::getTagId,request.getTagId());
+        baseMapper.update(null,updateWrapper);
     }
 
     /**

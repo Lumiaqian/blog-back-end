@@ -1,10 +1,15 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.caoyuqian.blogapi.dto.CategoryQuery;
 import com.caoyuqian.blogapi.dto.CreateCateRequest;
 import com.caoyuqian.blogapi.dto.UpdateCateRequest;
+import com.caoyuqian.blogapi.dto.UpdateCategoryStatusRequest;
 import com.caoyuqian.blogapi.vo.CategoryVo;
 import com.caoyuqian.blogapi.vo.PostCateVo;
 import com.caoyuqian.blogapi.vo.PostTagVo;
@@ -23,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,12 +59,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         CategoryVo categoryVo = new CategoryVo();
         BeanUtils.copyProperties(request, category);
         //根据分类名称，存在更新，不存在插入
-        if (checkByName(request.getCategoryName())){
+        if (checkByName(request.getCategoryName())) {
             UpdateWrapper<Category> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("category_name", request.getCategoryName());
-            categoryMapper.update(category,updateWrapper);
+            categoryMapper.update(category, updateWrapper);
             categoryVo = getByName(request.getCategoryName());
-        }else {
+        } else {
             categoryMapper.insert(category);
             BeanUtils.copyProperties(category, categoryVo);
         }
@@ -75,7 +81,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CategoryVo getByName(String name) {
-        if(StringUtils.isBlank(name)){
+        if (StringUtils.isBlank(name)) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
@@ -83,22 +89,22 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         queryWrapper.ne("status", com.caoyuqian.common.constant.Status.DELETE);
         Category category = categoryMapper.selectOne(queryWrapper);
         CategoryVo categoryVo = new CategoryVo();
-        BeanUtils.copyProperties(category,categoryVo);
+        BeanUtils.copyProperties(category, categoryVo);
         return categoryVo;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateList(List<UpdateCateRequest> requests) {
-        if (requests == null || requests.isEmpty()){
+        if (requests == null || requests.isEmpty()) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         List<Category> categories = requests.stream().map(updateCateRequest -> {
             Category category = new Category();
-            BeanUtils.copyProperties(updateCateRequest,category);
+            BeanUtils.copyProperties(updateCateRequest, category);
             return category;
         }).collect(Collectors.toList());
-       return this.updateBatchById(categories);
+        return this.updateBatchById(categories);
     }
 
     @Override
@@ -108,7 +114,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         List<PostCateVo> postCateVoList = postCategoryService.getByPostId(postId);
-        if (postCateVoList == null || postCateVoList.isEmpty()){
+        if (postCateVoList == null || postCateVoList.isEmpty()) {
             return null;
         }
         List<Category> categories = postCateVoList.stream()
@@ -116,9 +122,45 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .collect(Collectors.toList());
         return categories.stream().map(category -> {
             CategoryVo categoryVo = new CategoryVo();
-            BeanUtils.copyProperties(category,categoryVo);
+            BeanUtils.copyProperties(category, categoryVo);
             return categoryVo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public IPage<CategoryVo> getListByPage(CategoryQuery query) {
+        if (query == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        IPage<Category> iPage = query.getPage();
+        //获取分页内容
+        List<Category> categories = new ArrayList<>();
+        //构造查询条件
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(query.getCategoryId() != null, Category::getCategoryId, query.getCategoryId())
+                .eq(query.getParentId()!=null,Category::getParentId,query.getParentId())
+                .eq(StringUtils.isNoneBlank(query.getCategoryName()),Category::getCategoryName,query.getCategoryName())
+                .eq(query.getStatus()!=null,Category::getStatus,query.getStatus());
+        categories = baseMapper.selectList(queryWrapper);
+        //设置分页内容
+        iPage.setRecords(categories);
+        return iPage.convert(category -> {
+            CategoryVo categoryVo = new CategoryVo();
+            BeanUtils.copyProperties(category,categoryVo);
+            return categoryVo;
+        });
+    }
+
+
+    @Override
+    public void updateCategoryStatus(UpdateCategoryStatusRequest request) {
+        if (request == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        LambdaUpdateWrapper<Category> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(Category::getStatus, request.getStatus())
+                .eq(Category::getCategoryId,request.getCategoryId());
+        baseMapper.update(null,updateWrapper);
     }
 
     /**
