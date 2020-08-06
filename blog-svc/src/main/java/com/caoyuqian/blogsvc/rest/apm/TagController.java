@@ -48,4 +48,9 @@ public class TagController {
         tagService.updateTagStatus(request);
         return Result.success();
     }
+
+    @GetMapping("tag/{tagId}")
+    public Result getTagById(@PathVariable Long tagId){
+       return Result.success(tagService.getTagById(tagId));
+    }
 }

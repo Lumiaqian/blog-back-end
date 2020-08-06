@@ -90,4 +90,15 @@ public interface CategoryService {
      * @since 0.1.0
      */
     void updateCategoryStatus(UpdateCategoryStatusRequest request);
+
+    /**
+     * @param categoryId
+     * @return com.caoyuqian.blogapi.vo.CategoryVo
+     * @Description: 根据id获取category
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/6 9:27 下午
+     * @since 0.1.0
+     */
+    CategoryVo getCategoryById(Long categoryId);
 }

@@ -135,28 +135,40 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         List<Tag> tags = new ArrayList<>();
         //构造查询条件
         LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(query.getTagId()!=null,Tag::getTagId,query.getTagId())
-                .eq(StringUtils.isNoneBlank(query.getTagName()),Tag::getTagName,query.getTagName())
-                .eq(query.getStatus()!=null,Tag::getStatus,query.getStatus());
+        queryWrapper.eq(query.getTagId() != null, Tag::getTagId, query.getTagId())
+                .eq(StringUtils.isNoneBlank(query.getTagName()), Tag::getTagName, query.getTagName())
+                .eq(query.getStatus() != null, Tag::getStatus, query.getStatus());
         tags = baseMapper.selectList(queryWrapper);
         //设置分页内容
         page.setRecords(tags);
         return page.convert(tag -> {
             TagVo tagVo = new TagVo();
-            BeanUtils.copyProperties(tag,tagVo);
+            BeanUtils.copyProperties(tag, tagVo);
             return tagVo;
         });
     }
 
     @Override
     public void updateTagStatus(UpdateTagStatusRequest request) {
-        if (request == null){
+        if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         LambdaUpdateWrapper<Tag> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(Tag::getStatus,request.getStatus())
-                .eq(Tag::getTagId,request.getTagId());
-        baseMapper.update(null,updateWrapper);
+        updateWrapper.set(Tag::getStatus, request.getStatus())
+                .eq(Tag::getTagId, request.getTagId());
+        baseMapper.update(null, updateWrapper);
+    }
+
+    @Override
+    public TagVo getTagById(Long tagId) {
+        if (tagId == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+
+        Tag tag = baseMapper.selectById(tagId);
+        TagVo tagVo = new TagVo();
+        BeanUtils.copyProperties(tag,tagVo);
+        return tagVo;
     }
 
     /**

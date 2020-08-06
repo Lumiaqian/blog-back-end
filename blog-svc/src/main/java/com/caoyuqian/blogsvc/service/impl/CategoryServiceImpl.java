@@ -163,6 +163,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         baseMapper.update(null,updateWrapper);
     }
 
+    @Override
+    public CategoryVo getCategoryById(Long categoryId) {
+        if (categoryId == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        Category category = baseMapper.selectById(categoryId);
+        CategoryVo categoryVo = new CategoryVo();
+        BeanUtils.copyProperties(category,categoryVo);
+        return categoryVo;
+    }
+
     /**
      * @param name
      * @return boolean

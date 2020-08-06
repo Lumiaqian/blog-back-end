@@ -93,4 +93,15 @@ public interface TagService {
      * @since 0.1.0
      */
     void updateTagStatus(UpdateTagStatusRequest request);
+
+    /**
+     * @param tagId
+     * @return com.caoyuqian.blogapi.vo.TagVo
+     * @Description: 根据tagId获取tag¬
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/6 9:22 下午
+     * @since 0.1.0
+     */
+    TagVo getTagById(Long tagId);
 }

@@ -46,4 +46,9 @@ public class CategoryController {
         categoryService.updateCategoryStatus(request);
         return Result.success();
     }
+
+    @GetMapping("category/{categoryId}")
+    public Result getCategoryById(@PathVariable Long categoryId){
+        return Result.success(categoryService.getCategoryById(categoryId));
+    }
 }
