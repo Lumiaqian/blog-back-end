@@ -11,6 +11,7 @@ import com.caoyuqian.blogapi.dto.TagQuery;
 import com.caoyuqian.blogapi.dto.UpdateTagRequest;
 import com.caoyuqian.blogapi.dto.UpdateTagStatusRequest;
 import com.caoyuqian.blogapi.vo.PostTagVo;
+import com.caoyuqian.blogapi.vo.PostVo;
 import com.caoyuqian.blogapi.vo.TagVo;
 import com.caoyuqian.blogsvc.entity.Tag;
 import com.caoyuqian.blogsvc.mapper.TagMapper;
@@ -126,6 +127,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IPage<TagVo> getListByPage(TagQuery query) {
         if (query == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
@@ -149,6 +151,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateTagStatus(UpdateTagStatusRequest request) {
         if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
@@ -160,6 +163,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public TagVo getTagById(Long tagId) {
         if (tagId == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
@@ -169,6 +173,23 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         TagVo tagVo = new TagVo();
         BeanUtils.copyProperties(tag,tagVo);
         return tagVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<TagVo> getAllTags() {
+        LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Tag::getStatus, com.caoyuqian.common.constant.Status.PUBLIC);
+        List<Tag> tags = baseMapper.selectList(queryWrapper);
+        List<TagVo> tagVoList = new ArrayList<>();
+        if (tags!=null && !tags.isEmpty()){
+            tagVoList = tags.stream().map(tag -> {
+                TagVo tagVo = new TagVo();
+                BeanUtils.copyProperties(tag,tagVo);
+                return tagVo;
+            }).collect(Collectors.toList());
+        }
+        return tagVoList;
     }
 
     /**

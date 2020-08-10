@@ -1,5 +1,6 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -11,6 +12,8 @@ import com.caoyuqian.blogapi.dto.PostDto;
 import com.caoyuqian.blogsvc.converter.CreatePostRequest2PostConverter;
 import com.caoyuqian.blogsvc.converter.Post2PostDtoConverter;
 import com.caoyuqian.blogsvc.entity.Post;
+import com.caoyuqian.blogsvc.entity.PostCategory;
+import com.caoyuqian.blogsvc.entity.PostTag;
 import com.caoyuqian.blogsvc.mapper.PostMapper;
 import com.caoyuqian.blogsvc.service.*;
 import com.caoyuqian.common.api.Status;
@@ -88,7 +91,12 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Override
     @Transactional(rollbackFor = Exception.class)
     public IPage<PostVo> getAllPub(PostQuery postQuery) {
-        IPage<Post> iPage = postMapper.selectPage(postQuery.getPage(), null);
+        if (postQuery == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        LambdaQueryWrapper<Post> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Post::getStatus, com.caoyuqian.common.constant.Status.PUBLIC);
+        IPage<Post> iPage = postMapper.selectPage(postQuery.getPage(), queryWrapper);
         return iPage.convert(post -> {
             //获取tags
             List<TagVo> tagVoList = tagService.getByPostId(post.getPostId());
@@ -344,14 +352,14 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ManagementPostVo getManagementPostById(Long postId, Integer status) {
-        if (postId == null || postId == 0 || status == null){
+        if (postId == null || postId == 0 || status == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         QueryWrapper<Post> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("post_id",postId).eq("status",status);
+        queryWrapper.eq("post_id", postId).eq("status", status);
         Post post = postMapper.selectOne(queryWrapper);
         ManagementPostVo managementPostVo = new ManagementPostVo();
-        BeanUtils.copyProperties(post,managementPostVo);
+        BeanUtils.copyProperties(post, managementPostVo);
         //获取tags
         List<TagVo> tagVoList = tagService.getByPostId(post.getPostId());
         //获取categories
@@ -378,14 +386,62 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStatus(UpdatePostStatusRequest status) {
-        if (status == null){
+        if (status == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         LambdaUpdateWrapper<Post> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(Post::getStatus,status.getStatus())
-                .eq(Post::getPostId,status.getPostId());
-        baseMapper.update(null,updateWrapper);
+        updateWrapper.set(Post::getStatus, status.getStatus())
+                .eq(Post::getPostId, status.getPostId());
+        baseMapper.update(null, updateWrapper);
 
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PostVo> getPubPostByTagId(Long tagId) {
+        if (tagId == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        List<PostTag> postTags = postTagService.getByTagId(tagId);
+        List<Post> posts = new ArrayList<>();
+        List<PostVo> postVos = new ArrayList<>();
+        if (postTags != null && !postTags.isEmpty()) {
+            //获取postId集合
+            Set<Long> postId = postTags.stream().map(PostTag::getPostId).collect(Collectors.toSet());
+            //根据postId集合获取post集合
+            posts = baseMapper.selectBatchIds(postId);
+            //转化为postVos
+            postVos = posts.stream().map(post -> {
+                PostVo postVo = new PostVo();
+                BeanUtils.copyProperties(post, postVo);
+                return postVo;
+            }).collect(Collectors.toList());
+        }
+        return postVos;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PostVo> getPubPostByCategoryId(Long categoryId) {
+        if (categoryId == null) {
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        List<PostCategory> postCategories = postCategoryService.getByCategoryId(categoryId);
+        List<Post> posts = new ArrayList<>();
+        List<PostVo> postVos = new ArrayList<>();
+        if (postCategories != null && !postCategories.isEmpty()) {
+            //获取postId集合
+            Set<Long> postId = postCategories.stream().map(PostCategory::getPostId).collect(Collectors.toSet());
+            //根据postId集合获取post集合
+            posts = baseMapper.selectBatchIds(postId);
+            //转化为postVos
+            postVos = posts.stream().map(post -> {
+                PostVo postVo = new PostVo();
+                BeanUtils.copyProperties(post, postVo);
+                return postVo;
+            }).collect(Collectors.toList());
+        }
+        return postVos;
     }
 
     private PostYamlDTO parseArticle(String originalFilename, String context) {

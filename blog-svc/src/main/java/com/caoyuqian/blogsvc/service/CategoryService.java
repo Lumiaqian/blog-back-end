@@ -101,4 +101,15 @@ public interface CategoryService {
      * @since 0.1.0
      */
     CategoryVo getCategoryById(Long categoryId);
+
+    /**
+     * @param
+     * @return java.util.List<com.caoyuqian.blogapi.vo.CategoryVo>
+     * @Description: 获取所有已经公布的分类
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/10 9:55 下午
+     * @since 0.1.0
+     */
+    List<CategoryVo> getAllPubCategory();
 }

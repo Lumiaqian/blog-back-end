@@ -1,5 +1,6 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreatePostCateRequest;
@@ -74,6 +75,18 @@ public class PostCategoryServiceImpl extends ServiceImpl<PostCategoryMapper, Pos
             BeanUtils.copyProperties(postCategory,postCateVo);
             return postCateVo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PostCategory> getByCategoryId(Long categoryId) {
+        if (categoryId == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        LambdaQueryWrapper<PostCategory> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostCategory::getCategoryId,categoryId);
+
+        return baseMapper.selectList(queryWrapper);
     }
 
 }

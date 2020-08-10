@@ -5,6 +5,7 @@ import com.caoyuqian.blogapi.dto.CreateTagRequest;
 import com.caoyuqian.blogapi.dto.TagQuery;
 import com.caoyuqian.blogapi.dto.UpdateTagRequest;
 import com.caoyuqian.blogapi.dto.UpdateTagStatusRequest;
+import com.caoyuqian.blogapi.vo.PostVo;
 import com.caoyuqian.blogapi.vo.TagVo;
 import com.caoyuqian.blogsvc.entity.Tag;
 
@@ -104,4 +105,17 @@ public interface TagService {
      * @since 0.1.0
      */
     TagVo getTagById(Long tagId);
+
+    /**
+     * @param
+     * @return java.util.List<com.caoyuqian.blogapi.vo.TagVo>
+     * @Description: 获取所有发布的tag
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/10 9:12 下午
+     * @since 0.1.0
+     */
+    List<TagVo> getAllTags();
+
+
 }

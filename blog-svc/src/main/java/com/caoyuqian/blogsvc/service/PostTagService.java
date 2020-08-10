@@ -2,6 +2,7 @@ package com.caoyuqian.blogsvc.service;
 
 import com.caoyuqian.blogapi.dto.CreatePostTagRequest;
 import com.caoyuqian.blogapi.vo.PostTagVo;
+import com.caoyuqian.blogsvc.entity.PostTag;
 
 import java.util.List;
 
@@ -30,5 +31,19 @@ public interface PostTagService {
      * @since 0.1.0
      */
     List<PostTagVo> getByPostId(Long postId);
+
+
+    /**
+     * @param tagId
+     * @return java.util.List<com.caoyuqian.blogsvc.entity.PostTag>
+     * @Description: 根据tagId获取postTag
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/10 9:22 下午
+     * @since 0.1.0
+     */
+    List<PostTag> getByTagId(Long tagId);
+
+
 
 }

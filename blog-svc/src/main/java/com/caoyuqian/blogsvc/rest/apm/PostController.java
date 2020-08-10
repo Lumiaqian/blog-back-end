@@ -6,8 +6,10 @@ import com.caoyuqian.common.api.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * @author qian
@@ -48,5 +50,11 @@ public class PostController {
     @GetMapping("post")
     public Result getManagementPostById(@Param("postId") Long postId,@Param("status") Integer status){
         return Result.success(postService.getManagementPostById(postId,status));
+    }
+
+    @PostMapping("post/upload")
+    public Result upload(MultipartFile file) throws IOException {
+        postService.uploadPost(file);
+        return Result.success();
     }
 }

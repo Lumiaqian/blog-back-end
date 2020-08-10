@@ -1,5 +1,6 @@
 package com.caoyuqian.blogsvc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.blogapi.dto.CreatePostTagRequest;
@@ -69,5 +70,17 @@ public class PostTagServiceImpl extends ServiceImpl<PostTagMapper, PostTag> impl
           BeanUtils.copyProperties(postTag,postTagVo);
           return postTagVo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<PostTag> getByTagId(Long tagId) {
+        if (tagId == null){
+            throw new ServiceException(Status.PARAM_IS_NULL);
+        }
+        LambdaQueryWrapper<PostTag> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PostTag::getTagId,tagId);
+
+        return baseMapper.selectList(queryWrapper);
     }
 }

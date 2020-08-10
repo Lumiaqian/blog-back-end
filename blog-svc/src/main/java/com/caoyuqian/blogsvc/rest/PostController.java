@@ -1,12 +1,10 @@
 package com.caoyuqian.blogsvc.rest;
 
+import com.caoyuqian.blogapi.dto.PostQuery;
 import com.caoyuqian.blogsvc.service.PostService;
 import com.caoyuqian.common.api.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,13 +24,29 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("upload")
-    public Result upload(MultipartFile file) throws IOException {
-        postService.uploadPost(file);
-        return Result.success();
-    }
+
     @GetMapping
     public Result test(){
         return Result.success("Hello World");
+    }
+
+    @GetMapping
+    public Result getList(@RequestBody PostQuery query){
+        return Result.success(postService.getAllPub(query));
+    }
+
+    @GetMapping("/{postId}")
+    public Result getPubPostById(@PathVariable Long postId){
+        return Result.success(postService.getPubPostById(postId));
+    }
+
+    @GetMapping
+    public Result getPubPostByTagId(@RequestParam("tagId") Long tagId){
+        return Result.success(postService.getPubPostByTagId(tagId));
+    }
+
+    @GetMapping
+    public Result getPubPostByCategoryId(@RequestParam("categoryId") Long categoryId){
+        return Result.success(postService.getPubPostByCategoryId(categoryId));
     }
 }

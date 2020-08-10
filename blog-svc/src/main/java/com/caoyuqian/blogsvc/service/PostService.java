@@ -8,6 +8,7 @@ import com.caoyuqian.blogapi.vo.PostVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author lumiaqian
@@ -104,15 +105,15 @@ public interface PostService {
     PostVo getPubPostById(Long postId);
 
     /**
-     * @Description: 根据id和status获取ManagementPostVo
      * @param postId
-     * @version 0.1.0
      * @return com.caoyuqian.blogapi.vo.ManagementPostVo
+     * @Description: 根据id和status获取ManagementPostVo
+     * @version 0.1.0
      * @author qian
      * @date 2020/7/19 9:43 下午
      * @since 0.1.0
      */
-    ManagementPostVo getManagementPostById(Long postId,Integer status);
+    ManagementPostVo getManagementPostById(Long postId, Integer status);
 
     /**
      * @param status
@@ -124,4 +125,26 @@ public interface PostService {
      * @since 0.1.0
      */
     void updateStatus(UpdatePostStatusRequest status);
+
+    /**
+     * @param tagId
+     * @return java.util.List<com.caoyuqian.blogapi.vo.PostVo>
+     * @Description: 根据tagId获取Post
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/10 9:17 下午
+     * @since 0.1.0
+     */
+    List<PostVo> getPubPostByTagId(Long tagId);
+
+    /**
+     * @param categoryId
+     * @return java.util.List<com.caoyuqian.blogapi.vo.PostVo>
+     * @Description: 根据categoryId获取已经公布的文章
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/10 9:45 下午
+     * @since 0.1.0
+     */
+    List<PostVo> getPubPostByCategoryId(Long categoryId);
 }

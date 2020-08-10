@@ -2,6 +2,8 @@ package com.caoyuqian.blogsvc.service;
 
 import com.caoyuqian.blogapi.dto.CreatePostCateRequest;
 import com.caoyuqian.blogapi.vo.PostCateVo;
+import com.caoyuqian.blogsvc.entity.PostCategory;
+import com.caoyuqian.blogsvc.entity.PostTag;
 
 import java.util.List;
 
@@ -31,4 +33,15 @@ public interface PostCategoryService {
      * @since 0.1.0
      */
     List<PostCateVo> getByPostId(Long postId);
+
+    /**
+     * @param categoryId
+     * @return java.util.List<com.caoyuqian.blogsvc.entity.PostTag>
+     * @Description: 根据categoryId获取postTag
+     * @version 0.1.0
+     * @author qian
+     * @date 2020/8/10 9:41 下午
+     * @since 0.1.0
+     */
+    List<PostCategory> getByCategoryId(Long categoryId);
 }

@@ -128,6 +128,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IPage<CategoryVo> getListByPage(CategoryQuery query) {
         if (query == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
@@ -138,40 +139,60 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         //构造查询条件
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(query.getCategoryId() != null, Category::getCategoryId, query.getCategoryId())
-                .eq(query.getParentId()!=null,Category::getParentId,query.getParentId())
-                .eq(StringUtils.isNoneBlank(query.getCategoryName()),Category::getCategoryName,query.getCategoryName())
-                .eq(query.getStatus()!=null,Category::getStatus,query.getStatus());
+                .eq(query.getParentId() != null, Category::getParentId, query.getParentId())
+                .eq(StringUtils.isNoneBlank(query.getCategoryName()), Category::getCategoryName, query.getCategoryName())
+                .eq(query.getStatus() != null, Category::getStatus, query.getStatus());
         categories = baseMapper.selectList(queryWrapper);
         //设置分页内容
         iPage.setRecords(categories);
         return iPage.convert(category -> {
             CategoryVo categoryVo = new CategoryVo();
-            BeanUtils.copyProperties(category,categoryVo);
+            BeanUtils.copyProperties(category, categoryVo);
             return categoryVo;
         });
     }
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateCategoryStatus(UpdateCategoryStatusRequest request) {
-        if (request == null){
+        if (request == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         LambdaUpdateWrapper<Category> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(Category::getStatus, request.getStatus())
-                .eq(Category::getCategoryId,request.getCategoryId());
-        baseMapper.update(null,updateWrapper);
+                .eq(Category::getCategoryId, request.getCategoryId());
+        baseMapper.update(null, updateWrapper);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CategoryVo getCategoryById(Long categoryId) {
-        if (categoryId == null){
+        if (categoryId == null) {
             throw new ServiceException(Status.PARAM_IS_NULL);
         }
         Category category = baseMapper.selectById(categoryId);
         CategoryVo categoryVo = new CategoryVo();
-        BeanUtils.copyProperties(category,categoryVo);
+        BeanUtils.copyProperties(category, categoryVo);
         return categoryVo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public List<CategoryVo> getAllPubCategory() {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getStatus, com.caoyuqian.common.constant.Status.PUBLIC)
+                .orderByDesc(Category::getCreateTime);
+        List<Category> categories = baseMapper.selectList(queryWrapper);
+        List<CategoryVo> categoryVos = new ArrayList<>();
+        if (categories != null && !categories.isEmpty()) {
+          categoryVos = categories.stream().map(category -> {
+                CategoryVo categoryVo = new CategoryVo();
+                BeanUtils.copyProperties(category,categoryVo);
+                return categoryVo;
+            }).collect(Collectors.toList());
+        }
+        return categoryVos;
     }
 
     /**
