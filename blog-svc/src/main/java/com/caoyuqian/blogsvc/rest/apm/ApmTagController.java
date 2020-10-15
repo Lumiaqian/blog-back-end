@@ -15,14 +15,14 @@ import java.util.List;
 /**
  * @author qian
  * @version V1.0
- * @Title: TagController
+ * @Title: ApmTagController
  * @Package: com.caoyuqian.blogsvc.rest.apm
  * @Description: 管理平台tag api
  * @date 2020/8/4 9:37 下午
  **/
 @RestController
 @RequestMapping("/v1/blog/admin")
-public class TagController {
+public class ApmTagController {
     @Autowired
     private TagService tagService;
 

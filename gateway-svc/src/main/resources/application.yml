@@ -1,16 +1,16 @@
 spring:
   redis:
     host: 127.0.0.1
-  cloud:
-    gateway:
-      routes:
-        - id: user-svc
-          uri: lb://user-svc
-          predicates:
-            - Path=/user/**
-          filters:
-            - PrefixPath=/v1 #添加前缀
-        - id: auth-svc
-          uri: lb://auth-svc
-          predicates:
-            - Path=/oauth/**
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: user-svc
+#          uri: lb://user-svc
+#          predicates:
+#            - Path=/user/**
+#          filters:
+#            - PrefixPath=/v1 #添加前缀
+#        - id: auth-svc
+#          uri: lb://auth-svc
+#          predicates:
+#            - Path=/oauth/**

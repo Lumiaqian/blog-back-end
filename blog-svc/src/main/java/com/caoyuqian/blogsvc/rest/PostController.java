@@ -25,7 +25,7 @@ public class PostController {
     private PostService postService;
 
 
-    @GetMapping
+    @GetMapping("test")
     public Result test(){
         return Result.success("Hello World");
     }
@@ -40,13 +40,13 @@ public class PostController {
         return Result.success(postService.getPubPostById(postId));
     }
 
-    @GetMapping
-    public Result getPubPostByTagId(@RequestParam("tagId") Long tagId){
+    @GetMapping("/{tagId}")
+    public Result getPubPostByTagId(@PathVariable("tagId") Long tagId){
         return Result.success(postService.getPubPostByTagId(tagId));
     }
 
-    @GetMapping
-    public Result getPubPostByCategoryId(@RequestParam("categoryId") Long categoryId){
+    @GetMapping("/{categoryId}")
+    public Result getPubPostByCategoryId(@PathVariable("categoryId") Long categoryId){
         return Result.success(postService.getPubPostByCategoryId(categoryId));
     }
 }
