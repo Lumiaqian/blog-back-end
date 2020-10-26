@@ -7,7 +7,6 @@ import com.caoyuqian.user.service.MenuService;
 import com.caoyuqian.user.vo.MenuTree;
 import com.caoyuqian.user.vo.TreeVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,27 +27,27 @@ public class MenuController {
     private MenuService menuService;
 
     @GetMapping("menu")
-    @PreAuthorize("hasAuthority('menu:view')")
+    //@PreAuthorize("hasAuthority('menu:view')")
     public Result findMenus(){
         return Result.success(menuService.findMenus());
     }
 
     @PostMapping("menu")
-    @PreAuthorize("hasAuthority('menu:add')")
+    //@PreAuthorize("hasAuthority('menu:add')")
     public Result create(@Valid @RequestBody CreateMenuRequest request){
         menuService.add(request);
         return Result.success();
     }
 
     @DeleteMapping("menu")
-    @PreAuthorize("hasAuthority('menu:delete')")
+   // @PreAuthorize("hasAuthority('menu:delete')")
     public Result delete(List<Long> ids){
         menuService.deleteMenuList(ids);
         return Result.success();
     }
 
     @PutMapping("menu")
-    @PreAuthorize("hasAuthority('menu:update')")
+  //  @PreAuthorize("hasAuthority('menu:update')")
     public Result update(@Valid @RequestBody UpdateMenuRequest request){
         menuService.updateMenu(request);
         return Result.success();

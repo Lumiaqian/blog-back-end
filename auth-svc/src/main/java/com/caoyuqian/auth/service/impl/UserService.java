@@ -12,12 +12,17 @@ import com.caoyuqian.auth.service.RoleService;
 import com.caoyuqian.auth.service.UserRoleService;
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.api.Status;
+import com.caoyuqian.common.constant.AuthConstants;
 import com.caoyuqian.common.error.ServiceException;
 import com.caoyuqian.user.client.UserClient;
+import com.caoyuqian.user.dto.UserDto;
+import com.caoyuqian.user.vo.ResourceVo;
 import com.caoyuqian.user.vo.RoleVo;
+import com.caoyuqian.user.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -26,6 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -58,31 +64,39 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUsername, username);
-        User user = baseMapper.selectOne(queryWrapper);
+        User user = new User();
+
+        Result<UserDto> userVoResult = userClient.getByMobile(username);
+        UserDto userDto = userVoResult.getData();
+        BeanUtils.copyProperties(userDto, user);
         log.info("user:{}", user);
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.NO_AUTHORITIES;
         if (ObjectUtils.isEmpty(user)) {
             throw new UsernameNotFoundException("用户:" + username + "'不存在");
         }
-        //获取权限信息
-        String userPermissions = this.findUserPermissions(username);
-        if (StringUtils.isNotBlank(userPermissions)){
-            grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(userPermissions);
-
-            log.info("grantedAuthorities:{}",grantedAuthorities);
+        //获取用户角色
+        Result<List<RoleVo>> result = userClient.getByUserId(user.getUserId());
+        List<RoleVo> roleVos = result.getData();
+        List<String> roles = roleVos.stream().map(RoleVo::getRoleName).collect(Collectors.toList());
+        //获取权限
+        Set<String> authSet = new HashSet<>();
+        Result<List<ResourceVo>> listResult = userClient.getResourceByUserId(user.getUserId());
+        List<ResourceVo> resourceVos = listResult.getData();
+        if (!CollectionUtils.isEmpty(roles)){
+            roles.forEach(item -> authSet.add(AuthConstants.AUTHORITY_PREFIX + item));
         }
+        authSet.addAll(resourceVos.stream().map(ResourceVo::getUrl).collect(Collectors.toSet()));
+        //设置角色资源
+        List<GrantedAuthority> finalGrantedAuthorities = AuthorityUtils.createAuthorityList(authSet.toArray(new String[0]));
 
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 user.getEnabled(), user.getAccountNonExpired(), user.getCredentialsNonExpired(), user.getAccountNonLocked(),
-                grantedAuthorities);
+                finalGrantedAuthorities);
 
     }
 
-    private String findUserPermissions(String username){
+   /* private String findUserPermissions(String username) {
         List<Menu> userPermissions = menuService.findUserPermissionsString(username);
         return userPermissions.stream().map(Menu::getPerms).collect(Collectors.joining(","));
-    }
+    }*/
 }

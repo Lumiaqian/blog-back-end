@@ -9,7 +9,6 @@ import com.caoyuqian.user.entity.Role;
 import com.caoyuqian.user.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,26 +33,26 @@ public class RoleController {
     private Role2RoleVo role2ComRole;
 
     @PostMapping("role")
-    @PreAuthorize("hasAuthority('role:add')")
+    //@PreAuthorize("hasAuthority('role:add')")
     public Result add(@Valid @RequestBody CreateRoleRequest request){
 
         return Result.success(roleService.add(request));
     }
     @GetMapping("role/{userId}")
-    @PreAuthorize("hasAuthority('role:view')")
+   // @PreAuthorize("hasAuthority('role:view')")
     public Result getByUserId(@PathVariable Long userId){
 
         return Result.success(roleService.getByUserId(userId).stream().map(role -> role2ComRole.convert(role)));
     }
 
     @DeleteMapping("role/{roleId}")
-    @PreAuthorize("hasAuthority('role:delete')")
+   // @PreAuthorize("hasAuthority('role:delete')")
     public Result deleteById(@PathVariable Long roleId){
         return Result.success(roleService.delete(roleId));
     }
 
     @PutMapping("role")
-    @PreAuthorize("hasAuthority('role:update')")
+   // @PreAuthorize("hasAuthority('role:update')")
     public Result update(@Validated @RequestBody UpdateRoleRequest request){
         roleService.update(request);
         return Result.success();

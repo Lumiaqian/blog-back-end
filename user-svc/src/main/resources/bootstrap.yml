@@ -7,4 +7,12 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
+        server-addr: ${REGISTER_HOST:localhost}:${REGISTER_PORT:8848}
+
+# ===== 自定义swagger配置 ===== #
+swagger:
+  enable: true
+  application-name: ${spring.application.name}
+  application-version: 1.0
+  application-description: 用户中心API
+  try-host: http://localhost:${server.port}

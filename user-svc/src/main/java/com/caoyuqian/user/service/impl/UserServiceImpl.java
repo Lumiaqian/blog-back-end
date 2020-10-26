@@ -11,10 +11,7 @@ import com.caoyuqian.common.error.ServiceException;
 import com.caoyuqian.common.utils.SpringUtil;
 import com.caoyuqian.user.converter.User2UserVoConvert;
 import com.caoyuqian.user.converter.CreateUserRequest2UserConvert;
-import com.caoyuqian.user.dto.CreateUserRequest;
-import com.caoyuqian.user.dto.UpdateUserRequest;
-import com.caoyuqian.user.dto.UserQuery;
-import com.caoyuqian.user.dto.VerifyPasswordRequest;
+import com.caoyuqian.user.dto.*;
 import com.caoyuqian.user.mapper.UserMapper;
 import com.caoyuqian.user.entity.User;
 import com.caoyuqian.user.service.RoleService;
@@ -103,7 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserVo getByMobile(String mobile) {
+    public UserDto getByMobile(String mobile) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("mobile", mobile);
         User user = this.getOne(queryWrapper);
@@ -112,7 +109,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         user.setRoleIds(userRoleService.queryByUserId(user.getUserId()));
-        return user2UserVoConvert.convert(user);
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user,userDto);
+        return userDto;
 
 
     }

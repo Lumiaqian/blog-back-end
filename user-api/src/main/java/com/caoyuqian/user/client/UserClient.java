@@ -1,7 +1,9 @@
 package com.caoyuqian.user.client;
 
 import com.caoyuqian.common.api.Result;
+import com.caoyuqian.user.dto.UserDto;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
+import com.caoyuqian.user.vo.ResourceVo;
 import com.caoyuqian.user.vo.RoleVo;
 import com.caoyuqian.user.vo.UserVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -27,7 +30,7 @@ public interface UserClient {
      * @return
      */
     @GetMapping("/v1/user")
-    Result<UserVo> getByMobile(@RequestParam("mobile") @NotBlank String mobile);
+    Result<UserDto> getByMobile(@RequestParam("mobile") @NotBlank String mobile);
 
     /**
      * 校验密码
@@ -44,4 +47,12 @@ public interface UserClient {
      */
     @GetMapping("/v1/user/role/{userId}")
     Result<List<RoleVo>> getByUserId(@PathVariable(value = "userId") Long userId);
+
+    /**
+     * 查询用户所拥有的资源
+     * @param userId
+     * @return
+     */
+    @GetMapping("resource/{userId}")
+    Result<List<ResourceVo>> getResourceByUserId(@NotNull @PathVariable Long userId);
 }

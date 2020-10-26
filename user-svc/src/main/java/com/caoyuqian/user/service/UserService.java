@@ -2,12 +2,12 @@ package com.caoyuqian.user.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.caoyuqian.user.dto.CreateUserRequest;
-import com.caoyuqian.user.dto.UpdateUserRequest;
-import com.caoyuqian.user.dto.UserQuery;
-import com.caoyuqian.user.dto.VerifyPasswordRequest;
+import com.caoyuqian.user.dto.*;
 import com.caoyuqian.user.entity.User;
+import com.caoyuqian.user.vo.ResourceVo;
 import com.caoyuqian.user.vo.UserVo;
+
+import java.util.List;
 
 /**
  * @author lumiaqian
@@ -61,7 +61,7 @@ public interface UserService {
      * @param mobile
      * @return userVo
      */
-    UserVo getByMobile(String mobile);
+    UserDto getByMobile(String mobile);
 
     /**
      * @param id

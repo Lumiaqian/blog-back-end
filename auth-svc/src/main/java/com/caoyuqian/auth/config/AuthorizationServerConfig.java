@@ -7,6 +7,7 @@ import com.caoyuqian.common.constant.AuthConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -60,6 +61,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
+    /**
+     * jwt 对称加密密钥
+     */
+    @Value("${jwt.signingKey}")
+    private String signingKey;
 
     @Bean
     public ClientDetailsService clientDetails() {
@@ -177,7 +183,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     /**
      * @param
      * @return org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
-     * @Description: 使用非对称加密算法对token签名
+     * @Description: 使用对称加密算法对token签名
      * @version 0.1.0
      * @author qian
      * @date 2020/10/15 3:10 下午
@@ -186,7 +192,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setKeyPair(keyPair());
+        converter.setSigningKey(signingKey);
         return converter;
     }
 }
