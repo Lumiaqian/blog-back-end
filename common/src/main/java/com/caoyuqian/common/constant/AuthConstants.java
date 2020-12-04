@@ -19,19 +19,19 @@ public interface AuthConstants {
     /**
      * 别名
      */
-   String RSA_ALIAS = "blog";
+   String RSA_ALIAS = "lumiaqian";
 
     /**
      * 密钥库口令
      */
-   String RSA_STOREPASS = "lumiaqian";
+   String RSA_STOREPASS = "123456";
 
     /**
      * 密钥口令
      */
-   String RSA_KEYPASS = "lumiaqian";
+   String RSA_KEYPASS = "123456";
 
-   String RSA_JKS_NAME = "blog.jks";
+   String RSA_JKS_NAME = "lumiaqian.jks";
 
     String JWT_USER_ID_KEY = "id";
 

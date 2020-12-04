@@ -26,13 +26,13 @@ public class ResourceController {
     private ResourceService resourceService;
 
     @PostMapping
-    public Result add(@Validated CreateResourceRequest createResourceRequest){
+    public Result add(@RequestBody @Validated CreateResourceRequest createResourceRequest){
         resourceService.saveResource(createResourceRequest);
         return Result.success();
     }
 
     @PutMapping
-    public Result update(@Validated UpdateResourceRequest updateResourceRequest){
+    public Result update(@RequestBody @Validated UpdateResourceRequest updateResourceRequest){
         resourceService.updateResourceById(updateResourceRequest);
         return Result.success();
     }

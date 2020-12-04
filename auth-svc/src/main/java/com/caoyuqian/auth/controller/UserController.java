@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @Slf4j
-@RequestMapping("/v1/auth")
+@RequestMapping("oauth")
 public class UserController {
     @GetMapping("/principal")
     public Result getCurrentUser(Authentication authentication) {

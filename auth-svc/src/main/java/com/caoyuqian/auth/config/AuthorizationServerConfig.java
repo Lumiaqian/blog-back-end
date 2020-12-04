@@ -59,33 +59,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
-    /**
-     * jwt 对称加密密钥
-     */
-    @Value("${jwt.signingKey}")
-    private String signingKey;
+
 
     @Bean
     public ClientDetailsService clientDetails() {
         return new JdbcClientDetailsService(dataSource);
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-        /**
-         * redis 存储有状态方式
-         */
-        RedisTokenStore redisTokenStore = new RedisTokenStore(redisConnectionFactory);
-        // 解决每次生成的 token都一样的问题
-        redisTokenStore.setAuthenticationKeyGenerator(oAuth2Authentication -> UUID.randomUUID().toString());
-        return redisTokenStore;
-        /**
-         * jwt 无状态方式
-         */
-        //return new JwtTokenStore(jwtAccessTokenConverter());
-    }
 
     @Bean
     public WebResponseExceptionTranslator<OAuth2Exception> webResponseExceptionTranslator() {
@@ -100,24 +80,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-/*
-
-        // 配置tokenServices参数
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(tokenStore());
-        */
-/**
-         * jwt 无状态方式
-         *//*
-
-        //tokenServices.setTokenEnhancer(jwtAccessTokenConverter());
-        tokenServices.setSupportRefreshToken(true);
-        tokenServices.setClientDetailsService(clientDetails());
-        // 设置access_token有效时长12小时，默认12小时
-        tokenServices.setAccessTokenValiditySeconds(60 * 60 * 12);
-        // 设置refresh_token有效时长7天，默认30天
-        tokenServices.setRefreshTokenValiditySeconds(60 * 60 * 24 * 7);
-*/
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         List<TokenEnhancer> tokenEnhancers = new ArrayList<>();
         tokenEnhancers.add(tokenEnhancer());
@@ -192,7 +154,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(signingKey);
+        converter.setKeyPair(keyPair());
         return converter;
     }
 }

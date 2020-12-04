@@ -53,6 +53,6 @@ public interface UserClient {
      * @param userId
      * @return
      */
-    @GetMapping("resource/{userId}")
-    Result<List<ResourceVo>> getResourceByUserId(@NotNull @PathVariable Long userId);
+    @GetMapping("/v1/user/resource/{userId}")
+    Result<List<ResourceVo>> getResourceByUserId(@NotNull @PathVariable(value = "userId") Long userId);
 }

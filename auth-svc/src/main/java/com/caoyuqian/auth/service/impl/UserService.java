@@ -1,32 +1,24 @@
 package com.caoyuqian.auth.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.auth.converter.Role2RoleVo;
-import com.caoyuqian.auth.entity.Menu;
 import com.caoyuqian.auth.entity.User;
 import com.caoyuqian.auth.mapper.UserMapper;
 import com.caoyuqian.auth.service.MenuService;
 import com.caoyuqian.auth.service.RoleService;
-import com.caoyuqian.auth.service.UserRoleService;
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.constant.AuthConstants;
-import com.caoyuqian.common.error.ServiceException;
 import com.caoyuqian.user.client.UserClient;
 import com.caoyuqian.user.dto.UserDto;
 import com.caoyuqian.user.vo.ResourceVo;
 import com.caoyuqian.user.vo.RoleVo;
-import com.caoyuqian.user.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -67,6 +59,9 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
         User user = new User();
 
         Result<UserDto> userVoResult = userClient.getByMobile(username);
+        if (!userVoResult.getCode().equals(Status.SUCCESS.getCode())){
+            throw new UsernameNotFoundException("用户:" + username + "'不存在");
+        }
         UserDto userDto = userVoResult.getData();
         BeanUtils.copyProperties(userDto, user);
         log.info("user:{}", user);
@@ -95,8 +90,4 @@ public class UserService extends ServiceImpl<UserMapper, User> implements UserDe
 
     }
 
-   /* private String findUserPermissions(String username) {
-        List<Menu> userPermissions = menuService.findUserPermissionsString(username);
-        return userPermissions.stream().map(Menu::getPerms).collect(Collectors.joining(","));
-    }*/
 }

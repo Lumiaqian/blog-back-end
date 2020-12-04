@@ -8,10 +8,6 @@ spring:
     nacos:
       discovery:
         server-addr: ${REGISTER_HOST:localhost}:${REGISTER_PORT:8848}
-
-nacos:
-  gateway:
-    route:
       config:
-        data-id: gateway-router
-        group: DEFAULT_GROUP
+        server-addr: ${REGISTER_HOST:localhost}:${REGISTER_PORT:8848}
+        file-extension: yaml

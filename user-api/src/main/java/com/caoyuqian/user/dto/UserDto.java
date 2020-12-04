@@ -30,4 +30,23 @@ public class UserDto {
     private Set<Long> roleIds;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    /**
+     * 用户状态，true为可用
+     */
+    private Boolean enabled;
+
+    /**
+     * 用户账号是否过期，true为未过期
+     */
+    private Boolean accountNonExpired;
+
+    /**
+     * 用户密码是否过期，true为未过期
+     */
+    private Boolean credentialsNonExpired;
+
+    /**
+     * 用户账号是否被锁定，true为未锁定
+     */
+    private Boolean accountNonLocked;
 }

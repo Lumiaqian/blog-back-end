@@ -23,14 +23,13 @@ import javax.validation.Valid;
  **/
 @RestController
 @Slf4j
-@RequestMapping("/v1/client")
+@RequestMapping("oauth/client")
 public class OauthClientDetailsController {
 
     @Autowired
     private OauthClientDetailsService oauthClientDetailsService;
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('client:add')")
     public Result add(@Valid @RequestBody CreateOauthClientDetailsDto dto){
         oauthClientDetailsService.createOauthClientDetails(dto);
         return Result.success();

@@ -32,7 +32,7 @@ public class CustomWebResponseExceptionTranslator implements WebResponseExceptio
 
     @Override
     public ResponseEntity<CustomOAuth2Exception> translate(Exception e) throws Exception {
-
+        e.printStackTrace();
         log.error(e.getMessage());
 
         // Try to extract a SpringSecurityException from the stacktrace

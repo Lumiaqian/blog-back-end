@@ -7,7 +7,6 @@
         <artifactId>blog</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.caoyuqian</groupId>
     <artifactId>blog-svc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>blog-svc</name>

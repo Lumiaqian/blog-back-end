@@ -7,7 +7,6 @@
         <artifactId>blog</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.caoyuqian</groupId>
     <artifactId>gateway-svc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>gateway-svc</name>
@@ -19,16 +18,23 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.caoyuqian</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.baomidou</groupId>
+                    <artifactId>mybatis-plus-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,31 +53,8 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.caoyuqian</groupId>
-            <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-oauth2</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-security</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.baomidou</groupId>
-                    <artifactId>mybatis-plus-boot-starter</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
 

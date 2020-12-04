@@ -1,17 +1,17 @@
 package com.caoyuqian.gatewaysvc.config;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.caoyuqian.common.constant.AuthConstants;
 import com.caoyuqian.gatewaysvc.component.AuthorizationManager;
 import com.caoyuqian.gatewaysvc.error.CustomAccessDeniedHandler;
 import com.caoyuqian.gatewaysvc.error.CustomAuthenticationEntryPoint;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -35,6 +35,7 @@ import reactor.core.publisher.Mono;
 @Configuration
 @EnableWebFluxSecurity
 @Slf4j
+@RefreshScope
 public class ResourceServerConfig{
 
 
@@ -45,7 +46,6 @@ public class ResourceServerConfig{
     @Autowired
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    @Autowired
     private WhiteListConfig whiteListConfig;
 
     @Autowired
@@ -58,7 +58,7 @@ public class ResourceServerConfig{
         // 自定义处理JWT请求头过期或签名错误的结果
         http.oauth2ResourceServer().authenticationEntryPoint(customAuthenticationEntryPoint);
         http.authorizeExchange()
-                .pathMatchers(ArrayUtils.toStringArray(whiteListConfig.getUrls().toArray(new String[0]))).permitAll()
+                .pathMatchers(ArrayUtil.toArray(whiteListConfig.getUrls(), String.class)).permitAll()
                 .anyExchange().access(authorizationManager)
                 .and()
                 .exceptionHandling()
