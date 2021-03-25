@@ -1,6 +1,5 @@
 package com.caoyuqian.auth.service.impl;
 
-import com.caoyuqian.auth.entity.User;
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.constant.AuthConstants;
@@ -9,8 +8,6 @@ import com.caoyuqian.user.dto.UserDto;
 import com.caoyuqian.user.vo.ResourceVo;
 import com.caoyuqian.user.vo.RoleVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

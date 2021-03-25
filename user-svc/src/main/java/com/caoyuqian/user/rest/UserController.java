@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * @author qian
@@ -75,6 +76,12 @@ public class UserController {
     @GetMapping
     public Result getByMobile(@RequestParam("mobile") @NotBlank String mobile) {
         return Result.success(userService.getByMobile(mobile));
+    }
+
+    @ApiOperation(value = "根据id获取用户信息", httpMethod = "GET")
+    @GetMapping()
+    public Result getById(@Null Long userId){
+        return Result.success(userService.get(userId));
     }
 
     @ApiOperation(value = "通过手机号删除用户信息", httpMethod = "DELETE")
