@@ -5,7 +5,6 @@ import com.caoyuqian.user.dto.UserDto;
 import com.caoyuqian.user.dto.VerifyPasswordRequest;
 import com.caoyuqian.user.vo.ResourceVo;
 import com.caoyuqian.user.vo.RoleVo;
-import com.caoyuqian.user.vo.UserVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +28,8 @@ public interface UserClient {
      * @param mobile
      * @return
      */
-    @GetMapping("/v1/user")
-    Result<UserDto> getByMobile(@RequestParam("mobile") @NotBlank String mobile);
+    @GetMapping("/v1/user/{mobile}")
+    Result<UserDto> getByMobile(@PathVariable(value = "mobile") @NotBlank String mobile);
 
     /**
      * 校验密码

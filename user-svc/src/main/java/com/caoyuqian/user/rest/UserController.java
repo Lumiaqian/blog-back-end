@@ -73,8 +73,8 @@ public class UserController {
 
     @ApiOperation(value = "通过手机号获取用户信息", httpMethod = "GET")
     @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "query", dataType = "String")
-    @GetMapping
-    public Result getByMobile(@RequestParam("mobile") @NotBlank String mobile) {
+    @GetMapping("/{mobile}")
+    public Result getByMobile(@PathVariable("mobile") @NotBlank String mobile) {
         return Result.success(userService.getByMobile(mobile));
     }
 
