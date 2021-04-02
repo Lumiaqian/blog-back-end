@@ -1,12 +1,15 @@
-package com.caoyuqian.user.vo;
+package com.caoyuqian.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Vue路由 Meta
@@ -18,7 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RouterMetaVo implements Serializable {
+public class RouterMeta implements Serializable {
 
 
     private static final long serialVersionUID = 554885993972852685L;
@@ -27,6 +30,7 @@ public class RouterMetaVo implements Serializable {
 
     private String icon;
 
-    private Boolean breadcrumb = true;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private List<Long> roles;
 
 }

@@ -1,88 +1,55 @@
 package com.caoyuqian.user.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.caoyuqian.common.entity.Tree;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * @author qian
  * @version V1.0
  * @Title: MenuVo
  * @Package: com.caoyuqian.user.vo
- * @Description: MenuVo
- * @date 2020/7/21 9:50 下午
+ * @Description: 菜单
+ * @date 2021/4/2 11:33 上午
  **/
+@EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class MenuVo implements Serializable {
+@Accessors(chain = true)
+public class MenuVo extends Tree<MenuVo> {
 
-    private static final long serialVersionUID = -5651789841187416984L;
     /**
-     * 菜单/按钮ID
+     * 菜单名称
      */
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long menuId;
-
+    private String name;
     /**
-     * 上级菜单ID
-     */
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long parentId;
-
-    /**
-     * 菜单/按钮名称
-     */
-    private String menuName;
-
-    /**
-     * 菜单URL
-     */
-    private String path;
-
-    /**
-     * 对应 Vue组件
-     */
-    private String component;
-
-    /**
-     * 权限标识
-     */
-    private String perms;
-
-    /**
-     * 图标
+     * 菜单图标
      */
     private String icon;
 
     /**
-     * 类型 0菜单 1按钮
+     * 路径
      */
-    private Integer type;
+    private String path;
+
+    /**
+     * 菜单组件
+     */
+    private String component;
 
     /**
      * 排序
      */
-    private Integer orderNum;
+    private Integer sort;
 
     /**
-     * 创建时间
+     * 可见性
      */
-    private LocalDateTime createTime;
+    private Boolean visible;
 
     /**
-     * 修改时间
+     * 跳转路径
      */
-    private LocalDateTime updateTime;
+    private String redirect;
+
 }
