@@ -17,6 +17,11 @@ public interface AuthConstants {
     String AUTHORITY_CLAIM_NAME = "authorities";
 
     /**
+     * 认证请求头key
+     */
+    String AUTHORIZATION_KEY = "Authorization";
+
+    /**
      * 别名
      */
    String RSA_ALIAS = "lumiaqian";
@@ -45,4 +50,20 @@ public interface AuthConstants {
      * 后台管理接口路径匹配
      */
     String ADMIN_URL_PATTERN ="/admin/**" ;
+
+    /**
+     * JWT载体key
+     */
+    String JWT_PAYLOAD_KEY = "payload";
+
+    String USER_ID_KEY = "user_id";
+
+    String USER_NAME_KEY = "username";
+
+    String CLIENT_ID_KEY = "client_id";
+
+    /**
+     * Basic认证前缀
+     */
+    String BASIC_PREFIX = "Basic ";
 }

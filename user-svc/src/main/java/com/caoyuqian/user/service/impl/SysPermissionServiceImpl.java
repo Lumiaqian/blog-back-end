@@ -6,6 +6,8 @@ import com.caoyuqian.user.entity.SysPermission;
 import com.caoyuqian.user.service.SysPermissionService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 权限表(SysPermission)表服务实现类
  *
@@ -15,4 +17,8 @@ import org.springframework.stereotype.Service;
 @Service("sysPermissionService")
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements SysPermissionService {
 
+    @Override
+    public List<String> listPermsByRoleIds(List<Long> roleIds, Integer type) {
+        return null;
+    }
 }

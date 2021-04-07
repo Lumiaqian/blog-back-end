@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 角色表 [Data Base Object]
@@ -60,4 +61,9 @@ public class SysRole implements Serializable {
     @TableField("update_date")
     private LocalDateTime updateDate;
 
+    @TableField(exist = false)
+    private List<Long> menuIds;
+
+    @TableField(exist = false)
+    private List<Long> permissionIds;
 }

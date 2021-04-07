@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
         List<GrantedAuthority> finalGrantedAuthorities = AuthorityUtils.createAuthorityList(authSet.toArray(new String[0]));
 
 
-        return new org.springframework.security.core.userdetails.User(userDto.getUsername(), userDto.getPassword(),
+        return new org.springframework.security.core.userdetails.User(String.valueOf(userDto.getUserId()), userDto.getPassword(),
                 userDto.getEnabled(), userDto.getAccountNonExpired(), userDto.getCredentialsNonExpired(), userDto.getAccountNonLocked(),
                 finalGrantedAuthorities);
 

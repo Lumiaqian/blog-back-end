@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
  * @author lumiaqian
  */
 @Data
+@Accessors(chain = true)
 @TableName("sys_role_permission")
 public class SysRolePermission implements Serializable {
 	private static final long serialVersionUID =  3954847015465623280L;

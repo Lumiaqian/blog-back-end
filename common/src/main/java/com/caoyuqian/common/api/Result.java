@@ -73,4 +73,15 @@ public class Result<T> implements Serializable {
     public static Result fail(Status status,String msg){
         return new Result<>(status,msg);
     }
+
+    public static Result judge(boolean status) {
+        if (status) {
+            return success();
+        } else {
+            return failed();
+        }
+    }
+    public static Result failed() {
+        return fail(Status.FAILURE, Status.FAILURE.getMsg());
+    }
 }

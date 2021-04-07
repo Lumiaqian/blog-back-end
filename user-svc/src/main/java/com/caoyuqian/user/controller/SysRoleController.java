@@ -5,8 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.caoyuqian.common.api.Result;
+import com.caoyuqian.user.dto.RolePermissionDto;
 import com.caoyuqian.user.entity.SysRole;
+import com.caoyuqian.user.service.SysPermissionService;
+import com.caoyuqian.user.service.SysRoleMenuService;
+import com.caoyuqian.user.service.SysRolePermissionService;
 import com.caoyuqian.user.service.SysRoleService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,6 +34,15 @@ public class SysRoleController extends ApiController {
      */
     @Resource
     private SysRoleService sysRoleService;
+
+    @Resource
+    private SysRoleMenuService sysRoleMenuService;
+
+    @Resource
+    private SysRolePermissionService sysRolePermissionService;
+
+    @Resource
+    private SysPermissionService sysPermissionService;
 
     /**
      * 分页查询所有数据
@@ -82,6 +98,50 @@ public class SysRoleController extends ApiController {
     @DeleteMapping
     public Result delete(@RequestParam("idList") List<Long> idList) {
         return Result.success(this.sysRoleService.removeByIds(idList));
+    }
+
+    @ApiOperation(value = "角色拥有的菜单ID集合")
+    @ApiImplicitParam(name = "id", value = "角色id", required = true, paramType = "path", dataType = "Long")
+    @GetMapping("/{id}/menu_ids")
+    public Result roleMenuIds(@PathVariable("id") Long roleId) {
+        return Result.success(sysRoleMenuService.listMenuIds(roleId));
+    }
+
+    @ApiOperation(value = "角色拥有的权限ID集合")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "角色id", required = true, paramType = "path", dataType = "Long"),
+            @ApiImplicitParam(name = "type", value = "权限类型", paramType = "query", dataType = "Integer"),
+    })
+    @GetMapping("/{id}/permission_ids")
+    public Result rolePermissionIds(@PathVariable("id") Long roleId, @RequestParam Integer type) {
+        return Result.success(sysRolePermissionService.listPermissionIds(roleId, type));
+    }
+
+
+    @ApiOperation(value = "修改角色菜单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "角色id", required = true, paramType = "path", dataType = "Long"),
+            @ApiImplicitParam(name = "role", value = "实体JSON对象", required = true, paramType = "body", dataType = "SysRole")
+    })
+    @PutMapping(value = "/{id}/menu_ids")
+    public Result updateRoleMenuIds(
+            @PathVariable("id") Long roleId,
+            @RequestBody SysRole role) {
+        List<Long> menuIds = role.getMenuIds();
+        return Result.judge(sysRoleMenuService.update(roleId, menuIds));
+    }
+
+    @ApiOperation(value = "修改角色权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "角色id", required = true, paramType = "path", dataType = "Long"),
+            @ApiImplicitParam(name = "rolePermission", value = "实体JSON对象", required = true, paramType = "body", dataType = "RolePermissionDTO")
+    })
+    @PutMapping(value = "/{id}/permission_ids")
+    public Result updateRolePermissionIds(
+            @PathVariable("id") Long roleId,
+            @RequestBody RolePermissionDto rolePermission) {
+        rolePermission.setRoleId(roleId);
+        return Result.judge(sysRolePermissionService.update(rolePermission));
     }
 
 }
