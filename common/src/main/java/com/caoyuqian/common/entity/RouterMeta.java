@@ -1,8 +1,8 @@
 package com.caoyuqian.common.entity;
 
+import com.caoyuqian.common.json.LongArray2StringSerialize;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +30,7 @@ public class RouterMeta implements Serializable {
 
     private String icon;
 
-    @JsonSerialize(using = ToStringSerializer.class)
+    @JsonSerialize(using = LongArray2StringSerialize.class)
     private List<Long> roles;
 
 }

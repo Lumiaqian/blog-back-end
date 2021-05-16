@@ -19,6 +19,6 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     @Override
     public List<String> listPermsByRoleIds(List<Long> roleIds, Integer type) {
-        return null;
+        return baseMapper.listPermsByRoleIds(roleIds,type);
     }
 }

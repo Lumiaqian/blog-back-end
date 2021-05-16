@@ -1,9 +1,8 @@
 package com.caoyuqian.user.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.caoyuqian.common.json.LongArray2StringSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,7 +19,7 @@ public class SysRole implements Serializable {
 	private static final long serialVersionUID =  911873310772100066L;
 
     /**
-     * null
+     * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
@@ -52,18 +51,20 @@ public class SysRole implements Serializable {
     /**
      * 创建时间
      */
-    @TableField("create_date")
-    private LocalDateTime createDate;
+    @TableField(value = "create_time",fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    @TableField("update_date")
-    private LocalDateTime updateDate;
+    @TableField(value = "update_time",fill = FieldFill.UPDATE)
+    private LocalDateTime updateTime;
 
     @TableField(exist = false)
+    @JsonSerialize(using = LongArray2StringSerialize.class)
     private List<Long> menuIds;
 
     @TableField(exist = false)
+    @JsonSerialize(using = LongArray2StringSerialize.class)
     private List<Long> permissionIds;
 }

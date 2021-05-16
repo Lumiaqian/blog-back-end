@@ -38,10 +38,6 @@ public interface AuthConstants {
 
    String RSA_JKS_NAME = "lumiaqian.jks";
 
-    String JWT_USER_ID_KEY = "id";
-
-    String JWT_CLIENT_ID_KEY = "client_id";
-
     /**
      * 认证信息Http请求头
      */
@@ -66,4 +62,8 @@ public interface AuthConstants {
      * Basic认证前缀
      */
     String BASIC_PREFIX = "Basic ";
+    /**
+     * 密码加密方式
+     */
+    String BCRYPT = "{bcrypt}";
 }

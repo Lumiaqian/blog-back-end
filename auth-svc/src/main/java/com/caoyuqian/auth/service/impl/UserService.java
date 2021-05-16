@@ -1,5 +1,6 @@
 package com.caoyuqian.auth.service.impl;
 
+import com.caoyuqian.auth.entity.User;
 import com.caoyuqian.common.api.Result;
 import com.caoyuqian.common.api.Status;
 import com.caoyuqian.common.constant.AuthConstants;
@@ -67,10 +68,7 @@ public class UserService implements UserDetailsService {
         //设置角色资源
         List<GrantedAuthority> finalGrantedAuthorities = AuthorityUtils.createAuthorityList(authSet.toArray(new String[0]));
 
-
-        return new org.springframework.security.core.userdetails.User(String.valueOf(userDto.getUserId()), userDto.getPassword(),
-                userDto.getEnabled(), userDto.getAccountNonExpired(), userDto.getCredentialsNonExpired(), userDto.getAccountNonLocked(),
-                finalGrantedAuthorities);
+        return new User(userDto);
 
     }
 

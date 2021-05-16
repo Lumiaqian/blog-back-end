@@ -1,6 +1,7 @@
 package com.caoyuqian.auth.config;
 
 
+import com.caoyuqian.auth.entity.User;
 import com.caoyuqian.auth.exception.CustomWebResponseExceptionTranslator;
 import com.caoyuqian.auth.service.impl.UserService;
 import com.caoyuqian.common.constant.AuthConstants;
@@ -10,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -130,8 +130,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public TokenEnhancer tokenEnhancer() {
         return ((accessToken, authentication) -> {
             Map<String, Object> map = new HashMap<>(16);
-            UserDetails user = (UserDetails) authentication.getUserAuthentication().getPrincipal();
-            map.put(AuthConstants.JWT_USER_ID_KEY, user.getUsername());
+            User user = (User) authentication.getUserAuthentication().getPrincipal();
+            map.put(AuthConstants.USER_ID_KEY, user.getId());
+            map.put(AuthConstants.CLIENT_ID_KEY, user.getClientId());
+            map.put(AuthConstants.USER_NAME_KEY, user.getUsername());
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(map);
             return accessToken;
         });

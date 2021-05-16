@@ -7,16 +7,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.common.api.Status;
+import com.caoyuqian.common.enums.PermTypeEnum;
 import com.caoyuqian.common.error.ServiceException;
+import com.caoyuqian.common.utils.RequestUtil;
 import com.caoyuqian.common.utils.SpringUtil;
-import com.caoyuqian.user.converter.User2UserVoConvert;
 import com.caoyuqian.user.converter.CreateUserRequest2UserConvert;
+import com.caoyuqian.user.converter.User2UserVoConvert;
 import com.caoyuqian.user.dto.*;
-import com.caoyuqian.user.mapper.UserMapper;
 import com.caoyuqian.user.entity.User;
-import com.caoyuqian.user.service.RoleService;
-import com.caoyuqian.user.service.UserRoleService;
-import com.caoyuqian.user.service.UserService;
+import com.caoyuqian.user.mapper.UserMapper;
+import com.caoyuqian.user.service.*;
 import com.caoyuqian.user.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author qian
@@ -46,6 +49,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserRoleService userRoleService;
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private SysRolePermissionService sysRolePermissionService;
+
+    @Autowired
+    private SysPermissionService sysPermissionService;
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -163,6 +172,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //更新用户角色信息
         userRoleService.saveBatch(request.getUserId(), request.getRoleIds());
+    }
+
+    @Override
+    public UserVo getCurrentUser() {
+        UserVo userVo = new UserVo();
+        // 用户基本信息
+        Long userId = RequestUtil.getUserId();
+        userVo = this.get(userId);
+        // 用户角色信息
+        List<Long> roleIds = RequestUtil.getRoleIds();
+        userVo.setRoleIds(new HashSet<>(roleIds));
+        // 用户按钮权限信息
+        List<String> perms = sysPermissionService.listPermsByRoleIds(roleIds, PermTypeEnum.BUTTON.getValue());
+        userVo.setPerms(perms);
+
+        return userVo;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.caoyuqian.user.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.caoyuqian.common.json.LongArray2StringSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -83,5 +85,6 @@ public class SysMenu implements Serializable {
     private LocalDateTime updateTime;
 
     @TableField(exist = false)
+    @JsonSerialize(using = LongArray2StringSerialize.class)
     private List<Long> roles;
 }

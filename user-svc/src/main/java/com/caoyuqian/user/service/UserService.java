@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.caoyuqian.user.dto.*;
 import com.caoyuqian.user.entity.User;
-import com.caoyuqian.user.vo.ResourceVo;
 import com.caoyuqian.user.vo.UserVo;
-
-import java.util.List;
 
 /**
  * @author lumiaqian
@@ -95,4 +92,15 @@ public interface UserService {
      * @since 0.1.0
      */
     void updateByUserId(UpdateUserRequest request);
+
+    /**
+     * @param
+     * @return com.caoyuqian.user.vo.UserVo
+     * @Description: 获取当前登录的用户信息
+     * @version 0.1.0
+     * @author qian
+     * @date 2021/5/16 1:55 下午
+     * @since 0.1.0
+     */
+    UserVo getCurrentUser();
 }

@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,4 +42,6 @@ public class UserVo {
     private LocalDateTime createTime;
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
+    @ApiModelProperty(value = "权限信息")
+    private List<String> perms ;
 }

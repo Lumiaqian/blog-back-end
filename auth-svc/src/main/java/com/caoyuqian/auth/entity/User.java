@@ -1,112 +1,89 @@
 package com.caoyuqian.auth.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import cn.hutool.core.collection.CollectionUtil;
+import com.caoyuqian.common.constant.AuthConstants;
+import com.caoyuqian.user.dto.AuthMemberDto;
+import com.caoyuqian.user.dto.UserDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+
 
 /**
- * @author qian
- * @version V1.0
- * @Title: User
- * @Package: com.caoyuqian.auth.entity
- * @Description: User
- * @date 2020/4/14 4:29 下午
- **/
+ * 登录用户信息
+ */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@TableName("user")
-public class User implements Serializable {
+public class User implements UserDetails {
 
+    private Long id;
 
-    private static final long serialVersionUID = 4863500769310687862L;
-    @TableId(value = "user_id",type = IdType.ASSIGN_ID)
-    private Long userId;
-
-    @TableField("mobile")
-    private String mobile;
-
-    @TableField("user_name")
     private String username;
 
-    @TableField("password")
     private String password;
 
-    @TableField("email")
-    private String email;
-
-    /**
-     * 用户状态，true为可用
-     */
-    @TableField("enabled")
     private Boolean enabled;
 
-    /**
-     * 用户账号是否过期，true为未过期
-     */
-    @TableField("account_non_expired")
-    private Boolean accountNonExpired;
+    private String clientId;
 
-    /**
-     * 用户密码是否过期，true为未过期
-     */
-    @TableField("credentials_non_expired")
-    private Boolean credentialsNonExpired;
+    private Collection<SimpleGrantedAuthority> authorities;
 
-    /**
-     * 用户账号是否被锁定，true为未锁定
-     */
-    @TableField("account_non_locked")
-    private Boolean accountNonLocked;
+    public User(UserDto user) {
+        this.setId(user.getUserId());
+        this.setUsername(user.getUsername());
+        this.setPassword(AuthConstants.BCRYPT + user.getPassword());
+        this.setEnabled(user.getEnabled());
+        if (CollectionUtil.isNotEmpty(user.getRoleIds())) {
+            authorities = new ArrayList<>();
+            user.getRoleIds().forEach(roleId -> authorities.add(new SimpleGrantedAuthority(String.valueOf(roleId))));
+        }
+    }
 
-    @TableField(value = "create_time",fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
+    public User(AuthMemberDto member){
+        this.setId(member.getId());
+        this.setUsername(member.getUsername());
+        this.setPassword(AuthConstants.BCRYPT + member.getPassword());
+        this.setEnabled( Integer.valueOf(1).equals(member.getStatus()));
+    }
 
-    @TableField(value = "update_time",fill = FieldFill.UPDATE)
-    private LocalDateTime updateTime;
 
-    @TableField(exist = false)
-    private Set<Long> roleIds;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
 
-    @TableLogic
-    @TableField("deleted")
-    private Integer deleted;
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
 
-    /**
-     * 最后一次登录时间
-     */
-    @TableField("last_login_time")
-    private LocalDateTime lastLoginTime;
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
 
-    /**
-     * 配置ID
-     */
-    @TableField("setting_id")
-    private long settingId;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-    /**
-     * 微博
-     */
-    @TableField("weibo")
-    private String weibo;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-    /**
-     * QQ
-     */
-    @TableField(value = "QQ")
-    private String QQ;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-    /**
-     * github
-     */
-    @TableField("github")
-    private String github;
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 }

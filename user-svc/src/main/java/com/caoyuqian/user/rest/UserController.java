@@ -120,4 +120,10 @@ public class UserController {
     public Result getResourceByUserId(@NotNull @PathVariable Long userId) {
         return Result.success(resourceService.getByUserId(userId));
     }
+
+    @ApiOperation(value = "获取当前用户信息", httpMethod = "GET")
+    @GetMapping("me")
+    public Result getUserInfo(){
+        return Result.success(userService.getCurrentUser());
+    }
 }
