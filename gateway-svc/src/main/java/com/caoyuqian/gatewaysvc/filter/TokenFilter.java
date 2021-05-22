@@ -64,20 +64,6 @@ public class TokenFilter implements GlobalFilter, Ordered {
         // 格式化token 前缀 Bearer  -> access:
         final String formatKey = accessToken.replace(BEARER_PREFIX,ACCESS_PREFIX);
 
-        final Boolean hasKey = stringRedisTemplate.hasKey(formatKey);
-        if (!hasKey) {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            String jsonString = JsonUtil.obj2Str(Result.fail(Status.UNAUTHORIZED, "无效的 Token"));
-            return getVoidMono(response, jsonString);
-        }
-
-        final Long expire = stringRedisTemplate.getExpire(formatKey);
-        if (0 >= expire) {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            String jsonString = JsonUtil.obj2Str(Result.fail(Status.UNAUTHORIZED, "Token 已过期"));
-            return getVoidMono(response, jsonString);
-        }
-
         log.info("进入 gateway-svc 服务，执行 TokenFilter 过滤器，检查 Token 完成");
         return chain.filter(exchange);
 

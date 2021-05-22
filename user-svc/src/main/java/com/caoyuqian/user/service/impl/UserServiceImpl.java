@@ -62,7 +62,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserVo get(Long userId) {
         User user = this.getById(userId);
-        return user2UserVoConvert.convert(user);
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user,userVo);
+        return userVo;
     }
 
     @Override

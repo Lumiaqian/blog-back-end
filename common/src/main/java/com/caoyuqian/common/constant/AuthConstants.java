@@ -57,6 +57,10 @@ public interface AuthConstants {
     String USER_NAME_KEY = "username";
 
     String CLIENT_ID_KEY = "client_id";
+    /**
+     * JWT ID 唯一标识
+     */
+    String JWT_JTI = "jti";
 
     /**
      * Basic认证前缀
@@ -66,4 +70,15 @@ public interface AuthConstants {
      * 密码加密方式
      */
     String BCRYPT = "{bcrypt}";
+
+    /**
+     * JWT令牌前缀
+     */
+    String AUTHORIZATION_PREFIX = "Bearer ";
+    /**
+     * 黑名单token前缀
+     */
+    String TOKEN_BLACKLIST_PREFIX = "auth:token:blacklist:";
+
+    String LOGOUT_PATH = "/oauth/logout";
 }

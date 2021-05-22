@@ -2,6 +2,7 @@ package com.caoyuqian.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.caoyuqian.user.entity.SysRolePermission;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -14,6 +15,17 @@ import java.util.List;
  */
 public interface SysRolePermissionMapper extends BaseMapper<SysRolePermission> {
 
+    /**
+     * @param moduleId
+     * @param roleId
+     * @param type
+     * @return java.util.List<java.lang.Long>
+     * @Description: 查询权限
+     * @version 0.1.0
+     * @author qian
+     * @date 2021/5/22 4:47 下午
+     * @since 0.1.0
+     */
     @Select({"<script>",
             " SELECT",
             " 	t1.permission_id ",
@@ -31,7 +43,7 @@ public interface SysRolePermissionMapper extends BaseMapper<SysRolePermission> {
             "    AND t2.type = #{type} ",
             " </if>",
             "</script>"})
-    List<Long> listPermissionIds(Long moduleId, Long roleId, Integer type);
+    List<Long> listPermissionIds(@Param("moduleId") Long moduleId, @Param("roleId") Long roleId, @Param("type") Integer type);
 
 
 }

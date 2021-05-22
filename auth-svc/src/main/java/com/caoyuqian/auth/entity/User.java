@@ -36,8 +36,9 @@ public class User implements UserDetails {
     public User(UserDto user) {
         this.setId(user.getUserId());
         this.setUsername(user.getUsername());
-        this.setPassword(AuthConstants.BCRYPT + user.getPassword());
+        this.setPassword(user.getPassword());
         this.setEnabled(user.getEnabled());
+        this.setClientId(user.getClientId());
         if (CollectionUtil.isNotEmpty(user.getRoleIds())) {
             authorities = new ArrayList<>();
             user.getRoleIds().forEach(roleId -> authorities.add(new SimpleGrantedAuthority(String.valueOf(roleId))));

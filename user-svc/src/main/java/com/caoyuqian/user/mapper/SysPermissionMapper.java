@@ -2,6 +2,7 @@ package com.caoyuqian.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.caoyuqian.user.entity.SysPermission;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -29,5 +30,5 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
             "       </foreach>",
             "</script>"
     })
-    List<String> listPermsByRoleIds(List<Long> roleIds, Integer type);
+    List<String> listPermsByRoleIds(@Param("roleIds") List<Long> roleIds, @Param("type") Integer type);
 }

@@ -36,7 +36,9 @@ public enum Status {
     PARAM_ERROR(501, "Parameter Error"),
 
     //参数为空
-    PARAM_IS_NULL(502, "Parameter Is Null");
+    PARAM_IS_NULL(502, "Parameter Is Null"),
+
+    FORBIDDEN_OPERATION(302, "演示环境禁止修改、删除重要数据，请本地部署后测试");
 
     private Integer code;
 

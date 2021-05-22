@@ -28,6 +28,7 @@ public class UserDto {
     private String password;
     private Integer deleted;
     private Set<Long> roleIds;
+    private String clientId;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     /**
