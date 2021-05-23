@@ -20,7 +20,7 @@ import java.util.List;
  * @since 2021-03-30 10:06:30
  */
 @RestController
-@RequestMapping("sysMenu")
+@RequestMapping("/upm/sysMenu")
 public class SysMenuController extends ApiController {
     /**
      * 服务对象

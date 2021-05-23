@@ -74,11 +74,15 @@ public interface AuthConstants {
     /**
      * JWT令牌前缀
      */
-    String AUTHORIZATION_PREFIX = "Bearer ";
+    String AUTHORIZATION_PREFIX = "bearer ";
     /**
      * 黑名单token前缀
      */
     String TOKEN_BLACKLIST_PREFIX = "auth:token:blacklist:";
 
     String LOGOUT_PATH = "/oauth/logout";
+    /**
+     * Redis缓存权限规则key
+     */
+    String PERMISSION_ROLES_KEY = "auth:permission:roles";
 }

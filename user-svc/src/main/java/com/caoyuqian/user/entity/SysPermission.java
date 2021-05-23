@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 权限表 [Data Base Object]
@@ -62,5 +63,11 @@ public class SysPermission implements Serializable {
      */
 	@TableField(value = "update_time",fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 拥有资源权限角色ID集合
+     */
+    @TableField(exist = false)
+    private List<Long> roleIds;
 
 }

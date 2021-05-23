@@ -20,7 +20,7 @@ import java.util.List;
  * @since 2021-03-30 10:06:31
  */
 @RestController
-@RequestMapping("sysPermission")
+@RequestMapping("/upm/sysPermission")
 public class SysPermissionController extends ApiController {
     /**
      * 服务对象

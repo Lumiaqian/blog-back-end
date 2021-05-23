@@ -24,4 +24,15 @@ public interface SysPermissionService extends IService<SysPermission> {
      * @since 0.1.0
      */
     List<String> listPermsByRoleIds(List<Long> roleIds, Integer type);
+
+    /**
+     * @param
+     * @return boolean
+     * @Description: 刷新Redis中的权限信息
+     * @version 0.1.0
+     * @author qian
+     * @date 2021/5/22 5:22 下午
+     * @since 0.1.0
+     */
+    boolean refreshPermissionRolesCache();
 }

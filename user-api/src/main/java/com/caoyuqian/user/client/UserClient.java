@@ -28,7 +28,7 @@ public interface UserClient {
      * @param mobile
      * @return
      */
-    @GetMapping("/v1/user/{mobile}")
+    @GetMapping("/upm/user/{mobile}")
     Result<UserDto> getByMobile(@PathVariable(value = "mobile") @NotBlank String mobile);
 
     /**
@@ -36,7 +36,7 @@ public interface UserClient {
      * @param request
      * @return
      */
-    @PostMapping("/v1/user/verify")
+    @PostMapping("/upm/user/verify")
     Result verifyPassword(@Valid @RequestBody VerifyPasswordRequest request);
 
     /**
@@ -44,7 +44,7 @@ public interface UserClient {
      * @param userId
      * @return
      */
-    @GetMapping("/v1/user/role/{userId}")
+    @GetMapping("/upm/user/role/{userId}")
     Result<List<RoleVo>> getByUserId(@PathVariable(value = "userId") Long userId);
 
     /**
@@ -52,6 +52,6 @@ public interface UserClient {
      * @param userId
      * @return
      */
-    @GetMapping("/v1/user/resource/{userId}")
+    @GetMapping("/upm/user/resource/{userId}")
     Result<List<ResourceVo>> getResourceByUserId(@NotNull @PathVariable(value = "userId") Long userId);
 }

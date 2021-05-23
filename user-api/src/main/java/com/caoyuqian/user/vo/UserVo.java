@@ -1,5 +1,6 @@
 package com.caoyuqian.user.vo;
 
+import com.caoyuqian.common.json.LongSet2StringSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
@@ -37,6 +38,7 @@ public class UserVo {
     @ApiModelProperty(value = "是否删除")
     private Integer deleted;
     @ApiModelProperty(value = "角色id")
+    @JsonSerialize(using = LongSet2StringSerialize.class)
     private Set<Long> roleIds;
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;

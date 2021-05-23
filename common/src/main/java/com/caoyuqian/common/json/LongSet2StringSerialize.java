@@ -7,19 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author qian
  * @version V1.0
- * @Title: LongArray2StringSerialize
+ * @Title: LongSet2StringSerialize
  * @Package: com.caoyuqian.common.json
- * @Description: LongArray2StringSerialize
- * @date 2021/5/16 4:35 下午
+ * @Description: TOTO
+ * @date 2021/5/23 5:50 下午
  **/
-public class LongArray2StringSerialize extends JsonSerializer<List<Long>> {
+public class LongSet2StringSerialize extends JsonSerializer<Set<Long>> {
     @Override
-    public void serialize(List<Long> longs, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(Set<Long> longs, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         StringBuilder sb = new StringBuilder();
         for (Long str : longs) {
             if (sb.length() > 0) {

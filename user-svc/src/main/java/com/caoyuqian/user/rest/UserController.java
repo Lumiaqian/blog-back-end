@@ -30,7 +30,7 @@ import javax.validation.constraints.Null;
  * @date 2019/12/3 11:06 上午
  **/
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/upm/user")
 public class UserController {
     @Autowired
     private UserService userService;

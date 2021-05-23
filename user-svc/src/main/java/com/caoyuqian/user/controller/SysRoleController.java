@@ -27,7 +27,7 @@ import java.util.List;
  * @since 2021-03-30 10:06:32
  */
 @RestController
-@RequestMapping("sysRole")
+@RequestMapping("/upm/sysRole")
 public class SysRoleController extends ApiController {
     /**
      * 服务对象
