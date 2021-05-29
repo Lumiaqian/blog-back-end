@@ -1,6 +1,5 @@
 package com.caoyuqian.user.vo;
 
-import com.caoyuqian.common.entity.Tree;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -18,10 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TreeVo {
 
-    private List<? extends Tree<?>> trees;
+    private Long id;
 
-    private Integer total;
+    private String label;
+
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    private List<TreeVo> children;
 }

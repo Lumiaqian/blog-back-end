@@ -1,10 +1,13 @@
 package com.caoyuqian.common.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.caoyuqian.common.constant.SysAdminConstants;
 import com.caoyuqian.common.entity.Tree;
 import com.caoyuqian.common.entity.VueRouter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author qian
@@ -15,8 +18,6 @@ import java.util.List;
  * @date 2020/7/22 7:54 下午
  **/
 public class TreeUtil {
-
-    private final static Long TOP_NODE_ID = 0L;
 
     /**
      * @param nodes
@@ -31,24 +32,19 @@ public class TreeUtil {
         if (nodes == null) {
             return null;
         }
-
         //父级结点
         List<Tree<T>> topNodes = new ArrayList<>();
-
         nodes.forEach(node -> {
             //父节点id
             Long pid = node.getParentId();
-            if (pid == null || TOP_NODE_ID.equals(pid)) {
+            if (pid == null || SysAdminConstants.TOP_NODE_ID.equals(pid)) {
                 // 判断是否为Top结点
                 topNodes.add(node);
                 return;
             }
-
             //遍历List判断是否有node的父节点
             for (Tree<T> n : nodes) {
-
                 Long id = n.getId();
-
                 if (id != null && id.equals(pid)) {
                     if (n.getChildren() == null) {
                         n.initChildren();
@@ -59,13 +55,35 @@ public class TreeUtil {
                     n.setHasParent(true);
                     return;
                 }
-
-            }
-            if (topNodes.isEmpty()) {
-                topNodes.add(node);
             }
         });
         return topNodes;
+    }
+
+    /**
+     * @param pid
+     * @param nodes
+     * @return java.util.List<? extends com.caoyuqian.common.entity.Tree < ?>>
+     * @Description: 递归生成树
+     * @version 0.1.0
+     * @author qian
+     * @date 2021/5/29 6:08 下午
+     * @since 0.1.0
+     */
+    public static <T> List<? extends Tree<?>> recursionForTree(Long pid, List<? extends Tree<T>> nodes) {
+        //父级结点
+        List<Tree<T>> list = new ArrayList<>();
+        Optional.ofNullable(nodes).orElse(new ArrayList<>())
+                .stream()
+                .filter(tTree -> tTree.getParentId().equals(pid))
+                .forEach(tTree -> {
+                    List<Tree<T>> children = (List<Tree<T>>) recursionForTree(tTree.getId(), nodes);
+                    if (CollectionUtil.isNotEmpty(children)) {
+                        tTree.setChildren(children);
+                    }
+                    list.add(tTree);
+                });
+        return list;
     }
 
     /**
@@ -82,7 +100,7 @@ public class TreeUtil {
         List<VueRouter<T>> topRoutes = new ArrayList<>();
         routes.forEach(route -> {
             Long parentId = route.getParentId();
-            if (parentId == null || TOP_NODE_ID.equals(parentId)) {
+            if (parentId == null || SysAdminConstants.TOP_NODE_ID.equals(parentId)) {
                 topRoutes.add(route);
                 return;
             }

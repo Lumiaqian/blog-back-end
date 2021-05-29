@@ -88,4 +88,16 @@ public class SysMenuController extends ApiController {
     public Result listRouter(){
         return Result.success(this.sysMenuService.listRouterVo());
     }
+
+    @GetMapping("tree")
+    public Result listTree(){
+        return Result.success(this.sysMenuService.listTreeVo());
+    }
+
+    @GetMapping("list")
+    public Result list(){
+        return Result.success(this.sysMenuService.listMenuVO());
+    }
+
+
 }

@@ -3,8 +3,8 @@ package com.caoyuqian.user.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.caoyuqian.common.api.Result;
 import com.caoyuqian.user.entity.SysRoleMenu;
 import com.caoyuqian.user.service.SysRoleMenuService;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +36,8 @@ public class SysRoleMenuController extends ApiController {
      * @return 所有数据
      */
     @GetMapping
-    public R selectAll(Page<SysRoleMenu> page, SysRoleMenu sysRoleMenu) {
-        return success(this.sysRoleMenuService.page(page, new QueryWrapper<>(sysRoleMenu)));
+    public Result selectAll(Page<SysRoleMenu> page, SysRoleMenu sysRoleMenu) {
+        return Result.success(this.sysRoleMenuService.page(page, new QueryWrapper<>(sysRoleMenu)));
     }
 
     /**
@@ -47,8 +47,8 @@ public class SysRoleMenuController extends ApiController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public R selectOne(@PathVariable Serializable id) {
-        return success(this.sysRoleMenuService.getById(id));
+    public Result selectOne(@PathVariable Serializable id) {
+        return Result.success(this.sysRoleMenuService.getById(id));
     }
 
     /**
@@ -58,8 +58,8 @@ public class SysRoleMenuController extends ApiController {
      * @return 新增结果
      */
     @PostMapping
-    public R insert(@RequestBody SysRoleMenu sysRoleMenu) {
-        return success(this.sysRoleMenuService.save(sysRoleMenu));
+    public Result insert(@RequestBody SysRoleMenu sysRoleMenu) {
+        return Result.success(this.sysRoleMenuService.save(sysRoleMenu));
     }
 
     /**
@@ -69,8 +69,8 @@ public class SysRoleMenuController extends ApiController {
      * @return 修改结果
      */
     @PutMapping
-    public R update(@RequestBody SysRoleMenu sysRoleMenu) {
-        return success(this.sysRoleMenuService.updateById(sysRoleMenu));
+    public Result update(@RequestBody SysRoleMenu sysRoleMenu) {
+        return Result.success(this.sysRoleMenuService.updateById(sysRoleMenu));
     }
 
     /**
@@ -80,7 +80,7 @@ public class SysRoleMenuController extends ApiController {
      * @return 删除结果
      */
     @DeleteMapping
-    public R delete(@RequestParam("idList") List<Long> idList) {
-        return success(this.sysRoleMenuService.removeByIds(idList));
+    public Result delete(@RequestParam("idList") List<Long> idList) {
+        return Result.success(this.sysRoleMenuService.removeByIds(idList));
     }
 }

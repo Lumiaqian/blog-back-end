@@ -10,4 +10,8 @@ public interface SysAdminConstants {
      * 根菜单ID
      */
     Long ROOT_MENU_ID = 0L;
+    /**
+     * 根节点ID
+     */
+    Long TOP_NODE_ID = 0L;
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.caoyuqian.common.entity.VueRouter;
 import com.caoyuqian.user.entity.SysMenu;
 import com.caoyuqian.user.vo.MenuVo;
+import com.caoyuqian.user.vo.TreeVo;
 
 import java.util.List;
 
@@ -36,4 +37,25 @@ public interface SysMenuService extends IService<SysMenu> {
      * @since 0.1.0
      */
     List<VueRouter<SysMenu>> listRouterVo();
+
+    /**
+     * @return java.util.List<com.caoyuqian.user.vo.TreeVo>
+     * @Description: 树形列表下拉框
+     * @version 0.1.0
+     * @author qian
+     * @date 2021/5/29 4:12 下午
+     * @since 0.1.0
+     */
+    List<TreeVo> listTreeVo();
+
+    /**
+     * @param
+     * @return java.util.List<com.caoyuqian.user.vo.MenuVo>
+     * @Description: 列表查询
+     * @version 0.1.0
+     * @author qian
+     * @date 2021/5/29 5:18 下午
+     * @since 0.1.0
+     */
+    List<MenuVo> listMenuVO();
 }
