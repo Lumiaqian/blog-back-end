@@ -35,4 +35,6 @@ public interface SysPermissionService extends IService<SysPermission> {
      * @since 0.1.0
      */
     boolean refreshPermissionRolesCache();
+
+    void savePermission(SysPermission sysPermission);
 }

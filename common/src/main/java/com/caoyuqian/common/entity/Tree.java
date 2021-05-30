@@ -1,11 +1,12 @@
 package com.caoyuqian.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +26,14 @@ import java.util.List;
 @Builder
 public class Tree<T> {
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     private String label;
 
     private List<Tree<T>> children;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     private boolean hasParent = false;

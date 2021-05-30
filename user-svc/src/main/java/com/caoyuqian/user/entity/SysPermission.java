@@ -1,6 +1,9 @@
 package com.caoyuqian.user.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.caoyuqian.common.json.LongArray2StringSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,6 +23,7 @@ public class SysPermission implements Serializable {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
@@ -50,6 +54,7 @@ public class SysPermission implements Serializable {
      * 菜单模块ID
      */
     @TableField("module_id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long moduleId;
 
     /**
@@ -68,6 +73,7 @@ public class SysPermission implements Serializable {
      * 拥有资源权限角色ID集合
      */
     @TableField(exist = false)
+    @JsonSerialize(using = LongArray2StringSerialize.class)
     private List<Long> roleIds;
 
 }

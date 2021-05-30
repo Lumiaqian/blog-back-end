@@ -4,8 +4,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoyuqian.common.constant.AuthConstants;
 import com.caoyuqian.user.entity.SysPermission;
+import com.caoyuqian.user.entity.SysRolePermission;
 import com.caoyuqian.user.mapper.SysPermissionMapper;
 import com.caoyuqian.user.service.SysPermissionService;
+import com.caoyuqian.user.service.SysRolePermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,9 @@ import java.util.stream.Collectors;
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements SysPermissionService {
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private SysRolePermissionService sysRolePermissionService;
 
     @Override
     public List<String> listPermsByRoleIds(List<Long> roleIds, Integer type) {
@@ -48,5 +53,14 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
             redisTemplate.opsForHash().putAll(AuthConstants.PERMISSION_ROLES_KEY, permissionRoles);
         });
         return true;
+    }
+
+    @Override
+    public void savePermission(SysPermission sysPermission) {
+        if (this.save(sysPermission)){
+            SysRolePermission sysRolePermission = new SysRolePermission();
+            sysRolePermission.setPermissionId(sysPermission.getId());
+
+        }
     }
 }

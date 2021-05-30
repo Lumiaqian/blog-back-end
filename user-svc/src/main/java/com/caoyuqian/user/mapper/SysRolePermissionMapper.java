@@ -45,5 +45,8 @@ public interface SysRolePermissionMapper extends BaseMapper<SysRolePermission> {
             "</script>"})
     List<Long> listPermissionIds(@Param("moduleId") Long moduleId, @Param("roleId") Long roleId, @Param("type") Integer type);
 
-
+    @Select("<script>" +
+            "   select role_id from sys_role_permission where permission_id = #{permissionId} " +
+            "</script>")
+    List<Long> listRoleIds(Long permissionId);
 }

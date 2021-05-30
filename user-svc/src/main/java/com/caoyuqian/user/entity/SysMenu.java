@@ -3,6 +3,7 @@ package com.caoyuqian.user.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.caoyuqian.common.json.LongArray2StringSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,6 +23,7 @@ public class SysMenu implements Serializable {
      * 主键
      */
     @TableId(type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
