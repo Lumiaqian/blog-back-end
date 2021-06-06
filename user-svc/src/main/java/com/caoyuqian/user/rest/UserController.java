@@ -49,7 +49,7 @@ public class UserController {
         return Result.success(userService.add(request));
     }
 
-    @ApiOperation(value = "条件查询用户信息", httpMethod = "POST")
+    @ApiOperation(value = "条件查询用户信息", httpMethod = "Get")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, paramType = "body", dataType = "String"),
             @ApiImplicitParam(name = "username", value = "用户名", required = true, paramType = "body", dataType = "String"),
@@ -57,9 +57,8 @@ public class UserController {
             @ApiImplicitParam(name = "size", value = "页面大小", required = true, paramType = "body", dataType = "Integer")
 
     })
-    @PostMapping("condition")
-    public Result getAll(@RequestBody UserQuery userQuery) {
-
+    @GetMapping
+    public Result getAll(UserQuery userQuery) {
         return Result.success(userService.getAll(userQuery.getPage(), userQuery));
     }
 
@@ -79,8 +78,8 @@ public class UserController {
     }
 
     @ApiOperation(value = "根据id获取用户信息", httpMethod = "GET")
-    @GetMapping()
-    public Result getById(@Null Long userId){
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable @Null Long userId){
         return Result.success(userService.get(userId));
     }
 

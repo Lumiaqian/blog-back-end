@@ -42,6 +42,10 @@ public class Result<T> implements Serializable {
         this(status);
         this.data = data;
     }
+    private Result(Status status, String msg){
+        this(status);
+        this.msg = msg;
+    }
     /**
      * 快速创建成功结果并返回结果数据
      * @param data
