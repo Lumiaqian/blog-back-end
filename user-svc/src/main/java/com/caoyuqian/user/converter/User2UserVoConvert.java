@@ -2,6 +2,7 @@ package com.caoyuqian.user.converter;
 
 import com.caoyuqian.user.entity.User;
 import com.caoyuqian.user.vo.UserVo;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class User2UserVoConvert implements Converter<User, UserVo> {
     @Override
-    public UserVo convert(User user) {
+    public UserVo convert(@NotNull User user) {
         UserVo userVo = new UserVo();
         BeanUtils.copyProperties(user,userVo);
         return userVo;
