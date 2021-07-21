@@ -1,9 +1,8 @@
 package com.caoyuqian.common.api;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -15,10 +14,9 @@ import java.io.Serializable;
  * @Description: 封装统一返回值
  * @date 2019/11/29 10:25 上午
  **/
-@Getter
 @Builder
-@ToString
 @NoArgsConstructor
+@Data
 public class Result<T> implements Serializable {
     private static final long serialVersionUID = -8033454171379264752L;
     private Integer code;
